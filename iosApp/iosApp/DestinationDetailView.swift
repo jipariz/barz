@@ -1,8 +1,8 @@
-import AdaptiveNavSuiteKit
+import BarzSample
 import SwiftUI
 import UIKit
 
-/// Wraps the shared Compose Multiplatform screen (`dev.jparizek.adaptivenavsuite.ui
+/// Wraps the shared Compose Multiplatform screen (`dev.parez.barz.sample.ui
 /// .DestinationScreen`) — hosted via `ComposeUIViewController` in `MainViewController.kt` — as a
 /// native `UIViewController`, so it can be dropped straight into SwiftUI content.
 ///

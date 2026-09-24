@@ -1,204 +1,123 @@
-# Adaptive Nav Suite
+# Barz
 
-A small Kotlin Multiplatform sample that shows what "adaptive navigation"
-looks like when each platform uses its **own native, officially-recommended**
-adaptive container — instead of one custom-drawn navigation bar reused as-is
-on every OS.
+Adaptive navigation chrome for Compose Multiplatform. One list of destinations; a bottom bar, a
+navigation rail or a permanent drawer depending on the window — and a genuinely native `TabView` on
+iOS rather than an imitation of one.
 
-It's inspired by
-[narendraanjana09/adaptive-navigation-bar](https://github.com/narendraanjana09/adaptive-navigation-bar),
-which shares a single Compose Multiplatform UI (including the nav bar itself)
-between Android and iOS. This project takes the opposite approach for the
-navigation chrome specifically:
-
-- **Android** uses Material 3's
-  [`NavigationSuiteScaffold`](https://developer.android.com/develop/adaptive-apps/guides/build-adaptive-navigation),
-  which switches between a bottom `NavigationBar`, a `NavigationRail`, and a
-  permanent `NavigationDrawer` as the window size class changes — the pattern
-  Android's own adaptive-navigation guide recommends.
-- **iOS / iPadOS** uses SwiftUI's system `TabView` with
-  `.tabViewStyle(.sidebarAdaptable)`, which shows a bottom tab bar on iPhone
-  and promotes the same tabs to a top bar / sidebar on iPad, per Apple's
-  [Human Interface Guidelines for tab bars](https://developer.apple.com/documentation/human-interface-guidelines/tab-bars).
-  Using a real system container (rather than a hand-rolled one) is also what
-  keeps this app ready for **iPhone Duo** — see
-  [below](#iphone-duo-readiness).
-
-Only the *domain model and content* are shared in Kotlin; each platform's
-navigation UI is 100% native to that platform.
-
-## Architecture
-
-```
-adaptive-nav-suite/
-├── shared/      KMP module. Domain model (AppDestination), demo content
-│                (DestinationContent), and the shared Compose Multiplatform
-│                screen (ui/DestinationScreen.kt). Consumed by both apps.
-├── androidApp/  Jetpack Compose app. NavigationSuiteScaffold +
-│                Material 3 theming.
-└── iosApp/      SwiftUI app (Xcode project). TabView(.sidebarAdaptable) +
-                 NavigationStack, consuming `shared` as an
-                 Objective-C/Swift framework (AdaptiveNavSuiteKit).
+```kotlin
+implementation("dev.parez.barz:barz:0.1.0")
 ```
 
-`shared` owns the screen *content* (Compose Multiplatform) but deliberately
-contains **no navigation chrome** — that is where the platforms diverge. It
-also keeps icons framework-agnostic, exposing only string keys that each
-platform maps to its own icon type. It exposes:
+| Target | Chrome |
+|---|---|
+| Android | Material 3 bar / rail / drawer |
+| Desktop (JVM) | same, tracking the window as you resize it |
+| Web (Wasm, JS) | same, tracking the browser viewport |
+| iOS | SwiftUI `TabView` via the companion Swift package, or a Compose-drawn bar |
 
-- `AppDestination`: an enum of the four demo destinations (Home, Favorites,
-  Shopping, Profile), each carrying a Material icon name pair (outline /
-  filled), an SF Symbols name for iOS, and a content-description string.
-- `DestinationContent`: headline/body copy per destination. The UI renders no
-  text at all (see below), so these now serve as the accessibility labels the
-  screens are announced with.
-- `DemoCatalog`: the mock items each destination lists, each carrying an
-  `artSeed` that deterministically generates its artwork.
-- `allAppDestinations()`: a Swift-friendly top-level function returning
-  `List<AppDestination>` (Kotlin `List` bridges directly to a Swift `[T]`).
+## Use it
 
-Each platform's app then builds its **own native navigation container**
-around that shared model.
+```kotlin
+val items = listOf(
+    NavigationItem(title = "Home",      icon = Res.drawable.ic_home,     systemIcon = "house"),
+    NavigationItem(title = "Favorites", icon = Res.drawable.ic_favorite, systemIcon = "heart", badge = "3"),
+    NavigationItem(title = "Profile",   icon = Res.drawable.ic_person,   systemIcon = "person.crop.circle"),
+)
 
-### Android: `NavigationSuiteScaffold`
+var selected by rememberSaveable { mutableIntStateOf(0) }
 
-`androidApp/src/main/kotlin/.../ui/AdaptiveNavApp.kt` wraps content in a
-`NavigationSuiteScaffold`, iterating `AppDestination.entries` for nav items.
-It also overrides the suite type so a permanent `NavigationDrawer` (with
-labels) is forced at the **large** width breakpoint (1200dp) — desktop-sized
-windows and large tablets. The default calculated type is used below that
-(bottom bar on compact, rail on medium and expanded).
+AdaptiveNavigationScaffold(
+    items = items,
+    selectedIndex = selected,
+    onItemSelected = { selected = it },
+) {
+    CurrentScreen(selected)
+}
+```
 
-Two guards are worth noting, both of which the naive "drawer at expanded"
-version gets wrong:
+Want just a bottom bar, in your own `Scaffold`? Use `AdaptiveNavigationBar` instead — same
+parameters, no adaptation. Want the decision without the container? `rememberNavigationMode(config)`
+returns the `NavigationMode` and leaves the rendering to you.
 
-- **Height.** A phone in landscape is wide (~891dp) but short (~411dp), and
-  `NavigationSuiteScaffoldDefaults` deliberately sends that case to a bottom
-  bar. A width-only override hands a 411dp-tall window a permanent drawer.
-- **Width.** A permanent drawer is roughly 40% of an unfolded foldable's
-  width. That is affordable when the content is one pane, but this app's
-  content is itself a list-detail layout, and the drawer squeezes it until the
-  Favorites grid collapses to a single column. Above 1200dp there is room for
-  both; below it, the rail is the better trade.
+If your icons are `ImageVector`s rather than Compose resources, `AdaptiveNavigationBar` has an
+overload taking `icon: (index, selected) -> ImageVector`.
 
-### Adaptive content, not just adaptive chrome
+## Configure it
 
-The screen content is a `ListDetailPaneScaffold` (from the multiplatform
-`org.jetbrains.compose.material3.adaptive` artifacts, so Android and iOS share
-one implementation). It is a second, independent axis of adaptation: an
-unfolded foldable gets a navigation rail *and* two content panes, each decided
-separately. The detail pane stays collapsed until a row is selected, and only
-one detail is ever open — selecting another row replaces it rather than
-stacking, so Back always returns straight to the list.
+```kotlin
+val config = AdaptiveNavigationBarDefaults.config(
+    // Phones stay on a bottom bar no matter how the window is resized.
+    android = AdaptiveNavigationConfig(allowedModes = setOf(NavigationMode.BottomBar)),
+    // Desktop goes straight to a drawer.
+    desktop = AdaptiveNavigationConfig(allowedModes = setOf(NavigationMode.Drawer)),
+    // Everywhere else: default behaviour, but promote to a rail sooner.
+    default = AdaptiveNavigationConfig(
+        breakpoints = NavigationBreakpoints(railFromWidthDp = 520),
+    ),
+)
+```
 
-`Profile` deliberately opts out and renders a single-pane settings layout,
-which makes the point that the navigation chrome adapts regardless of what
-layout a given screen chooses.
+Only the override matching the running platform is consulted, so this is safe to write in
+`commonMain` with no `expect`/`actual` of your own. `allowedModes` clamps rather than throws — a
+config that permits only a drawer still renders a drawer on a phone.
 
-### Shapes, not copy
+### Why the drawer waits until 1200dp
 
-Every label in the content is a placeholder shape, and the imagery is
-generated from each item's seed with colors taken entirely from
-`MaterialTheme.colorScheme` — so it follows light/dark and Material You with
-no fixed colors anywhere. The point is that nothing competes with the
-navigation chrome for attention. The real strings are still attached as
-semantics, so the screens remain legible to a screen reader.
+The Material default promotes to a drawer at the 840dp "expanded" breakpoint. Barz waits for 1200dp,
+because a permanent drawer takes roughly 40% of an unfolded foldable's width. That is affordable
+when your content is one pane and ruinous when it has its own multi-pane layout. Move it with
+`NavigationBreakpoints(drawerFromWidthDp = 840)` if you disagree.
 
-Verified live on a `Pixel_10_Pro_Fold` emulator: folded/compact width shows a
-bottom `NavigationBar` and a single content pane; unfolded shows a
-`NavigationRail` alongside a two-pane list-detail layout. Tapping a
-destination swaps the Material icon to its filled variant.
+There is also a height guard: a phone in landscape is ~891dp wide but only ~411dp tall, and a rail
+or drawer there wastes the height that is left. Below `minHeightDp` you always get a bottom bar.
 
-### iOS: `TabView(.sidebarAdaptable)` + `NavigationStack`
+## iOS
 
-`iosApp/iosApp/RootView.swift` drives a `TabView(selection:)` over
-`AppDestinationKt.allAppDestinations()`, using the iOS 18+ `Tab(title,
-systemImage:, value:)` API and `.tabViewStyle(.sidebarAdaptable)`. Each tab
-hosts a `NavigationStack` wrapping `DestinationDetailView`, which reads
-`DestinationContent.shared.headline(destination:)` /
-`.body(destination:)` — the same shared object the Android app uses.
+Two options, chosen with `IosOptions.chrome`:
 
-Verified by building with `xcodebuild` and running on both an iPhone 17
-simulator (bottom tab bar) and an iPad Pro 11" (M5) simulator (top tab bar
-with a sidebar-toggle button) — confirming the same `TabView` adapts its
-presentation per idiom automatically, with no per-device code.
-
-#### iPhone Duo readiness
-
-Duo support landed in **Xcode 27.1**, which is also the first release with an
-`iPhone Duo` simulator (it requires the iOS 27.1 runtime specifically — the
-iOS 27.2 beta runtime lists the Duo's `iPhone19,4` in `unsupportedDeviceTypes`
-and refuses to pair with it). Verified against the SDKs on hand:
-`axisBehavior` is absent from iOS 26.5 and iOS 27.0, and present from 27.1.
-
-Note what that API actually is: it extends `ToolbarContent` /
-`CustomizableToolbarContent`, **not** `TabView` or `View` —
+**`IosChrome.NativeTabView`** (default) — the companion Swift package renders a real SwiftUI
+`TabView`. Liquid Glass, sidebar promotion on iPad and the placement iPhone Duo introduces are
+genuine system behaviour, because they come from a real system container. Add it alongside the
+Gradle dependency:
 
 ```swift
-func axisBehavior(_ behavior: ToolbarItemAxisBehavior) -> some ToolbarContent
-// ToolbarItemAxisBehavior: .automatic | .horizontalOnly | .verticalPreferred
+.package(url: "https://github.com/jipariz/barz", from: "0.1.0")
 ```
 
-so it tunes individual toolbar items rather than opting a container into Duo
-layout. This app has no toolbar items, so there is nothing here for it to
-apply to. The Duo geometry APIs live in UIKit instead —
-`UIView.reservedRegionsOfKind:` (hinge divisions and camera occlusions),
-`UIHinge` (`status`, `angle`), and `UIHingeInteraction`.
+```swift
+BarzTabView(items: items, selection: $selected) { item in
+    NavigationStack { ComposeScreen(id: item.id) }
+}
+```
 
-The guidance is explicit that **only real system containers pick up Duo
-behavior automatically**; custom, hand-drawn navigation bars do not. That's
-why this project deliberately avoids a Compose-drawn / hand-rolled nav bar on
-iOS (unlike the reference project, which hosts a shared Compose
-`UIViewController` for its entire UI) and instead builds on `TabView` +
-`NavigationStack` — the same containers Apple's guidance names as
-Duo-adaptive, and which adapt without any opt-in modifier.
+**`IosChrome.ComposeGlass`** — a bar drawn in Compose. One dependency, no Swift, but it only
+*imitates* the system material and gets none of the automatic behaviours above.
 
-One caveat this project has **not** yet addressed: Apple's guidance calls out
-asymmetrical safe areas and reserved regions across the hinge.
-`DestinationDetailView` applies `.ignoresSafeArea()` and hands the full window
-to Compose, and `DestinationScreen` consumes no insets of its own — so content
-would lay out straight across a fold. Because the Compose screen is hosted in
-a `UIViewController`, the fix belongs on the UIKit side: read
-`reservedRegionsOfKind:` there and pass the insets down into Compose.
+> **On `liquidGlass`.** This flag is not a true system opt-out. The only real switch is the
+> app-level `UIDesignRequiresCompatibility` key in `Info.plist`, which no library can set on your
+> behalf. The flag chooses between the system material and an explicitly opaque bar background.
 
-## Requirements
+## Platform notes
 
-- JDK 21
-- Android SDK (`compileSdk`/`targetSdk` 37, `minSdk` 24) — see
-  `local.properties` for the `sdk.dir` used locally
-- Xcode 16+ (iOS 18+ deployment target, required for the `Tab`/
-  `.sidebarAdaptable` APIs)
-- Gradle 9.6+ (the wrapper handles this automatically)
+Foldable posture (`isTabletop`) is reported on Android only — every other Compose Multiplatform
+target returns a default `Posture()`. Window *size* is live everywhere, including desktop window
+drags and browser resizes.
 
-## Building & running
+`iosX64` (the Intel-Mac simulator) is not published. Apple has wound Intel Macs down and several
+Compose Multiplatform artifacts have already stopped shipping that variant.
 
-### Android
+## Building this repo
 
 ```sh
-./gradlew :androidApp:assembleDebug
-# or, with a running emulator/device:
-./gradlew :androidApp:installDebug
+./gradlew :barz:allTests              # jvm, android host, iOS simulator
+./gradlew :barz:publishToMavenLocal
+./gradlew :sample:androidApp:installDebug
 ```
 
-### iOS
+Web targets are compile-verified rather than tested: Karma needs a local Chrome, and Node cannot
+host them either because Compose's web runtime loads Skiko's `.wasm` over XHR. The logic under test
+is `commonMain` and is covered by the three runs above.
 
-The Xcode project's "Compile Kotlin Framework" build phase runs
-`./gradlew :shared:embedAndSignAppleFrameworkForXcode` automatically, so no
-manual Gradle step is needed first — just open and build/run from Xcode:
+## Licence
 
-```sh
-open iosApp/iosApp.xcodeproj
-# or from the command line:
-cd iosApp
-xcodebuild -project iosApp.xcodeproj -scheme iosApp \
-  -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' build
-```
-
-### Shared module tests
-
-```sh
-./gradlew :shared:build
-```
-
-Runs `AppDestinationTest` on both the Android host-test target and the iOS
-simulator test target.
+Apache 2.0. See [LICENSE](LICENSE).

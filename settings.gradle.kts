@@ -1,4 +1,4 @@
-rootProject.name = "adaptive-nav-suite"
+rootProject.name = "barz-sdk"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -28,5 +28,6 @@ dependencyResolutionManagement {
     }
 }
 
-include(":shared")
-include(":androidApp")
+include(":barz")
+include(":sample:shared")
+include(":sample:androidApp")

@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Fail early with a readable message rather than part-way through an upload.
+      # Secrets go through env, not shell interpolation, and the checks use `if` because
+      # GitHub runs steps under `bash -e`: a bare `[ -z "$x" ] && ...` returns 1 when the
+      # variable IS set, which would fail the step exactly when everything is fine.
+      - name: Check credentials are configured
+        env:
+          CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+        run: |
+          missing=""
+          if [ -z "$CENTRAL_USERNAME" ]; then missing="$missing MAVEN_CENTRAL_USERNAME"; fi
+          if [ -z "$CENTRAL_PASSWORD" ]; then missing="$missing MAVEN_CENTRAL_PASSWORD"; fi
+          if [ -z "$SIGNING_KEY" ]; then missing="$missing SIGNING_IN_MEMORY_KEY"; fi
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secrets:$missing"
+            exit 1
+          fi
+          echo "All release credentials present."
+
+      - name: Publish to Maven Central
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache -Dorg.gradle.workers.max=4
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          # In-memory ASCII-armored key. useGpgCmd() is not configuration-cache compatible.
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}

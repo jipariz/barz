@@ -1,4 +1,4 @@
-import AdaptiveNavSuiteKit
+import BarzSample
 import SwiftUI
 
 /// `AppDestination` comes from the shared Kotlin Multiplatform module. Its `id: String` property

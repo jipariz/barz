@@ -35,3 +35,11 @@ Pods/
 *.ipa
 *.dSYM.zip
 *.dSYM
+
+## Signing / credentials
+*.gpg
+*.asc
+secring.*
+*.jks
+*.keystore
+**/credentials*.properties

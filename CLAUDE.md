@@ -2,92 +2,88 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## What this project is
+## What this is
 
-A KMP sample (`adaptive-nav-suite`) demonstrating one specific thesis: **screen content is shared
-Compose Multiplatform; navigation chrome is 100% native per platform.** Android wraps the shared
-screen in Material 3 `NavigationSuiteScaffold`; iOS wraps it in SwiftUI `TabView(.sidebarAdaptable)`
-+ `NavigationStack`. See README.md for the full rationale and the iPhone Duo argument.
+**Barz** — a published Compose Multiplatform SDK providing adaptive navigation chrome (bottom bar /
+rail / drawer), plus a Swift companion package for native iOS chrome, plus a sample app.
 
-The load-bearing constraint: **never replace the native nav containers with a Compose-drawn or
-hand-rolled nav bar on iOS.** Apple's iPhone Duo guidance only grants adaptive placement to real
-system containers. The whole point of the repo is lost if `RootView.swift`'s `TabView` becomes a
-Compose surface.
+```
+:barz                 the published SDK. android, jvm, js, wasmJs, iosArm64, iosSimulatorArm64
+swift/Barz/           Swift Package — SwiftUI TabView for iOS
+:sample:shared        demo content (shapes UI, list-detail screens)
+:sample:androidApp    demo app, a consumer of :barz
+iosApp/               demo Xcode project
+```
+
+Coordinates: `dev.parez.barz:barz`. Root project is `barz-sdk`, **not** `barz` — a root and a
+module with the same name collide in type-safe project accessors.
 
 ## Commands
 
 ```sh
-./gradlew :androidApp:assembleDebug            # build Android
-./gradlew :androidApp:installDebug             # install on running emulator/device
-./gradlew :shared:allTests                     # shared tests, all targets
-./gradlew :shared:testAndroidHostTest          # shared tests, JVM host only (fast)
-./gradlew :shared:iosSimulatorArm64Test        # shared tests, iOS sim target
+./gradlew :barz:allTests                    # jvm + androidHostTest + iosSimulatorArm64
+./gradlew :barz:publishToMavenLocal         # verifies the whole publishing setup
+./gradlew :barz:checkKotlinAbi              # fails if the public API changed
+./gradlew :barz:updateKotlinAbi             # accept an intentional API change
+./gradlew :sample:androidApp:installDebug
 ```
 
-Single test: `./gradlew :shared:testAndroidHostTest --tests "*AppDestinationTest.start*"`
+Single test: `./gradlew :barz:jvmTest --tests "*NavigationModeResolverTest.landscape*"`
 
-iOS — the Xcode project has a "Compile Kotlin Framework" build phase that runs
-`:shared:embedAndSignAppleFrameworkForXcode`, so no manual Gradle step first:
-
-```sh
-open iosApp/iosApp.xcodeproj
-xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp \
-  -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' build
-```
-
-No linter/formatter is configured. Gradle configuration cache and build cache are on
-(`gradle.properties`); workers are capped at 2.
+iOS: `open iosApp/iosApp.xcodeproj` — the "Compile Kotlin Framework" phase runs
+`:sample:shared:embedAndSignAppleFrameworkForXcode`, so no manual Gradle step.
 
 ## Architecture
 
-```
-shared/     KMP module. commonMain: AppDestination (enum), DestinationContent,
-            ui/DestinationScreen.kt (Compose Multiplatform). iosMain:
-            MainViewController.kt exposes destinationViewController() via
-            ComposeUIViewController. Built as static framework AdaptiveNavSuiteKit.
-androidApp/ Compose app. AdaptiveNavApp.kt = NavigationSuiteScaffold + shared screen.
-iosApp/     SwiftUI app. RootView.swift = TabView; DestinationDetailView.swift wraps
-            the Compose controller in UIViewControllerRepresentable.
-```
+**The SDK is deliberately thin.** Its whole substance is `rememberNavigationMode` in
+`NavigationModeResolver.kt`, which maps window size to a `NavigationMode`. Everything else wraps it:
+`AdaptiveNavigationScaffold` feeds it to `NavigationSuiteScaffold`, `AdaptiveNavigationBar` ignores
+it and always draws a bottom bar.
 
-**Icon indirection.** `AppDestination` carries *string* icon keys (`materialIconName`,
-`systemImageName`) rather than platform icon types, so `shared` stays framework-agnostic on icons.
-`androidApp/.../ui/icons/DestinationIcons.kt` maps those keys to `ImageVector` via two maps and
-**throws at runtime** on an unmapped key. Adding a destination therefore means touching three
-places: the enum, `DestinationContent`'s two `when` blocks (exhaustive, so the compiler catches
-those), and both maps in `DestinationIcons.kt` (the compiler does *not*). iOS needs no change —
-SF Symbol names pass straight through.
+`resolveNavigationMode` is a **pure function**, separate from the composable, so all its tests run
+without a Compose runtime. Keep that split — it is why the test suite is cheap.
 
-**Swift bridging.** `allAppDestinations()` is a top-level function returning `List<AppDestination>`
-because `EnumEntries` doesn't bridge cleanly; Swift sees `[AppDestination]`. Kotlin enums already
-bridge as `Hashable` — adding a `Hashable` extension in Swift conflicts with the inherited
-conformance. `Identifiable` is added retroactively using the shared `id: String`.
+**Two non-obvious breakpoint rules, both load-bearing:**
+- Drawer waits for 1200dp, not Material's 840dp "expanded". A permanent drawer takes ~40% of an
+  unfolded foldable's width and starves multi-pane content.
+- A minimum *height* is required for rail/drawer. A landscape phone is ~891dp wide but ~411dp tall;
+  width alone would wrongly promote it.
 
-**Android nav-type override.** `AdaptiveNavApp` forces `NavigationSuiteType.NavigationDrawer` at
-the expanded width breakpoint and defers to `NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo`
-below it (bottom bar → rail). That override is deliberate, per Android's adaptive-navigation guide.
+**Icons have two paths.** `NavigationItem.icon` (a `DrawableResource`) or an `icon` composable slot
+on the container. Exactly one must be supplied; `NavigationItemIcon` throws a named error otherwise,
+deliberately, because a missing icon would otherwise be an invisible tap target. The sample uses the
+slot — see the AGP note below.
 
-## Dependencies
-
-All versions live in `gradle/libs.versions.toml`. `androidApp` pulls AndroidX Compose artifacts as
-unversioned strings governed by the Compose BOM; `shared` uses the JetBrains Compose Multiplatform
-artifacts (a separate version line, `composeMultiplatform` / `composeMultiplatformMaterial3`). Bump
-the right one — they are not interchangeable.
-
-Requires JDK 21, Xcode 16+ (iOS 18+ for `Tab` / `.sidebarAdaptable`), Android compileSdk/targetSdk 37,
-minSdk 24.
+**iOS has two chrome options** via `IosOptions.chrome`: `NativeTabView` (the Swift package, real
+Liquid Glass and Duo-readiness) or `ComposeGlass` (Compose-drawn, imitation). `liquidGlass` is *not*
+a true system opt-out — the only real switch is the app-level `UIDesignRequiresCompatibility`
+Info.plist key, which no library can set.
 
 ## Gotchas
 
-`AdaptiveNavApp`'s drawer override guards on **both** width and height. Width alone
-promotes a landscape phone (891x411dp) to a permanent drawer, which is exactly the case
-`NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo` sends to a bottom bar. Keep the
-height guard if you touch that logic.
+**Dependency versions are pinned for target-availability reasons, not taste.** Compose Multiplatform
+artifacts periodically drop target variants. `adaptive` stays on stable 1.2.0 — the 1.3.0 line is
+beta-only on the JetBrains side, and an SDK should not ship a beta transitive. Before bumping
+anything, check the target list in
+`~/.gradle/caches/modules-2/metadata-2.107/descriptors/<group>/<artifact>/<version>/*/descriptor.bin`
+— it is more reliable than the downloaded filenames in `files-2.1`.
 
-`material3-adaptive-navigation-suite` has **no version** in the catalog on purpose — the
-Compose BOM governs it, and Gradle resolves conflicts to the highest version, so an explicit
-pin there is silently ignored. Change the BOM, not the catalog.
+**`iosX64` is intentionally absent.** Intel simulators are end-of-life and several artifacts no
+longer publish a `uikitX64` variant.
 
-iPhone Duo work needs Xcode 27.1 **and** the iOS 27.1 runtime; the 27.2 beta runtime
-blacklists the Duo's `iPhone19,4`. Pose/fold control is GUI-only (Xcode Device Hub) — there
-is no `simctl` equivalent.
+**Web targets are compile-verified, not tested.** Karma needs a local Chrome, and Node cannot host
+them because Compose's web runtime loads Skiko's `.wasm` over XHR. Both browser test tasks are
+explicitly disabled. The logic under test is `commonMain` and covered by the other three runs.
+
+**AGP's `com.android.kotlin.multiplatform.library` does not merge a KMP library's Compose resources
+into a consuming app's assets.** The sample crashed with `MissingResourceException` and zero
+`composeResources` entries in the APK; that is why it uses the icon slot rather than `Res.drawable`.
+The SDK's `painterResource` path itself is correct.
+
+**`currentWindowAdaptiveInfoV2` does not exist in adaptive 1.2.0** (it arrived in 1.3.0). The SDK
+reads `LocalWindowInfo.containerSize` directly instead — which is also what makes configurable
+breakpoints possible, since the window size class quantises to fixed buckets.
+
+**Signing must use in-memory keys.** `org.gradle.configuration-cache=true` is on and
+`signing.useGpgCmd()` is not compatible with it. Publishing is gated on `signingInMemoryKey` being
+present, so local builds work without credentials.
