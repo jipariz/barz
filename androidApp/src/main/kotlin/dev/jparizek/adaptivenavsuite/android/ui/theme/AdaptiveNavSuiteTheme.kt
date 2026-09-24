@@ -7,7 +7,10 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
+import dev.jparizek.adaptivenavsuite.ui.theme.AppSpacing
+import dev.jparizek.adaptivenavsuite.ui.theme.LocalAppSpacing
 import android.os.Build
 
 /**
@@ -29,8 +32,13 @@ fun AdaptiveNavSuiteTheme(
         else -> lightColorScheme()
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        content = content,
-    )
+    // Provides the same spacing scale the shared composables expect. Android keeps its own
+    // MaterialTheme rather than using the shared AppTheme so it can offer Material You dynamic
+    // color — the visible platform difference is the point of the demo.
+    CompositionLocalProvider(LocalAppSpacing provides AppSpacing) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            content = content,
+        )
+    }
 }

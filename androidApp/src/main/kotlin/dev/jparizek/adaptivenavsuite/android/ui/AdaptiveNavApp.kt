@@ -1,6 +1,7 @@
 package dev.jparizek.adaptivenavsuite.android.ui
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
@@ -14,11 +15,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.window.core.layout.WindowSizeClass.Companion.HEIGHT_DP_MEDIUM_LOWER_BOUND
-import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND
+import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_LARGE_LOWER_BOUND
 import dev.jparizek.adaptivenavsuite.AppDestination
+import dev.jparizek.adaptivenavsuite.DemoCatalog
 import dev.jparizek.adaptivenavsuite.android.ui.icons.icon
 import dev.jparizek.adaptivenavsuite.android.ui.theme.AdaptiveNavSuiteTheme
 import dev.jparizek.adaptivenavsuite.ui.DestinationScreen
+import dev.jparizek.adaptivenavsuite.ui.ItemDetailPane
 
 /**
  * Root composable — the Android half of the "adaptive navigation" story.
@@ -40,12 +43,18 @@ fun AdaptiveNavApp() {
 
     val adaptiveInfo = currentWindowAdaptiveInfoV2()
     val navSuiteType = with(adaptiveInfo) {
-        // Width alone isn't enough: a phone in landscape is wide (~891dp) but short (~411dp).
-        // NavigationSuiteScaffoldDefaults would give it a bottom bar for exactly that reason, so
-        // the drawer override has to respect the same compact-height guard or it hands a 411dp-tall
-        // window a permanent drawer.
+        // Two guards on the drawer override.
+        //
+        // Width: LARGE (1200dp), not EXPANDED (840dp). A permanent drawer is ~40% of an unfolded
+        // foldable's width, which leaves the content's own list-detail layout too little room —
+        // the Favorites grid collapses to a single column. Below 1200dp the rail is the better
+        // trade, and the defaults already pick it.
+        //
+        // Height: a phone in landscape is wide (~891dp) but short (~411dp), and
+        // NavigationSuiteScaffoldDefaults sends exactly that case to a bottom bar. Without this
+        // the override would hand a 411dp-tall window a permanent drawer.
         if (
-            windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_EXPANDED_LOWER_BOUND) &&
+            windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_LARGE_LOWER_BOUND) &&
             windowSizeClass.isHeightAtLeastBreakpoint(HEIGHT_DP_MEDIUM_LOWER_BOUND)
         ) {
             NavigationSuiteType.NavigationDrawer
@@ -85,8 +94,11 @@ fun AdaptiveNavApp() {
  * `@PreviewScreenSizes` spans phone (compact width) / foldable (medium) / tablet + desktop
  * (expanded), which is exactly the three nav treatments: bottom `NavigationBar`, `NavigationRail`,
  * and the permanent `NavigationDrawer` forced above the expanded breakpoint. This works because
- * `currentWindowAdaptiveInfo()` derives the size class from `LocalWindowInfo.containerSize`, which
- * the preview canvas populates from the device spec — no fake window plumbing needed.
+ * `currentWindowAdaptiveInfoV2()` derives the size class from `LocalWindowInfo.containerSize`,
+ * which the preview canvas populates from the device spec — no fake window plumbing needed.
+ *
+ * It now also covers the second adaptive axis for free: the shared `ListDetailPaneScaffold` inside
+ * the content slot collapses to one pane on the phone specs and splits into two on the wide ones.
  */
 @PreviewScreenSizes
 @PreviewLightDark
@@ -94,5 +106,24 @@ fun AdaptiveNavApp() {
 private fun AdaptiveNavAppPreview() {
     AdaptiveNavSuiteTheme(dynamicColor = false) {
         AdaptiveNavApp()
+    }
+}
+
+/**
+ * The detail pane on its own, to check the generated artwork in both color schemes — the art is
+ * built entirely from `MaterialTheme.colorScheme`, so light and dark are genuinely different
+ * renderings rather than the same image on a different background.
+ */
+@PreviewLightDark
+@Composable
+private fun ItemDetailPanePreview() {
+    AdaptiveNavSuiteTheme(dynamicColor = false) {
+        Surface {
+            ItemDetailPane(
+                item = DemoCatalog.items(AppDestination.HOME).first(),
+                showBack = true,
+                onBack = {},
+            )
+        }
     }
 }

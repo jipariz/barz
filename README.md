@@ -49,9 +49,11 @@ platform maps to its own icon type. It exposes:
 - `AppDestination`: an enum of the four demo destinations (Home, Favorites,
   Shopping, Profile), each carrying a Material icon name pair (outline /
   filled), an SF Symbols name for iOS, and a content-description string.
-- `DestinationContent`: headline/body copy per destination (used to prove the
-  same shared code path drives both platforms' content, not just their nav
-  chrome).
+- `DestinationContent`: headline/body copy per destination. The UI renders no
+  text at all (see below), so these now serve as the accessibility labels the
+  screens are announced with.
+- `DemoCatalog`: the mock items each destination lists, each carrying an
+  `artSeed` that deterministically generates its artwork.
 - `allAppDestinations()`: a Swift-friendly top-level function returning
   `List<AppDestination>` (Kotlin `List` bridges directly to a Swift `[T]`).
 
@@ -63,14 +65,49 @@ around that shared model.
 `androidApp/src/main/kotlin/.../ui/AdaptiveNavApp.kt` wraps content in a
 `NavigationSuiteScaffold`, iterating `AppDestination.entries` for nav items.
 It also overrides the suite type so a permanent `NavigationDrawer` (with
-labels) is forced at the "expanded" width breakpoint, per the customization
-snippet in Android's own adaptive-navigation guide — the default calculated
-type is used below that breakpoint (bottom bar on compact, rail on medium).
+labels) is forced at the **large** width breakpoint (1200dp) — desktop-sized
+windows and large tablets. The default calculated type is used below that
+(bottom bar on compact, rail on medium and expanded).
+
+Two guards are worth noting, both of which the naive "drawer at expanded"
+version gets wrong:
+
+- **Height.** A phone in landscape is wide (~891dp) but short (~411dp), and
+  `NavigationSuiteScaffoldDefaults` deliberately sends that case to a bottom
+  bar. A width-only override hands a 411dp-tall window a permanent drawer.
+- **Width.** A permanent drawer is roughly 40% of an unfolded foldable's
+  width. That is affordable when the content is one pane, but this app's
+  content is itself a list-detail layout, and the drawer squeezes it until the
+  Favorites grid collapses to a single column. Above 1200dp there is room for
+  both; below it, the rail is the better trade.
+
+### Adaptive content, not just adaptive chrome
+
+The screen content is a `ListDetailPaneScaffold` (from the multiplatform
+`org.jetbrains.compose.material3.adaptive` artifacts, so Android and iOS share
+one implementation). It is a second, independent axis of adaptation: an
+unfolded foldable gets a navigation rail *and* two content panes, each decided
+separately. The detail pane stays collapsed until a row is selected, and only
+one detail is ever open — selecting another row replaces it rather than
+stacking, so Back always returns straight to the list.
+
+`Profile` deliberately opts out and renders a single-pane settings layout,
+which makes the point that the navigation chrome adapts regardless of what
+layout a given screen chooses.
+
+### Shapes, not copy
+
+Every label in the content is a placeholder shape, and the imagery is
+generated from each item's seed with colors taken entirely from
+`MaterialTheme.colorScheme` — so it follows light/dark and Material You with
+no fixed colors anywhere. The point is that nothing competes with the
+navigation chrome for attention. The real strings are still attached as
+semantics, so the screens remain legible to a screen reader.
 
 Verified live on a `Pixel_10_Pro_Fold` emulator: folded/compact width shows a
-bottom `NavigationBar`; unfolded/expanded width shows a permanent
-`NavigationDrawer`. Tapping a destination swaps the Material icon to its
-filled variant and updates the body text sourced from `DestinationContent`.
+bottom `NavigationBar` and a single content pane; unfolded shows a
+`NavigationRail` alongside a two-pane list-detail layout. Tapping a
+destination swaps the Material icon to its filled variant.
 
 ### iOS: `TabView(.sidebarAdaptable)` + `NavigationStack`
 
