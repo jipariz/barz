@@ -1,5 +1,6 @@
 // Klib ABI Dump
 // Targets: [iosArm64, iosSimulatorArm64, js, wasmJs]
+// Alias: ios => [iosArm64, iosSimulatorArm64]
 // Rendering settings:
 // - Signature version: 2
 // - Show manifest properties: true
@@ -210,3 +211,6 @@ final fun dev.parez.barz/dev_parez_barz_IosOptions$stableprop_getter(): kotlin/I
 final fun dev.parez.barz/dev_parez_barz_NavigationBreakpoints$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_NavigationBreakpoints$stableprop_getter|dev_parez_barz_NavigationBreakpoints$stableprop_getter(){}[0]
 final fun dev.parez.barz/dev_parez_barz_NavigationItem$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_NavigationItem$stableprop_getter|dev_parez_barz_NavigationItem$stableprop_getter(){}[0]
 final fun dev.parez.barz/rememberNavigationMode(dev.parez.barz/AdaptiveNavigationConfig?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.parez.barz/NavigationMode // dev.parez.barz/rememberNavigationMode|rememberNavigationMode(dev.parez.barz.AdaptiveNavigationConfig?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+
+// Targets: [ios]
+final fun dev.parez.barz/barzTabBarController(kotlin.collections/List<dev.parez.barz/NavigationItem>, dev.parez.barz/IosOptions = ..., kotlin/Function1<kotlin/Int, kotlin/Unit> = ..., kotlin/Function3<kotlin/Int, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>): platform.UIKit/UIViewController // dev.parez.barz/barzTabBarController|barzTabBarController(kotlin.collections.List<dev.parez.barz.NavigationItem>;dev.parez.barz.IosOptions;kotlin.Function1<kotlin.Int,kotlin.Unit>;kotlin.Function3<kotlin.Int,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]

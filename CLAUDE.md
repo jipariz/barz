@@ -9,7 +9,6 @@ rail / drawer), plus a Swift companion package for native iOS chrome, plus a sam
 
 ```
 :barz                 the published SDK. android, jvm, js, wasmJs, iosArm64, iosSimulatorArm64
-swift/Barz/           Swift Package — SwiftUI TabView for iOS
 :sample:shared        demo content (shapes UI, list-detail screens)
 :sample:androidApp    demo app, a consumer of :barz
 iosApp/               demo Xcode project
@@ -54,10 +53,20 @@ on the container. Exactly one must be supplied; `NavigationItemIcon` throws a na
 deliberately, because a missing icon would otherwise be an invisible tap target. The sample uses the
 slot — see the AGP note below.
 
-**iOS has two chrome options** via `IosOptions.chrome`: `NativeTabView` (the Swift package, real
-Liquid Glass and Duo-readiness) or `ComposeGlass` (Compose-drawn, imitation). `liquidGlass` is *not*
-a true system opt-out — the only real switch is the app-level `UIDesignRequiresCompatibility`
-Info.plist key, which no library can set.
+**iOS native chrome is Kotlin, not Swift.** `BarzTabBarController.kt` (iosMain) builds a real
+`UITabBarController` through Kotlin/Native's UIKit bindings, so the SDK stays a single Gradle
+dependency — SwiftUI could not have been shipped inside a Kotlin framework, UIKit can. That is what
+makes Liquid Glass, `UITabBarControllerModeTabSidebar` and Duo-readiness real rather than imitated.
+`IosChrome.ComposeGlass` is the opt-out for teams who want pure Compose.
+
+Two Kotlin/Native interop gotchas in that file: ObjC *category* members (`tabBarItem`) are
+extensions needing an explicit import (`platform.UIKit.setTabBarItem`), and NS_ENUM constants are
+top-level (`UITabBarControllerModeTabSidebar`), not nested under the enum type. Also, UIKit holds
+`delegate` weakly, so the delegate is a field of the controller subclass — drop that and tab
+selection silently stops firing.
+
+`liquidGlass` is *not* a true system opt-out — the only real switch is the app-level
+`UIDesignRequiresCompatibility` Info.plist key, which no library can set.
 
 ## Gotchas
 

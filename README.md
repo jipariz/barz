@@ -13,7 +13,7 @@ implementation("dev.parez.barz:barz:0.1.0")
 | Android | Material 3 bar / rail / drawer |
 | Desktop (JVM) | same, tracking the window as you resize it |
 | Web (Wasm, JS) | same, tracking the browser viewport |
-| iOS | SwiftUI `TabView` via the companion Swift package, or a Compose-drawn bar |
+| iOS | Real `UITabBarController` from Kotlin/UIKit, or a Compose-drawn bar |
 
 ## Use it
 
@@ -73,29 +73,57 @@ or drawer there wastes the height that is left. Below `minHeightDp` you always g
 
 ## iOS
 
-Two options, chosen with `IosOptions.chrome`:
+**One Gradle dependency. No Swift package, no SPM.**
 
-**`IosChrome.NativeTabView`** (default) — the companion Swift package renders a real SwiftUI
-`TabView`. Liquid Glass, sidebar promotion on iPad and the placement iPhone Duo introduces are
-genuine system behaviour, because they come from a real system container. Add it alongside the
-Gradle dependency:
+`barzTabBarController(...)` returns a real `UITabBarController` built from UIKit in Kotlin. Because
+it is a genuine system container, Liquid Glass, the iPad sidebar and the placement iPhone Duo
+introduces are all system behaviour rather than imitations — and because UIKit is fully bound by
+Kotlin/Native (unlike SwiftUI, which cannot be shipped inside a Kotlin framework), none of it costs
+you a second artifact.
 
-```swift
-.package(url: "https://github.com/jipariz/barz", from: "0.1.0")
-```
-
-```swift
-BarzTabView(items: items, selection: $selected) { item in
-    NavigationStack { ComposeScreen(id: item.id) }
+```kotlin
+// iosMain
+fun rootViewController(): UIViewController = barzTabBarController(
+    items = navItems,
+    options = IosOptions(sidebarAdaptable = true, liquidGlass = true),
+) { index ->
+    AppTheme { CurrentScreen(index) }
 }
 ```
 
-**`IosChrome.ComposeGlass`** — a bar drawn in Compose. One dependency, no Swift, but it only
-*imitates* the system material and gets none of the automatic behaviours above.
+Swift's only job is to host it:
+
+```swift
+struct BarzRoot: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        MainViewControllerKt.rootViewController()
+    }
+    func updateUIViewController(_ vc: UIViewController, context: Context) {}
+}
+```
+
+`NavigationItem.systemIcon` is used as the SF Symbol, `badge` becomes the tab's badge value, and
+`contentDescription` its accessibility label.
+
+Prefer to stay entirely in Compose? Set `IosOptions.chrome = IosChrome.ComposeGlass` and use
+`AdaptiveNavigationBar` like any other platform. You lose the automatic system behaviours above —
+that is the whole trade.
 
 > **On `liquidGlass`.** This flag is not a true system opt-out. The only real switch is the
 > app-level `UIDesignRequiresCompatibility` key in `Info.plist`, which no library can set on your
-> behalf. The flag chooses between the system material and an explicitly opaque bar background.
+> behalf. When false, Barz applies an opaque `UITabBarAppearance` — the closest a container can get
+> on its own.
+
+### How many dependencies do I need?
+
+One, on every platform:
+
+```kotlin
+implementation("dev.parez.barz:barz:0.1.0")
+```
+
+It goes in your **shared KMP module**, not in Xcode — your existing
+`embedAndSignAppleFrameworkForXcode` build phase already carries it into the iOS app.
 
 ## Platform notes
 
