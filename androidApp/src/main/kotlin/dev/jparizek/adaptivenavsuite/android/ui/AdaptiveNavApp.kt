@@ -2,7 +2,7 @@ package dev.jparizek.adaptivenavsuite.android.ui
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -13,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.window.core.layout.WindowSizeClass.Companion.HEIGHT_DP_MEDIUM_LOWER_BOUND
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND
 import dev.jparizek.adaptivenavsuite.AppDestination
 import dev.jparizek.adaptivenavsuite.android.ui.icons.icon
@@ -37,9 +38,16 @@ import dev.jparizek.adaptivenavsuite.ui.DestinationScreen
 fun AdaptiveNavApp() {
     var currentDestination by rememberSaveable { mutableStateOf(AppDestination.startDestination) }
 
-    val adaptiveInfo = currentWindowAdaptiveInfo()
+    val adaptiveInfo = currentWindowAdaptiveInfoV2()
     val navSuiteType = with(adaptiveInfo) {
-        if (windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_EXPANDED_LOWER_BOUND)) {
+        // Width alone isn't enough: a phone in landscape is wide (~891dp) but short (~411dp).
+        // NavigationSuiteScaffoldDefaults would give it a bottom bar for exactly that reason, so
+        // the drawer override has to respect the same compact-height guard or it hands a 411dp-tall
+        // window a permanent drawer.
+        if (
+            windowSizeClass.isWidthAtLeastBreakpoint(WIDTH_DP_EXPANDED_LOWER_BOUND) &&
+            windowSizeClass.isHeightAtLeastBreakpoint(HEIGHT_DP_MEDIUM_LOWER_BOUND)
+        ) {
             NavigationSuiteType.NavigationDrawer
         } else {
             NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)

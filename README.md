@@ -31,9 +31,9 @@ navigation UI is 100% native to that platform.
 
 ```
 adaptive-nav-suite/
-├── shared/      Pure-Kotlin KMP module (no Compose dependency).
-│                Domain model (AppDestination) + demo content
-│                (DestinationContent). Consumed natively by both apps.
+├── shared/      KMP module. Domain model (AppDestination), demo content
+│                (DestinationContent), and the shared Compose Multiplatform
+│                screen (ui/DestinationScreen.kt). Consumed by both apps.
 ├── androidApp/  Jetpack Compose app. NavigationSuiteScaffold +
 │                Material 3 theming.
 └── iosApp/      SwiftUI app (Xcode project). TabView(.sidebarAdaptable) +
@@ -41,8 +41,10 @@ adaptive-nav-suite/
                  Objective-C/Swift framework (AdaptiveNavSuiteKit).
 ```
 
-`shared` intentionally has **no UI toolkit dependency** — no Compose, no
-SwiftUI. It only exposes:
+`shared` owns the screen *content* (Compose Multiplatform) but deliberately
+contains **no navigation chrome** — that is where the platforms diverge. It
+also keeps icons framework-agnostic, exposing only string keys that each
+platform maps to its own icon type. It exposes:
 
 - `AppDestination`: an enum of the four demo destinations (Home, Favorites,
   Shopping, Profile), each carrying a Material icon name pair (outline /
@@ -86,12 +88,25 @@ presentation per idiom automatically, with no per-device code.
 
 #### iPhone Duo readiness
 
-Apple's [Preparing your app for iPhone Duo](https://developer.apple.com/documentation/technologyoverviews/preparing-your-app-for-iphone-duo)
-guidance describes a new `.axisBehavior(_:)` toolbar modifier for controlling
-how system containers lay out across the two Duo displays. As of this
-project's Xcode 26.6 / iOS 26.5 SDK, that API does not exist yet (it's
-documented as shipping in a future SDK), so no code references it today —
-doing so would fail to compile.
+Duo support landed in **Xcode 27.1**, which is also the first release with an
+`iPhone Duo` simulator (it requires the iOS 27.1 runtime specifically — the
+iOS 27.2 beta runtime lists the Duo's `iPhone19,4` in `unsupportedDeviceTypes`
+and refuses to pair with it). Verified against the SDKs on hand:
+`axisBehavior` is absent from iOS 26.5 and iOS 27.0, and present from 27.1.
+
+Note what that API actually is: it extends `ToolbarContent` /
+`CustomizableToolbarContent`, **not** `TabView` or `View` —
+
+```swift
+func axisBehavior(_ behavior: ToolbarItemAxisBehavior) -> some ToolbarContent
+// ToolbarItemAxisBehavior: .automatic | .horizontalOnly | .verticalPreferred
+```
+
+so it tunes individual toolbar items rather than opting a container into Duo
+layout. This app has no toolbar items, so there is nothing here for it to
+apply to. The Duo geometry APIs live in UIKit instead —
+`UIView.reservedRegionsOfKind:` (hinge divisions and camera occlusions),
+`UIHinge` (`status`, `angle`), and `UIHingeInteraction`.
 
 The guidance is explicit that **only real system containers pick up Duo
 behavior automatically**; custom, hand-drawn navigation bars do not. That's
@@ -99,9 +114,15 @@ why this project deliberately avoids a Compose-drawn / hand-rolled nav bar on
 iOS (unlike the reference project, which hosts a shared Compose
 `UIViewController` for its entire UI) and instead builds on `TabView` +
 `NavigationStack` — the same containers Apple's guidance names as
-Duo-adaptive. Once building against an SDK that ships `.axisBehavior(_:)`,
-adopting Duo-specific layout should only require adding that modifier to
-`RootView`'s existing `TabView` — no structural rework.
+Duo-adaptive, and which adapt without any opt-in modifier.
+
+One caveat this project has **not** yet addressed: Apple's guidance calls out
+asymmetrical safe areas and reserved regions across the hinge.
+`DestinationDetailView` applies `.ignoresSafeArea()` and hands the full window
+to Compose, and `DestinationScreen` consumes no insets of its own — so content
+would lay out straight across a fold. Because the Compose screen is hosted in
+a `UIViewController`, the fix belongs on the UIKit side: read
+`reservedRegionsOfKind:` there and pass the insets down into Compose.
 
 ## Requirements
 

@@ -15,7 +15,7 @@ import dev.jparizek.adaptivenavsuite.AppDestination
 /**
  * Maps the shared, framework-agnostic icon keys from [AppDestination] to Compose `ImageVector`s.
  * This mapping is the only Android-specific piece of icon knowledge in the app — the shared
- * module never depends on Compose.
+ * module names icons as plain strings and never depends on a Compose icon type.
  */
 private val outlineIcons: Map<String, ImageVector> = mapOf(
     "home_outline" to Icons.Outlined.Home,

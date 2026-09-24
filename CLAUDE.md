@@ -77,8 +77,17 @@ the right one — they are not interchangeable.
 Requires JDK 21, Xcode 16+ (iOS 18+ for `Tab` / `.sidebarAdaptable`), Android compileSdk/targetSdk 37,
 minSdk 24.
 
-## Note on README.md
+## Gotchas
 
-README.md's Architecture section still claims `shared` has "no UI toolkit dependency — no Compose".
-That is stale: `shared` depends on Compose Multiplatform and hosts `DestinationScreen`. The
-no-Compose rule now applies only to *navigation chrome*, not to the module.
+`AdaptiveNavApp`'s drawer override guards on **both** width and height. Width alone
+promotes a landscape phone (891x411dp) to a permanent drawer, which is exactly the case
+`NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo` sends to a bottom bar. Keep the
+height guard if you touch that logic.
+
+`material3-adaptive-navigation-suite` has **no version** in the catalog on purpose — the
+Compose BOM governs it, and Gradle resolves conflicts to the highest version, so an explicit
+pin there is silently ignored. Change the BOM, not the catalog.
+
+iPhone Duo work needs Xcode 27.1 **and** the iOS 27.1 runtime; the 27.2 beta runtime
+blacklists the Duo's `iPhone19,4`. Pose/fold control is GUI-only (Xcode Device Hub) — there
+is no `simctl` equivalent.
