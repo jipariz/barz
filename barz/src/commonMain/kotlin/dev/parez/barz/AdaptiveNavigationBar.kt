@@ -2,19 +2,22 @@ package dev.parez.barz
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
@@ -47,11 +50,27 @@ fun AdaptiveNavigationBar(
     modifier: Modifier = Modifier,
     config: AdaptiveNavigationConfig = AdaptiveNavigationConfig(),
     icon: (@Composable (index: Int, selected: Boolean) -> Unit)? = null,
+    iosFab: IosFabItem? = null,
+    onIosFabClick: () -> Unit = {},
+    fabIcon: (@Composable () -> Unit)? = null,
     colors: AdaptiveNavigationBarColors = AdaptiveNavigationBarDefaults.colors(),
 ) {
-    val glass = currentPlatform == BarzPlatform.Ios &&
-        config.ios.chrome == IosChrome.ComposeGlass &&
-        config.ios.liquidGlass
+    // Prefer the platform's own bar view: a real UITabBar renders with the genuine system
+    // material, which nothing drawn in Compose can reproduce. Falls through to the Compose bar
+    // everywhere else, and whenever the caller asks for it explicitly.
+    if (supportsNativeBar && config.ios.chrome == IosChrome.NativeTabBar) {
+        NativeIosBar(
+            items = items,
+            selectedIndex = selectedIndex,
+            onItemSelected = onItemSelected,
+            colors = colors,
+            options = config.ios,
+            modifier = modifier.fillMaxWidth().height(config.ios.nativeBarHeight),
+        )
+        return
+    }
+
+    val glass = currentPlatform == BarzPlatform.Ios && config.ios.liquidGlass
     if (glass) {
         // An approximation of the system material, not the real thing — see IosOptions.liquidGlass.
         Surface(
@@ -60,10 +79,12 @@ fun AdaptiveNavigationBar(
             color = colors.containerColor.copy(alpha = 0.72f),
             tonalElevation = 3.dp,
         ) {
-            BarContent(items, selectedIndex, onItemSelected, icon, colors, Color.Transparent)
+            BarWithFab(items, selectedIndex, onItemSelected, icon, colors, Color.Transparent,
+                iosFab, onIosFabClick, fabIcon)
         }
     } else {
-        BarContent(items, selectedIndex, onItemSelected, icon, colors, colors.containerColor, modifier)
+        BarWithFab(items, selectedIndex, onItemSelected, icon, colors, colors.containerColor,
+            iosFab, onIosFabClick, fabIcon, modifier)
     }
 }
 
@@ -88,16 +109,66 @@ fun AdaptiveNavigationBar(
                 onClick = { onItemSelected(index) },
                 enabled = item.enabled,
                 icon = {
-                    ItemBadge(item) {
-                        Icon(
-                            imageVector = icon(index, selected),
-                            contentDescription = item.contentDescription ?: item.title,
-                        )
-                    }
+                    NavigationItemIcon(
+                        item, index, selected,
+                        slot = { i, sel ->
+                            Icon(
+                                imageVector = icon(i, sel),
+                                contentDescription = item.contentDescription ?: item.title,
+                            )
+                        },
+                        badgeContainerColor = colors.badgeContainerColor,
+                        badgeContentColor = colors.badgeContentColor,
+                    )
                 },
                 label = if (item.showLabel) ({ Text(item.title) }) else null,
                 colors = colors.itemColors(),
             )
+        }
+    }
+}
+
+/**
+ * Places the bar and, on iOS only, the prominent action beside it.
+ *
+ * The platform check is here rather than at the call site so shared code can pass an [IosFabItem]
+ * unconditionally and get the right behaviour everywhere.
+ */
+@Composable
+private fun BarWithFab(
+    items: List<NavigationItem>,
+    selectedIndex: Int,
+    onItemSelected: (Int) -> Unit,
+    icon: (@Composable (index: Int, selected: Boolean) -> Unit)?,
+    colors: AdaptiveNavigationBarColors,
+    containerColor: Color,
+    iosFab: IosFabItem?,
+    onIosFabClick: () -> Unit,
+    fabIcon: (@Composable () -> Unit)?,
+    modifier: Modifier = Modifier,
+) {
+    if (iosFab == null || currentPlatform != BarzPlatform.Ios) {
+        BarContent(items, selectedIndex, onItemSelected, icon, colors, containerColor, modifier)
+        return
+    }
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        BarContent(
+            items, selectedIndex, onItemSelected, icon, colors, containerColor,
+            Modifier.weight(1f),
+        )
+        FloatingActionButton(
+            onClick = onIosFabClick,
+            modifier = Modifier.padding(horizontal = 8.dp),
+            containerColor = iosFab.containerColor.takeOrElse { colors.containerColor },
+            contentColor = iosFab.contentColor.takeOrElse { colors.selectedIconColor },
+        ) {
+            when {
+                fabIcon != null -> fabIcon()
+                iosFab.icon != null -> Icon(
+                    painter = painterResource(iosFab.icon),
+                    contentDescription = iosFab.contentDescription ?: iosFab.title,
+                )
+            }
         }
     }
 }
@@ -119,21 +190,17 @@ private fun BarContent(
                 selected = selected,
                 onClick = { onItemSelected(index) },
                 enabled = item.enabled,
-                icon = { ItemBadge(item) { NavigationItemIcon(item, index, selected, icon) } },
+                icon = {
+                    NavigationItemIcon(
+                        item, index, selected, icon,
+                        badgeContainerColor = colors.badgeContainerColor,
+                        badgeContentColor = colors.badgeContentColor,
+                    )
+                },
                 label = if (item.showLabel) ({ Text(item.title) }) else null,
                 colors = colors.itemColors(),
             )
         }
-    }
-}
-
-/** Wraps [content] in a badge when the item asks for one. Text badge wins over the dot. */
-@Composable
-private fun ItemBadge(item: NavigationItem, content: @Composable () -> Unit) {
-    when {
-        item.badge != null -> BadgedBox(badge = { Badge { Text(item.badge) } }) { content() }
-        item.showBadgeDot -> BadgedBox(badge = { Badge() }) { content() }
-        else -> Box { content() }
     }
 }
 

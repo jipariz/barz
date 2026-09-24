@@ -14,7 +14,7 @@ plugins {
 kotlin {
     android {
         namespace = "dev.parez.barz"
-        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        compileSdk = libs.versions.android.library.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
         withHostTestBuilder {}.configure {}
@@ -32,7 +32,7 @@ kotlin {
     // Node cannot host them either because Compose's web runtime loads Skiko's .wasm over XHR.
     // The code under test lives in commonMain and is exercised by the jvm, android and iOS runs,
     // so the web targets are compile-verified rather than untested.
-    js(IR) { browser { testTask { enabled = false } } }
+    js { browser { testTask { enabled = false } } }
 
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs { browser { testTask { enabled = false } } }
@@ -65,6 +65,14 @@ kotlin {
     }
 }
 
+// Compose 1.12 added a check that fails the build when a web target has Compose UI tests but no
+// webpack bundle to load Skiko from. Barz's web test tasks are disabled (see the note on the js
+// target above), so there is nothing for it to guard — and satisfying it would mean declaring an
+// executable binary on a library.
+tasks.matching { it.name.startsWith("checkComposeUiTestConfigurationFor") }.configureEach {
+    enabled = false
+}
+
 mavenPublishing {
     // Coordinates, POM and version come from gradle.properties (GROUP / VERSION_NAME / POM_*).
     configure(
@@ -72,7 +80,6 @@ mavenPublishing {
             // Central requires a javadoc jar; an empty one satisfies it. Dokka would pull
             // rendering artifacts that are not in the local cache, so it stays opt-in.
             javadocJar = JavadocJar.Empty(),
-            sourcesJar = true,
         ),
     )
     publishToMavenCentral()
@@ -85,8 +92,8 @@ mavenPublishing {
 
 @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
 kotlin {
-    abiValidation {
-        // Commit the dump so a change to the public API shows up as a diff in review.
-        enabled.set(true)
-    }
+    // Calling this is what enables ABI validation as of Kotlin 2.4 — the `enabled` property it
+    // used to take was removed. The dump under barz/api/ is committed so a change to the public
+    // API shows up as a diff in review.
+    abiValidation {}
 }

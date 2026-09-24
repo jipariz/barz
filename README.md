@@ -1,11 +1,11 @@
 # Barz
 
 Adaptive navigation chrome for Compose Multiplatform. One list of destinations; a bottom bar, a
-navigation rail or a permanent drawer depending on the window — and a genuinely native `TabView` on
+navigation rail or a permanent drawer depending on the window — and a real `UITabBarController` on
 iOS rather than an imitation of one.
 
 ```kotlin
-implementation("dev.parez.barz:barz:0.1.0")
+implementation("dev.parez.barz:barz:0.1.0-SNAPSHOT")
 ```
 
 | Target | Chrome |
@@ -13,138 +13,122 @@ implementation("dev.parez.barz:barz:0.1.0")
 | Android | Material 3 bar / rail / drawer |
 | Desktop (JVM) | same, tracking the window as you resize it |
 | Web (Wasm, JS) | same, tracking the browser viewport |
-| iOS | Real `UITabBarController` from Kotlin/UIKit, or a Compose-drawn bar |
+| iOS | real `UITabBarController` built from Kotlin/UIKit, or a Compose-drawn bar |
 
-## Use it
+## What it looks like
+
+One `AdaptiveNavigationScaffold`, one list of destinations. Everything below is the same sample app
+on the same code path — only the window changed.
+
+### The three modes
+
+| Bottom bar | Rail | Drawer |
+|---|---|---|
+| under 600dp | 600dp and up | 1200dp and up |
+| ![Bottom bar](docs/images/desktop-bar.png) | ![Rail](docs/images/desktop-rail.png) | ![Drawer](docs/images/desktop-drawer.png) |
+
+### Foldables
+
+Barz holds the drawer back until **1200dp**, not Material's 840dp "expanded". An unfolded Pixel 10
+Pro Fold is 852dp wide — under Material's default that earns a permanent drawer eating ~40% of the
+screen; under Barz it gets a rail, and the content keeps its two panes.
+
+| Folded — 443dp, bottom bar | Unfolded — 852dp, rail |
+|---|---|
+| ![Android folded](docs/images/android-folded.png) | ![Android unfolded](docs/images/android-unfolded.png) |
+
+### iOS, natively
+
+`barzTabBarController` builds a real `UITabBarController`, so the system — not Barz — decides where
+the bar goes. On iPhone it is a Liquid Glass tab bar; on iPad it adapts to a sidebar; on iPhone Duo
+it relocates to the side strip by itself, in both postures.
+
+| iPhone | iPad — sidebar | iPhone Duo, folded | iPhone Duo, open |
+|---|---|---|---|
+| ![iPhone](docs/images/ios-iphone.png) | ![iPad](docs/images/ios-ipad.png) | ![Duo folded](docs/images/ios-duo-folded.png) | ![Duo open](docs/images/ios-duo-open.png) |
+
+### Web
+
+![Web](docs/images/web.png)
+
+> The sample deliberately frosts its own screens so the navigation chrome is the only thing in
+> focus. That blur is the demo's, not the SDK's — see [the sample](#the-sample).
+
+## Quick start
 
 ```kotlin
-val items = listOf(
-    NavigationItem(title = "Home",      icon = Res.drawable.ic_home,     systemIcon = "house"),
-    NavigationItem(title = "Favorites", icon = Res.drawable.ic_favorite, systemIcon = "heart", badge = "3"),
-    NavigationItem(title = "Profile",   icon = Res.drawable.ic_person,   systemIcon = "person.crop.circle"),
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import dev.parez.barz.AdaptiveNavigationScaffold
+import dev.parez.barz.NavigationItem
+
+private val items = listOf(
+    NavigationItem(title = "Home", systemIcon = "house"),
+    NavigationItem(title = "Profile", systemIcon = "person", badge = "3"),
 )
 
-var selected by rememberSaveable { mutableIntStateOf(0) }
-
-AdaptiveNavigationScaffold(
-    items = items,
-    selectedIndex = selected,
-    onItemSelected = { selected = it },
-) {
-    CurrentScreen(selected)
-}
-```
-
-Want just a bottom bar, in your own `Scaffold`? Use `AdaptiveNavigationBar` instead — same
-parameters, no adaptation. Want the decision without the container? `rememberNavigationMode(config)`
-returns the `NavigationMode` and leaves the rendering to you.
-
-If your icons are `ImageVector`s rather than Compose resources, `AdaptiveNavigationBar` has an
-overload taking `icon: (index, selected) -> ImageVector`.
-
-## Configure it
-
-```kotlin
-val config = AdaptiveNavigationBarDefaults.config(
-    // Phones stay on a bottom bar no matter how the window is resized.
-    android = AdaptiveNavigationConfig(allowedModes = setOf(NavigationMode.BottomBar)),
-    // Desktop goes straight to a drawer.
-    desktop = AdaptiveNavigationConfig(allowedModes = setOf(NavigationMode.Drawer)),
-    // Everywhere else: default behaviour, but promote to a rail sooner.
-    default = AdaptiveNavigationConfig(
-        breakpoints = NavigationBreakpoints(railFromWidthDp = 520),
-    ),
-)
-```
-
-Only the override matching the running platform is consulted, so this is safe to write in
-`commonMain` with no `expect`/`actual` of your own. `allowedModes` clamps rather than throws — a
-config that permits only a drawer still renders a drawer on a phone.
-
-### Why the drawer waits until 1200dp
-
-The Material default promotes to a drawer at the 840dp "expanded" breakpoint. Barz waits for 1200dp,
-because a permanent drawer takes roughly 40% of an unfolded foldable's width. That is affordable
-when your content is one pane and ruinous when it has its own multi-pane layout. Move it with
-`NavigationBreakpoints(drawerFromWidthDp = 840)` if you disagree.
-
-There is also a height guard: a phone in landscape is ~891dp wide but only ~411dp tall, and a rail
-or drawer there wastes the height that is left. Below `minHeightDp` you always get a bottom bar.
-
-## iOS
-
-**One Gradle dependency. No Swift package, no SPM.**
-
-`barzTabBarController(...)` returns a real `UITabBarController` built from UIKit in Kotlin. Because
-it is a genuine system container, Liquid Glass, the iPad sidebar and the placement iPhone Duo
-introduces are all system behaviour rather than imitations — and because UIKit is fully bound by
-Kotlin/Native (unlike SwiftUI, which cannot be shipped inside a Kotlin framework), none of it costs
-you a second artifact.
-
-```kotlin
-// iosMain
-fun rootViewController(): UIViewController = barzTabBarController(
-    items = navItems,
-    options = IosOptions(sidebarAdaptable = true, liquidGlass = true),
-) { index ->
-    AppTheme { CurrentScreen(index) }
-}
-```
-
-Swift's only job is to host it:
-
-```swift
-struct BarzRoot: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.rootViewController()
+@Composable
+fun App() {
+    var selected by rememberSaveable { mutableIntStateOf(0) }
+    AdaptiveNavigationScaffold(
+        items = items,
+        selectedIndex = selected,
+        onItemSelected = { selected = it },
+        icon = { index, _ ->
+            Icon(if (index == 0) Icons.Filled.Home else Icons.Filled.Person, null)
+        },
+    ) {
+        Screen(selected)
     }
-    func updateUIViewController(_ vc: UIViewController, context: Context) {}
 }
 ```
 
-`NavigationItem.systemIcon` is used as the SF Symbol, `badge` becomes the tab's badge value, and
-`contentDescription` its accessibility label.
+`systemIcon` is an SF Symbol name used by the iOS chrome; the `icon` slot draws everything else.
+Note it is a **required** parameter that sits after two defaulted ones, so name your arguments.
 
-Prefer to stay entirely in Compose? Set `IosOptions.chrome = IosChrome.ComposeGlass` and use
-`AdaptiveNavigationBar` like any other platform. You lose the automatic system behaviours above —
-that is the whole trade.
+## Documentation
 
-> **On `liquidGlass`.** This flag is not a true system opt-out. The only real switch is the
-> app-level `UIDesignRequiresCompatibility` key in `Info.plist`, which no library can set on your
-> behalf. When false, Barz applies an opaque `UITabBarAppearance` — the closest a container can get
-> on its own.
+- **[Integration guide](docs/integration.md)** — install, the four entry points, icons,
+  breakpoints, per-platform configuration, the `header` and `fab` slots.
+- **[iOS guide](docs/ios.md)** — native chrome, what Liquid Glass actually is and is not, iPad
+  sidebar, iPhone Duo, wiring into an Xcode project.
+- **[API reference](docs/api-reference.md)** — every public declaration, with the limitations.
 
-### How many dependencies do I need?
+## The sample
 
-One, on every platform:
+`sample/` is a Pokédex on [PokéAPI](https://pokeapi.co) with three tabs — Pokemon, Team, Settings —
+running on all five targets from one `commonMain`. It exercises both adaptive axes at once: Barz
+picks the chrome from the window, and *inside* the Pokemon tab a `ListDetailPaneScaffold`
+independently splits into two panes.
 
-```kotlin
-implementation("dev.parez.barz:barz:0.1.0")
+```sh
+./gradlew :sample:androidApp:installDebug
+./gradlew :sample:desktopApp:run                          # drag the window across 600dp and 1200dp
+./gradlew :sample:webApp:wasmJsBrowserDevelopmentRun
+open sample/iosApp/iosApp.xcodeproj
 ```
-
-It goes in your **shared KMP module**, not in Xcode — your existing
-`embedAndSignAppleFrameworkForXcode` build phase already carries it into the iOS app.
-
-## Platform notes
-
-Foldable posture (`isTabletop`) is reported on Android only — every other Compose Multiplatform
-target returns a default `Posture()`. Window *size* is live everywhere, including desktop window
-drags and browser resizes.
-
-`iosX64` (the Intel-Mac simulator) is not published. Apple has wound Intel Macs down and several
-Compose Multiplatform artifacts have already stopped shipping that variant.
 
 ## Building this repo
 
 ```sh
 ./gradlew :barz:allTests              # jvm, android host, iOS simulator
+./gradlew :barz:checkKotlinAbi        # fails if the public API changed
 ./gradlew :barz:publishToMavenLocal
-./gradlew :sample:androidApp:installDebug
 ```
 
 Web targets are compile-verified rather than tested: Karma needs a local Chrome, and Node cannot
 host them either because Compose's web runtime loads Skiko's `.wasm` over XHR. The logic under test
 is `commonMain` and is covered by the three runs above.
+
+`iosX64` (the Intel-Mac simulator) is not published. Apple has wound Intel Macs down and several
+Compose Multiplatform artifacts have already stopped shipping that variant.
 
 ## Licence
 

@@ -2,27 +2,20 @@ package dev.parez.barz.sample
 
 import dev.parez.barz.IosOptions
 import dev.parez.barz.barzTabBarController
-import dev.parez.barz.sample.ui.DestinationScreen
-import dev.parez.barz.sample.ui.theme.AppTheme
 import platform.UIKit.UIViewController
 
 /**
- * The whole iOS app, from Kotlin.
+ * UIViewController entry point consumed by `iosApp/iosApp/ContentView.swift`.
  *
- * [barzTabBarController] returns a real `UITabBarController`, so the tab bar is a genuine system
- * container — Liquid Glass, the iPad sidebar and iPhone Duo placement all come for free — while
- * each tab's content is the shared Compose screen. Swift's only job is to host this one view
- * controller.
- *
- * [AppTheme] is not optional: `ComposeUIViewController` installs no Material composition locals, so
- * without it `MaterialTheme.colorScheme` resolves to `lightColorScheme()` whatever the system
- * appearance is. It is also what gives the iOS app dark mode.
+ * This roots the app in Barz's real `UITabBarController` rather than in a Compose-drawn bar. That
+ * is what earns the system treatment: Liquid Glass on the bar, the sidebar on iPad, and — on iPhone
+ * Duo — the bar moving to the side strip on its own. A Compose bar would get none of those,
+ * however closely it imitated them.
  */
-fun barzSampleRootViewController(): UIViewController = barzTabBarController(
-    items = sampleDestinations,
-    options = IosOptions(sidebarAdaptable = true, liquidGlass = true),
-) { index ->
-    AppTheme {
-        DestinationScreen(destination = destinationAt(index))
-    }
-}
+@Suppress("unused")
+fun MainViewController(): UIViewController =
+    barzTabBarController(
+        items = DemoNavItems,
+        options = IosOptions(sidebarAdaptable = true),
+        content = { index -> DemoTab(index) },
+    )
