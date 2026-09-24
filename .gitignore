@@ -1,0 +1,37 @@
+## Kotlin/Gradle/Android
+.gradle/
+.kotlin/
+build/
+*/build/
+**/build/
+.idea/
+*.iml
+.DS_Store
+local.properties
+captures/
+.cxx/
+*.hprof
+
+## Xcode / iOS
+iosApp/build/
+iosApp/*.xcodeproj/xcuserdata/
+iosApp/*.xcodeproj/project.xcworkspace/xcuserdata/
+iosApp/*.xcworkspace/xcuserdata/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+Pods/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
