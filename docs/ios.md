@@ -28,14 +28,14 @@ entirely: it replaces your root view controller, which is why it is not an `IosC
 
 ```kotlin
 // shared/src/iosMain/kotlin/…/MainViewController.kt
-import dev.parez.navbarz.IosOptions
+import dev.parez.navbarz.IosControllerOptions
 import dev.parez.navbarz.navBarzTabBarController
 import platform.UIKit.UIViewController
 
 fun rootViewController(): UIViewController =
     navBarzTabBarController(
         items = navItems,
-        options = IosOptions(sidebarAdaptable = true, liquidGlass = true),
+        options = IosControllerOptions(sidebarAdaptable = true, liquidGlass = true),
         onSelect = { index -> println("selected $index") },
         content = { index -> AppTab(index) },
     )
@@ -89,7 +89,8 @@ LazyVerticalGrid(contentPadding = insets, …) { … }
 
 ## Liquid Glass, honestly
 
-`IosOptions.liquidGlass` is **not a true system opt-out.** The only real switch is the app-level
+`liquidGlass` — on both `IosBarOptions` and `IosControllerOptions` — is **not a true system
+opt-out.** The only real switch is the app-level
 `UIDesignRequiresCompatibility` key in `Info.plist`, which no library can set on your behalf. What
 the flag does:
 

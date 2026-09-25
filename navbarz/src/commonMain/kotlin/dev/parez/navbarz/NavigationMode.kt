@@ -72,23 +72,26 @@ enum class IosChrome {
 }
 
 /**
- * iOS-only knobs. Ignored on every other platform.
+ * iOS-only knobs for [AdaptiveNavigationBar]. Ignored on every other platform.
+ *
+ * Separate from `IosControllerOptions` (iOS source set, for `navBarzTabBarController`) because the
+ * two iOS entry points share only one setting between them. Fused into a single type, each API
+ * carried knobs that silently did nothing.
  *
  * @param chrome which bar [AdaptiveNavigationBar] renders; see [IosChrome].
  * @param liquidGlass **not a true system opt-out.** The only real switch is the app-level
  *   `UIDesignRequiresCompatibility` Info.plist key, which a library cannot set. This flag chooses
- *   between the system material and an explicitly opaque bar background.
- * @param sidebarAdaptable promote tabs to a sidebar on iPad. Only meaningful for
- *   [navBarzTabBarController] — an embedded bar has no sidebar mode.
+ *   between the system material and an explicitly opaque bar background. With
+ *   [IosChrome.ComposeGlass] it also decides whether the Compose bar imitates glass at all — false
+ *   there leaves a plain `NavigationBar`, the same one every other platform gets.
  * @param nativeBarHeight height reserved for the embedded `UITabBar` ([IosChrome.NativeTabBar]). A
  *   UIKit view cannot report its size back through Compose interop, so the host has to reserve
  *   space for it. Raise this if your layout adds an offset and the bar ends up clipped.
  */
 @Immutable
-data class IosOptions(
+data class IosBarOptions(
     val chrome: IosChrome = IosChrome.NativeTabBar,
     val liquidGlass: Boolean = true,
-    val sidebarAdaptable: Boolean = true,
     val nativeBarHeight: Dp = 56.dp,
 )
 
@@ -99,13 +102,13 @@ data class IosOptions(
  *   bottom bar at every width; omitting [NavigationMode.Drawer] caps the widest windows at a rail.
  *   The resolver clamps down to the widest permitted mode rather than failing.
  * @param breakpoints where the transitions happen.
- * @param ios iOS-only options.
+ * @param ios iOS-only options for the bar; see [IosBarOptions].
  */
 @Immutable
 data class AdaptiveNavigationConfig(
     val allowedModes: Set<NavigationMode> = NavigationMode.entries.toSet(),
     val breakpoints: NavigationBreakpoints = NavigationBreakpoints(),
-    val ios: IosOptions = IosOptions(),
+    val ios: IosBarOptions = IosBarOptions(),
 ) {
     init {
         require(allowedModes.isNotEmpty()) {

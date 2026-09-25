@@ -40,17 +40,17 @@ public final class dev/parez/navbarz/AdaptiveNavigationBarKt {
 public final class dev/parez/navbarz/AdaptiveNavigationConfig {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosOptions;)V
-	public synthetic fun <init> (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosOptions;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosBarOptions;)V
+	public synthetic fun <init> (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosBarOptions;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/Set;
 	public final fun component2 ()Ldev/parez/navbarz/NavigationBreakpoints;
-	public final fun component3 ()Ldev/parez/navbarz/IosOptions;
-	public final fun copy (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosOptions;)Ldev/parez/navbarz/AdaptiveNavigationConfig;
-	public static synthetic fun copy$default (Ldev/parez/navbarz/AdaptiveNavigationConfig;Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosOptions;ILjava/lang/Object;)Ldev/parez/navbarz/AdaptiveNavigationConfig;
+	public final fun component3 ()Ldev/parez/navbarz/IosBarOptions;
+	public final fun copy (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosBarOptions;)Ldev/parez/navbarz/AdaptiveNavigationConfig;
+	public static synthetic fun copy$default (Ldev/parez/navbarz/AdaptiveNavigationConfig;Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosBarOptions;ILjava/lang/Object;)Ldev/parez/navbarz/AdaptiveNavigationConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAllowedModes ()Ljava/util/Set;
 	public final fun getBreakpoints ()Ldev/parez/navbarz/NavigationBreakpoints;
-	public final fun getIos ()Ldev/parez/navbarz/IosOptions;
+	public final fun getIos ()Ldev/parez/navbarz/IosBarOptions;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -65,31 +65,29 @@ public final class dev/parez/navbarz/ComposableSingletons$AdaptiveNavigationScaf
 	public final fun getLambda$-2112465584$navbarz_sdk_navbarz ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class dev/parez/navbarz/IosBarOptions {
+	public static final field $stable I
+	public synthetic fun <init> (Ldev/parez/navbarz/IosChrome;ZFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ldev/parez/navbarz/IosChrome;ZFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ldev/parez/navbarz/IosChrome;
+	public final fun component2 ()Z
+	public final fun component3-D9Ej5fM ()F
+	public final fun copy-wH6b6FI (Ldev/parez/navbarz/IosChrome;ZF)Ldev/parez/navbarz/IosBarOptions;
+	public static synthetic fun copy-wH6b6FI$default (Ldev/parez/navbarz/IosBarOptions;Ldev/parez/navbarz/IosChrome;ZFILjava/lang/Object;)Ldev/parez/navbarz/IosBarOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChrome ()Ldev/parez/navbarz/IosChrome;
+	public final fun getLiquidGlass ()Z
+	public final fun getNativeBarHeight-D9Ej5fM ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class dev/parez/navbarz/IosChrome : java/lang/Enum {
 	public static final field ComposeGlass Ldev/parez/navbarz/IosChrome;
 	public static final field NativeTabBar Ldev/parez/navbarz/IosChrome;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Ldev/parez/navbarz/IosChrome;
 	public static fun values ()[Ldev/parez/navbarz/IosChrome;
-}
-
-public final class dev/parez/navbarz/IosOptions {
-	public static final field $stable I
-	public synthetic fun <init> (Ldev/parez/navbarz/IosChrome;ZZFILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ldev/parez/navbarz/IosChrome;ZZFLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ldev/parez/navbarz/IosChrome;
-	public final fun component2 ()Z
-	public final fun component3 ()Z
-	public final fun component4-D9Ej5fM ()F
-	public final fun copy-eqLRuRQ (Ldev/parez/navbarz/IosChrome;ZZF)Ldev/parez/navbarz/IosOptions;
-	public static synthetic fun copy-eqLRuRQ$default (Ldev/parez/navbarz/IosOptions;Ldev/parez/navbarz/IosChrome;ZZFILjava/lang/Object;)Ldev/parez/navbarz/IosOptions;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getChrome ()Ldev/parez/navbarz/IosChrome;
-	public final fun getLiquidGlass ()Z
-	public final fun getNativeBarHeight-D9Ej5fM ()F
-	public final fun getSidebarAdaptable ()Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class dev/parez/navbarz/NavBarzPlatform : java/lang/Enum {

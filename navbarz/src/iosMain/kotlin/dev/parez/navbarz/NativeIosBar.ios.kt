@@ -36,7 +36,7 @@ internal actual fun NativeIosBar(
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit,
     colors: AdaptiveNavigationBarColors,
-    options: IosOptions,
+    options: IosBarOptions,
     modifier: Modifier,
 ) {
     // UITabBar holds its delegate weakly, so it has to be remembered here rather than created

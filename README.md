@@ -5,11 +5,8 @@ navigation rail or a permanent drawer depending on the window — and a real `UI
 iOS rather than an imitation of one.
 
 ```kotlin
-implementation("dev.parez.navbarz:navbarz:0.1.0-SNAPSHOT")
+implementation("dev.parez.navbarz:navbarz:0.1.0")
 ```
-
-Pre-release, so it lives in the snapshots repository — see the
-[integration guide](docs/integration.md#install) for the `repositories` line that copy-paste needs.
 
 | Target | Chrome |
 |---|---|

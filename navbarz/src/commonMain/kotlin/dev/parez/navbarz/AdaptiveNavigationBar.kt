@@ -64,7 +64,8 @@ fun AdaptiveNavigationBar(
 
     val glass = currentPlatform == NavBarzPlatform.Ios && config.ios.liquidGlass
     if (glass) {
-        // An approximation of the system material, not the real thing — see IosOptions.liquidGlass.
+        // An approximation of the system material, not the real thing — see
+        // IosBarOptions.liquidGlass.
         Surface(
             modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
             shape = MaterialTheme.shapes.extraLarge,

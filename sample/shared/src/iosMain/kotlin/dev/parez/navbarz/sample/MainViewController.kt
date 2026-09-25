@@ -1,6 +1,6 @@
 package dev.parez.navbarz.sample
 
-import dev.parez.navbarz.IosOptions
+import dev.parez.navbarz.IosControllerOptions
 import dev.parez.navbarz.navBarzTabBarController
 import platform.UIKit.UIViewController
 
@@ -16,6 +16,6 @@ import platform.UIKit.UIViewController
 fun MainViewController(): UIViewController =
     navBarzTabBarController(
         items = DemoNavItems,
-        options = IosOptions(sidebarAdaptable = true),
+        options = IosControllerOptions(sidebarAdaptable = true),
         content = { index -> DemoTab(index) },
     )

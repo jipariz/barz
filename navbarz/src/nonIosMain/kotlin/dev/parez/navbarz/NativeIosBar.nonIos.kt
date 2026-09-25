@@ -12,6 +12,6 @@ internal actual fun NativeIosBar(
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit,
     colors: AdaptiveNavigationBarColors,
-    options: IosOptions,
+    options: IosBarOptions,
     modifier: Modifier,
 ): Unit = Unit

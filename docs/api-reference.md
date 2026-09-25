@@ -92,7 +92,7 @@ callers recompose only at the two thresholds where the mode actually changes.
 ```kotlin
 fun navBarzTabBarController(
     items: List<NavigationItem>,
-    options: IosOptions = IosOptions(),
+    options: IosControllerOptions = IosControllerOptions(),
     onSelect: (Int) -> Unit = {},
     content: @Composable (index: Int) -> Unit,
 ): UIViewController
@@ -134,7 +134,7 @@ reader read every destination twice.
 data class AdaptiveNavigationConfig(
     val allowedModes: Set<NavigationMode> = NavigationMode.entries.toSet(),
     val breakpoints: NavigationBreakpoints = NavigationBreakpoints(),
-    val ios: IosOptions = IosOptions(),
+    val ios: IosBarOptions = IosBarOptions(),
 )
 ```
 
@@ -154,20 +154,32 @@ data class NavigationBreakpoints(
 `railFromWidthDp > drawerFromWidthDp` throws at construction: the resolver tests the drawer first,
 so a swapped pair would make `Rail` unreachable rather than fail.
 
-### `IosOptions`
+### `IosBarOptions` / `IosControllerOptions`
+
+The two iOS entry points share exactly one setting, so they take separate option types rather than
+one fused type in which each API carried knobs that silently did nothing.
 
 ```kotlin
+// commonMain — for AdaptiveNavigationBar, via AdaptiveNavigationConfig.ios
 @Immutable
-data class IosOptions(
+data class IosBarOptions(
     val chrome: IosChrome = IosChrome.NativeTabBar,
     val liquidGlass: Boolean = true,
-    val sidebarAdaptable: Boolean = true,
     val nativeBarHeight: Dp = 56.dp,
+)
+
+// iOS source set only — for navBarzTabBarController
+@Immutable
+data class IosControllerOptions(
+    val liquidGlass: Boolean = true,
+    val sidebarAdaptable: Boolean = true,
 )
 ```
 
-`sidebarAdaptable` only affects `navBarzTabBarController`. `nativeBarHeight` exists because a UIKit
-view cannot report its size back through Compose interop.
+`nativeBarHeight` exists because a UIKit view cannot report its size back through Compose interop;
+it is meaningless to a real `UITabBarController`, which the system lays out itself.
+`IosControllerOptions` lives in the iOS source set so a `js` or `jvm` consumer never sees a type it
+cannot use.
 
 ### `AdaptiveNavigationBarColors` / `AdaptiveNavigationBarDefaults`
 

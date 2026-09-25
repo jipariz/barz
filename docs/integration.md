@@ -7,25 +7,14 @@
 One dependency, on every platform. It goes in your **shared** KMP module, not in the per-platform
 shells — the iOS chrome rides along inside the Kotlin framework.
 
-NavBarz has not had a stable release yet, so the current build is a snapshot and `mavenCentral()`
-alone will not find it. Add the snapshots repository:
-
-```kotlin
-// settings.gradle.kts
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        maven("https://central.sonatype.com/repository/maven-snapshots/")
-    }
-}
-```
+It is on Maven Central, so `mavenCentral()` is the only repository you need.
 
 ```kotlin
 // shared/build.gradle.kts
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("dev.parez.navbarz:navbarz:0.1.0-SNAPSHOT")
+            implementation("dev.parez.navbarz:navbarz:0.1.0")
         }
     }
 }
@@ -36,7 +25,7 @@ With a version catalog:
 ```toml
 # gradle/libs.versions.toml
 [versions]
-navbarz = "0.1.0-SNAPSHOT"
+navbarz = "0.1.0"
 
 [libraries]
 navbarz = { module = "dev.parez.navbarz:navbarz", version.ref = "navbarz" }
@@ -57,10 +46,7 @@ product:
   platforms: [jvm, android, iosArm64, iosSimulatorArm64, js, wasmJs]
 
 dependencies:
-  - dev.parez.navbarz:navbarz:0.1.0-SNAPSHOT
-
-repositories:
-  - https://central.sonatype.com/repository/maven-snapshots/
+  - dev.parez.navbarz:navbarz:0.1.0
 
 settings:
   compose: enabled
@@ -173,7 +159,7 @@ AdaptiveNavigationConfig(
         drawerFromWidthDp = 1200,
         minHeightDp = 480,
     ),
-    ios = IosOptions(),
+    ios = IosBarOptions(),
 )
 ```
 

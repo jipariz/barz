@@ -3,6 +3,7 @@
 package dev.parez.navbarz
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.window.ComposeUIViewController
 import platform.Foundation.NSBundle
 import platform.Foundation.NSSelectorFromString
@@ -30,21 +31,40 @@ import platform.darwin.NSObject
  * `UIViewControllerRepresentable`, or set it as the window's `rootViewController`.
  *
  * @param items the destinations; [NavigationItem.systemIcon] is used as an SF Symbol name.
- * @param options [IosOptions.sidebarAdaptable] promotes tabs to a sidebar on iPad;
- *   [IosOptions.liquidGlass] false forces an opaque bar instead of the system material.
+ * @param options see [IosControllerOptions].
  * @param onSelect invoked with the newly selected index.
  * @param content the Compose content for a given tab index.
  */
+/**
+ * Knobs for [navBarzTabBarController]. Lives in the iOS source set because that is the only place
+ * the controller exists — a `js` or `jvm` consumer should never see a type it cannot use.
+ *
+ * Deliberately not [IosBarOptions]: that one configures the bar [AdaptiveNavigationBar] draws, and
+ * its `chrome` and `nativeBarHeight` mean nothing to a real `UITabBarController`, which the system
+ * lays out and sizes itself.
+ *
+ * @param liquidGlass false installs an explicitly opaque `UITabBarAppearance` instead of leaving
+ *   the bar on the system material. Not a true opt-out of the design language — see
+ *   [IosBarOptions.liquidGlass].
+ * @param sidebarAdaptable promote tabs to a sidebar on iPad. Requires iOS 18; below that the
+ *   selector is absent and the flag is ignored rather than crashing.
+ */
+@Immutable
+data class IosControllerOptions(
+    val liquidGlass: Boolean = true,
+    val sidebarAdaptable: Boolean = true,
+)
+
 fun navBarzTabBarController(
     items: List<NavigationItem>,
-    options: IosOptions = IosOptions(),
+    options: IosControllerOptions = IosControllerOptions(),
     onSelect: (Int) -> Unit = {},
     content: @Composable (index: Int) -> Unit,
 ): UIViewController = NavBarzTabBarController(items, options, onSelect, content)
 
 private class NavBarzTabBarController(
     items: List<NavigationItem>,
-    options: IosOptions,
+    options: IosControllerOptions,
     private val onSelect: (Int) -> Unit,
     content: @Composable (index: Int) -> Unit,
 ) : UITabBarController(nibName = null, bundle = null as NSBundle?) {
