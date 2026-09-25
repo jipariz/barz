@@ -34,7 +34,7 @@ public final class dev/parez/barz/AdaptiveNavigationBarDefaults {
 
 public final class dev/parez/barz/AdaptiveNavigationBarKt {
 	public static final fun AdaptiveNavigationBar (Ljava/util/List;ILkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/parez/barz/AdaptiveNavigationConfig;Lkotlin/jvm/functions/Function4;Ldev/parez/barz/AdaptiveNavigationBarColors;Landroidx/compose/runtime/Composer;II)V
-	public static final fun AdaptiveNavigationBar (Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Ldev/parez/barz/AdaptiveNavigationBarColors;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AdaptiveNavigationBar (Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Ldev/parez/barz/AdaptiveNavigationConfig;Ldev/parez/barz/AdaptiveNavigationBarColors;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class dev/parez/barz/AdaptiveNavigationConfig {
@@ -71,6 +71,12 @@ public final class dev/parez/barz/BarzPlatform : java/lang/Enum {
 
 public final class dev/parez/barz/BarzPlatform_jvmKt {
 	public static final fun getCurrentPlatform ()Ldev/parez/barz/BarzPlatform;
+}
+
+public final class dev/parez/barz/ComposableSingletons$AdaptiveNavigationScaffoldKt {
+	public static final field INSTANCE Ldev/parez/barz/ComposableSingletons$AdaptiveNavigationScaffoldKt;
+	public fun <init> ()V
+	public final fun getLambda$-2013511895$barz_sdk_barz ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class dev/parez/barz/IosChrome : java/lang/Enum {

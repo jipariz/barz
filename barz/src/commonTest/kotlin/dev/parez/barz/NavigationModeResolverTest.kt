@@ -116,6 +116,16 @@ class NavigationModeResolverTest {
     }
 
     @Test
+    fun `breakpoints that would make rail unreachable are rejected`() {
+        try {
+            NavigationBreakpoints(railFromWidthDp = 1200, drawerFromWidthDp = 600)
+            throw AssertionError("expected IllegalArgumentException")
+        } catch (expected: IllegalArgumentException) {
+            // exactly what we want
+        }
+    }
+
+    @Test
     fun `empty allowedModes is rejected at construction`() {
         try {
             AdaptiveNavigationConfig(allowedModes = emptySet())

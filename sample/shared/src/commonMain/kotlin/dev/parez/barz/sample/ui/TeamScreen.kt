@@ -55,7 +55,7 @@ fun TeamScreen(
         contentPadding = contentPadding + PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(members, key = { it.id }) { member ->
+        items(members, key = { it.id }, contentType = { "member" }) { member ->
             TeamCard(
                 member = member,
                 twentyFourHourTime = twentyFourHourTime,
@@ -65,7 +65,7 @@ fun TeamScreen(
         // The empty slots aren't drawn as placeholders — the design fills the remaining space with
         // a single invitation instead, whether the team is empty or merely not full.
         if (members.size < TEAM_CAPACITY) {
-            item { EmptySlotsInvitation() }
+            item(contentType = "invitation") { EmptySlotsInvitation() }
         }
     }
 }

@@ -97,12 +97,3 @@ private class BarzTabBarController(
         }
     }
 }
-
-/**
- * SF Symbol first, asset catalog second.
- *
- * Both iOS paths resolve icons this way now; the embedded [NativeIosBar] always did, and this one
- * did not, so the same [NavigationItem] list rendered with icons in one and blanks in the other.
- */
-private fun String.asUIImage(): UIImage? =
-    UIImage.systemImageNamed(this) ?: UIImage.imageNamed(this)

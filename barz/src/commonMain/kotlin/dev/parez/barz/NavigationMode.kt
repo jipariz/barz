@@ -31,7 +31,16 @@ data class NavigationBreakpoints(
     val railFromWidthDp: Int = 600,
     val drawerFromWidthDp: Int = 1200,
     val minHeightDp: Int = 480,
-)
+) {
+    init {
+        // Swapped, the resolver tests drawer first and Rail becomes unreachable — a config that
+        // looks plausible and fails silently. AdaptiveNavigationConfig already guards its own
+        // invariant; this is the other one.
+        require(railFromWidthDp <= drawerFromWidthDp) {
+            "railFromWidthDp ($railFromWidthDp) must be <= drawerFromWidthDp ($drawerFromWidthDp)"
+        }
+    }
+}
 
 /**
  * Which bar [AdaptiveNavigationBar] renders on iOS.

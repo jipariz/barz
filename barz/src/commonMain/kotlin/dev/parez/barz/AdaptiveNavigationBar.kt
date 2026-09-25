@@ -98,7 +98,11 @@ fun AdaptiveNavigationBar(
 
 /**
  * Overload for apps whose icons are [ImageVector]s (`Icons.Default.*`) rather than Compose
- * resources. Same behaviour; [NavigationItem.icon] is ignored in favour of [icon].
+ * resources. [NavigationItem.icon] is ignored in favour of [icon].
+ *
+ * Delegates rather than duplicating: as its own implementation it bypassed the native-bar and
+ * glass branches entirely, so an iOS app that happened to use ImageVector icons silently got a
+ * plain Compose bar with no way to tell.
  */
 @Composable
 fun AdaptiveNavigationBar(
@@ -107,33 +111,28 @@ fun AdaptiveNavigationBar(
     onItemSelected: (Int) -> Unit,
     icon: (index: Int, selected: Boolean) -> ImageVector,
     modifier: Modifier = Modifier,
+    config: AdaptiveNavigationConfig = AdaptiveNavigationConfig(),
     colors: AdaptiveNavigationBarColors = AdaptiveNavigationBarDefaults.colors(),
 ) {
-    NavigationBar(modifier = modifier, containerColor = colors.containerColor) {
-        items.forEachIndexed { index, item ->
-            val selected = index == selectedIndex
-            NavigationBarItem(
-                selected = selected,
-                onClick = { onItemSelected(index) },
-                enabled = item.enabled,
-                icon = {
-                    NavigationItemIcon(
-                        item, index, selected,
-                        slot = { i, sel ->
-                            Icon(
-                                imageVector = icon(i, sel),
-                                contentDescription = item.contentDescription ?: item.title,
-                            )
-                        },
-                        badgeContainerColor = colors.badgeContainerColor,
-                        badgeContentColor = colors.badgeContentColor,
-                    )
-                },
-                label = if (item.showLabel) ({ Text(item.title) }) else null,
-                colors = colors.itemColors(),
-            )
-        }
+    // Typed explicitly: both overloads take an `icon` in the same position, so an un-annotated
+    // lambda resolves back to this one.
+    val slot: @Composable (index: Int, selected: Boolean) -> Unit = { index, selected ->
+        val item = items[index]
+        Icon(
+            imageVector = icon(index, selected),
+            contentDescription =
+                if (item.showLabel) null else item.contentDescription ?: item.title,
+        )
     }
+    AdaptiveNavigationBar(
+        items = items,
+        selectedIndex = selectedIndex,
+        onItemSelected = onItemSelected,
+        modifier = modifier,
+        config = config,
+        icon = slot,
+        colors = colors,
+    )
 }
 
 @Composable

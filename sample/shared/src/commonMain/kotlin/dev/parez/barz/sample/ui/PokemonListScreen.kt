@@ -27,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -91,7 +90,7 @@ private fun PokemonGrid(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(state.filteredItems, key = { it.id }) { entry ->
+        items(state.filteredItems, key = { it.id }, contentType = { "pokemon" }) { entry ->
             PokemonCard(
                 entry = entry,
                 onTeam = isOnTeam(entry.id),
@@ -101,7 +100,7 @@ private fun PokemonGrid(
         }
 
         // Footer: load-more sentinel / spinner / end-of-list.
-        item(span = { GridItemSpan(maxLineSpan) }) {
+        item(span = { GridItemSpan(maxLineSpan) }, contentType = "footer") {
             Box(Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
                 when {
                     state.isLoadingMore -> PokeballLoader(modifier = Modifier.size(40.dp))
@@ -115,12 +114,11 @@ private fun PokemonGrid(
                             Spacer(Modifier.height(8.dp))
                             Button(onClick = onRetry) { Text("Retry") }
                         }
-                    state.hasMore && state.query.isBlank() -> {
+                    state.hasMore -> {
                         // Infinite-scroll sentinel: this item only composes once it scrolls into
-                        // view. rememberUpdatedState so the never-restarting effect always calls
-                        // the current lambda rather than the one captured on first composition.
-                        val loadMore by rememberUpdatedState(onLoadMore)
-                        LaunchedEffect(Unit) { loadMore() }
+                        // view, and the effect runs immediately after that first composition — so
+                        // there is no recomposition window in which the lambda could go stale.
+                        LaunchedEffect(Unit) { onLoadMore() }
                         PokeballLoader(modifier = Modifier.size(40.dp))
                     }
                 }

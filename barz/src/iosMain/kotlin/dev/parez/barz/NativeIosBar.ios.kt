@@ -50,6 +50,24 @@ internal actual fun NativeIosBar(
         delegate.items = items
     }
 
+    // Built once per item list, not per recomposition. `update` runs on any state change — a plain
+    // selection tap included — and rebuilding these there re-resolved every SF Symbol and called
+    // setItems, which tears down and recreates the bar's subviews and kills the selection
+    // animation the native bar exists to provide.
+    val barItems = remember(items) {
+        items.mapIndexed { index, item ->
+            UITabBarItem(
+                title = item.title.takeIf { item.showLabel },
+                image = item.systemIcon.asUIImage(),
+                tag = index.toLong(),
+            ).apply {
+                item.selectedSystemIcon?.let { selectedImage = it.asUIImage() }
+                badgeValue = item.badge ?: if (item.showBadgeDot) "" else null
+                enabled = item.enabled
+            }
+        }
+    }
+
     UIKitView(
         factory = {
             UITabBar().apply {
@@ -65,25 +83,7 @@ internal actual fun NativeIosBar(
         update = { bar ->
             colors.selectedIconColor.toUIColor()?.let { bar.tintColor = it }
             bar.unselectedItemTintColor = colors.unselectedIconColor.toUIColor()
-            bar.setItems(
-                items.mapIndexed { index, item ->
-                    UITabBarItem(
-                        title = item.title.takeIf { item.showLabel },
-                        image = UIImage.systemImageNamed(item.systemIcon)
-                            ?: UIImage.imageNamed(item.systemIcon),
-                        tag = index.toLong(),
-                    ).apply {
-                        // Asset-catalog images are a legitimate fallback: consumers often ship
-                        // their own glyphs rather than SF Symbols.
-                        item.selectedSystemIcon?.let {
-                            selectedImage = UIImage.systemImageNamed(it) ?: UIImage.imageNamed(it)
-                        }
-                        badgeValue = item.badge ?: if (item.showBadgeDot) "" else null
-                        enabled = item.enabled
-                    }
-                },
-                animated = false,
-            )
+            if (bar.items != barItems) bar.setItems(barItems, animated = false)
             // -1 is the documented "nothing selected" value; UIKit expects a null item for that.
             bar.selectedItem = bar.items?.getOrNull(selectedIndex) as? UITabBarItem
         },
@@ -103,3 +103,10 @@ private class NativeBarDelegate : NSObject(), UITabBarDelegateProtocol {
 private fun Color.toUIColor(): UIColor? = takeIf { it != Color.Unspecified }?.let {
     UIColor.colorWithRed(it.red.toDouble(), it.green.toDouble(), it.blue.toDouble(), it.alpha.toDouble())
 }
+
+/**
+ * SF Symbol first, asset catalog second — consumers often ship their own glyphs rather than
+ * SF Symbols. Shared with [barzTabBarController], which used to omit the fallback.
+ */
+internal fun String.asUIImage(): UIImage? =
+    UIImage.systemImageNamed(this) ?: UIImage.imageNamed(this)

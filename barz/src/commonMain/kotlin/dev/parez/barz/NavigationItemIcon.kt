@@ -31,6 +31,7 @@ internal fun NavigationItemIcon(
     slot: (@Composable (index: Int, selected: Boolean) -> Unit)?,
     badgeContainerColor: Color = Color.Unspecified,
     badgeContentColor: Color = Color.Unspecified,
+    showBadge: Boolean = true,
 ) {
     val icon: @Composable () -> Unit = {
         when {
@@ -52,6 +53,7 @@ internal fun NavigationItemIcon(
 
     // A text badge wins over the dot; `showBadgeDot` is only consulted when `badge` is null.
     val badge: (@Composable () -> Unit)? = when {
+        !showBadge -> null
         item.badge != null -> ({ ItemBadge(badgeContainerColor, badgeContentColor) { Text(item.badge) } })
         item.showBadgeDot -> ({ ItemBadge(badgeContainerColor, badgeContentColor, content = null) })
         else -> null

@@ -1,10 +1,13 @@
 package dev.parez.barz
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
@@ -92,7 +95,10 @@ fun AdaptiveNavigationScaffold(
                         }
 
                     NavigationMode.Rail ->
-                        NavigationRail(header = header) {
+                        NavigationRail(
+                            header = header,
+                            modifier = Modifier.verticalScroll(rememberScrollState()),
+                        ) {
                             // Material reserves only 4dp above the first item and expects a header
                             // to do the spacing. Without one the icons end up against the top
                             // edge, so stand in for it.
@@ -111,7 +117,7 @@ fun AdaptiveNavigationScaffold(
 
                     NavigationMode.Drawer ->
                         PermanentDrawerSheet {
-                            Column(Modifier.fillMaxHeight()) {
+                            Column(Modifier.verticalScroll(rememberScrollState())) {
                                 // Same gutter the items below get. PermanentDrawerSheet lays its
                                 // content out edge to edge, and unlike the rail it does not centre
                                 // it, so an unpadded header is clipped by the sheet's edge.
@@ -129,11 +135,21 @@ fun AdaptiveNavigationScaffold(
                                                 NavigationDrawerItemDefaults.ItemPadding
                                             ),
                                         selected = selected,
-                                        onClick = { onItemSelected(index) },
-                                        icon = {
-                                            NavigationItemIcon(navItem, index, selected, icon)
+                                        // NavigationDrawerItem has no `enabled`; approximate it so
+                                        // a disabled item is at least inert and announced as such.
+                                        onClick = {
+                                            if (navItem.enabled) onItemSelected(index)
                                         },
-                                        label = { Text(navItem.title) },
+                                        icon = {
+                                            NavigationItemIcon(
+                                                navItem, index, selected, icon,
+                                                showBadge = false,
+                                            )
+                                        },
+                                        // The drawer has a dedicated badge slot at the row's end;
+                                        // routing badges through the icon would overlap them.
+                                        badge = navItem.badgeLabel(),
+                                        label = { if (navItem.showLabel) Text(navItem.title) },
                                     )
                                 }
                             }
@@ -148,6 +164,12 @@ fun AdaptiveNavigationScaffold(
 /** Matches Material's own header-to-items gap in `NavigationRail`. */
 private val TopContentSpacing = 8.dp
 
+/**
+ * @Composable so the returned lambda is compiler-memoized. As a plain function it allocated a fresh
+ * lambda per call, changing the `label` parameter's identity every recomposition and stopping the
+ * Material item from ever skipping.
+ */
+@Composable
 private fun NavigationItem.labelOrNull(): (@Composable () -> Unit)? =
     if (showLabel) ({ Text(title) }) else null
 
@@ -155,4 +177,12 @@ private fun NavigationMode.toSuiteType(): NavigationSuiteType = when (this) {
     NavigationMode.BottomBar -> NavigationSuiteType.NavigationBar
     NavigationMode.Rail -> NavigationSuiteType.NavigationRail
     NavigationMode.Drawer -> NavigationSuiteType.NavigationDrawer
+}
+
+/** The drawer renders badges in its own end slot rather than over the icon. */
+@Composable
+private fun NavigationItem.badgeLabel(): (@Composable () -> Unit)? = when {
+    badge != null -> ({ Text(badge) })
+    showBadgeDot -> ({ Text("") })
+    else -> null
 }

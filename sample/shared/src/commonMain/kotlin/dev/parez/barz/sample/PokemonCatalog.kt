@@ -30,7 +30,6 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.PaddingValues
 import dev.parez.barz.sample.TeamState
 import dev.parez.barz.sample.UnitSystem
@@ -65,8 +64,10 @@ internal fun PokemonCatalog(
     onTeamFull: () -> Unit,
     contentPadding: PaddingValues,
 ) {
-    val members by team.members.collectAsState()
-    val onTeamIds = remember(members) { members.mapTo(mutableSetOf()) { it.id } }
+    // Deliberately not read here with `by`. PokemonCatalog owns the NavDisplay, so reading the
+    // team at this level made every add/remove rebuild the whole nav graph. Holding the State and
+    // reading it inside the callbacks confines the snapshot read to the card that renders it.
+    val members = team.members.collectAsState()
 
     // Drop the default horizontal gutter between the two panes — same tweak as
     // the official Material recipe (b/418201867).
@@ -129,7 +130,7 @@ internal fun PokemonCatalog(
                         ScreenHeader("Pokemon", insets = contentPadding)
                         PokemonListScreen(
                             contentPadding = contentPadding.withoutTop(),
-                            isOnTeam = { it in onTeamIds },
+                            isOnTeam = { id -> members.value.any { it.id == id } },
                             onToggleTeam = { entry ->
                                 // The list only knows a name and an id — types arrive with the
                                 // detail fetch, so a Pokémon added from here gets its tags filled
@@ -157,7 +158,7 @@ internal fun PokemonCatalog(
                         id = key.id,
                         name = key.name,
                         onBack = { backStack.removeLastOrNull() },
-                        onTeam = key.id in onTeamIds,
+                        onTeam = members.value.any { it.id == key.id },
                         onToggleTeam = { detail ->
                             val types = detail.types.sortedBy { it.slot }.map { it.type.name }
                             if (!team.toggle(detail.id, detail.name, types)) onTeamFull()
