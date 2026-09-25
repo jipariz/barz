@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "dev.parez.barz.sample.app"
+    namespace = "dev.parez.navbarz.sample.app"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "dev.parez.barz.sample"
+        applicationId = "dev.parez.navbarz.sample"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

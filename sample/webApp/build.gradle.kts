@@ -20,9 +20,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.sample.shared)
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
+            // ComposeViewport and ExperimentalComposeUiApi. Not transitive: the shared module
+            // declares compose.ui as implementation, not api.
             implementation(libs.compose.ui)
         }
     }

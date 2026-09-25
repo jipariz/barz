@@ -4,7 +4,7 @@
 
 ## One Gradle dependency. No Swift package, no SPM.
 
-`BarzTabBarController.kt` builds a real `UITabBarController` through Kotlin/Native's UIKit
+`NavBarzTabBarController.kt` builds a real `UITabBarController` through Kotlin/Native's UIKit
 bindings, so the native chrome ships **inside your Kotlin framework**. SwiftUI could not have been
 distributed that way; UIKit is fully bound by Kotlin/Native, so it can.
 
@@ -19,7 +19,7 @@ Pick deliberately — they are not interchangeable.
 |---|---|---|
 | `IosChrome.ComposeGlass` | imitated in Compose | no |
 | `IosChrome.NativeTabBar` (default) | real — an embedded `UITabBar` | no |
-| `barzTabBarController` | real | **yes** |
+| `navBarzTabBarController` | real | **yes** |
 
 The first two are properties of `AdaptiveNavigationBar`. The third is a different shape of API
 entirely: it replaces your root view controller, which is why it is not an `IosChrome` value.
@@ -28,14 +28,14 @@ entirely: it replaces your root view controller, which is why it is not an `IosC
 
 ```kotlin
 // shared/src/iosMain/kotlin/…/MainViewController.kt
-import dev.parez.barz.IosOptions
-import dev.parez.barz.barzTabBarController
+import dev.parez.navbarz.IosControllerOptions
+import dev.parez.navbarz.navBarzTabBarController
 import platform.UIKit.UIViewController
 
 fun rootViewController(): UIViewController =
-    barzTabBarController(
+    navBarzTabBarController(
         items = navItems,
-        options = IosOptions(sidebarAdaptable = true, liquidGlass = true),
+        options = IosControllerOptions(sidebarAdaptable = true, liquidGlass = true),
         onSelect = { index -> println("selected $index") },
         content = { index -> AppTab(index) },
     )
@@ -47,7 +47,7 @@ Then hand it to SwiftUI:
 import SwiftUI
 import ComposeApp
 
-struct BarzRoot: UIViewControllerRepresentable {
+struct NavBarzRoot: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         MainViewControllerKt.rootViewController()
     }
@@ -55,7 +55,7 @@ struct BarzRoot: UIViewControllerRepresentable {
 }
 
 struct ContentView: View {
-    var body: some View { BarzRoot().ignoresSafeArea() }
+    var body: some View { NavBarzRoot().ignoresSafeArea() }
 }
 ```
 
@@ -89,7 +89,8 @@ LazyVerticalGrid(contentPadding = insets, …) { … }
 
 ## Liquid Glass, honestly
 
-`IosOptions.liquidGlass` is **not a true system opt-out.** The only real switch is the app-level
+`liquidGlass` — on both `IosBarOptions` and `IosControllerOptions` — is **not a true system
+opt-out.** The only real switch is the app-level
 `UIDesignRequiresCompatibility` key in `Info.plist`, which no library can set on your behalf. What
 the flag does:
 
@@ -113,7 +114,7 @@ and point it at your shared module.
 
 ## Known limitations
 
-- **Barz has no FAB.** A floating action button is an Android idiom, and iOS has better native
+- **NavBarz has no FAB.** A floating action button is an Android idiom, and iOS has better native
   answers that belong to your app rather than to a navigation library: add an extra `UITabBarItem`
   and intercept it in `tabBarController:shouldSelectViewController:` to run an action instead of
   switching tabs, or use `UITabBarController.bottomAccessory` (iOS 26) for a Now-Playing-style

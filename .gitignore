@@ -2,9 +2,7 @@
 .gradle/
 .kotlin/
 build/
-*/build/
-**/build/
-.idea/
+*.idea/
 *.iml
 .DS_Store
 local.properties
@@ -13,8 +11,6 @@ captures/
 *.hprof
 
 ## Xcode / iOS
-iosApp/build/
-iosApp/*.xcodeproj/xcuserdata/
 iosApp/*.xcodeproj/project.xcworkspace/xcuserdata/
 iosApp/*.xcworkspace/xcuserdata/
 DerivedData/

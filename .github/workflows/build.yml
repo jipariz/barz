@@ -23,16 +23,26 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      # The committed gradle.properties caps workers at 2 to stay friendly on a laptop.
-      # Override here rather than editing the file, so local builds keep their setting.
-      - name: Build and test
-        run: ./gradlew build allTests --stacktrace -Dorg.gradle.workers.max=4
-
-      - name: Check public ABI
-        run: ./gradlew :barz:checkKotlinAbi
+      # `build` already runs allTests and — because KGP wires check -> checkKotlinAbi — the ABI
+      # check too, so neither needs its own step. The committed gradle.properties caps workers at
+      # 2 to stay friendly on a laptop; override on the command line so local builds keep theirs.
+      - name: Build, test and check the public ABI
+        run: ./gradlew build ktfmtCheck --stacktrace --max-workers=4
 
       - name: Verify the library publishes
-        run: ./gradlew :barz:publishToMavenLocal
+        run: ./gradlew :navbarz:publishToMavenLocal
+
+      # The Kotlin framework is already built above; what is not covered is the Xcode project
+      # around it — iOSApp.swift, ContentView.swift, and the "Compile Kotlin Framework" build
+      # phase that docs/ios.md tells readers to copy into their own app.
+      - name: Build the iOS sample app
+        run: |
+          xcodebuild -project sample/iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/dd" \
+            CODE_SIGNING_ALLOWED=NO \
+            build
 
       - uses: actions/upload-artifact@v4
         if: failure()

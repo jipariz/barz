@@ -1,13 +1,7 @@
 [versions]
 agp = "9.4.1"
 kotlin = "2.4.0"
-# :barz used to build against 36 while the sample used 37, to keep the AAR consumable by apps on
-# AGP 8.x — an AAR records its compileSdk as a *minimum* for consumers. That no longer buys
-# anything: every Compose 1.12 AndroidX artifact the library depends on (foundation, ui, material3,
-# the navigation suite) already demands 37, and consumers get them transitively. Holding the
-# library at 36 only broke `publishToMavenLocal` on checkAarMetadata.
 android-compileSdk = "37"
-android-library-compileSdk = "37"
 android-minSdk = "24"
 android-targetSdk = "37"
 composeMultiplatform = "1.12.0"
@@ -18,16 +12,17 @@ composeMultiplatformAdaptive = "1.3.0-beta02"
 activityCompose = "1.13.0"
 lifecycle = "2.11.0"
 kotlinxCoroutines = "1.10.2"
+ktfmt = "0.27.0"
 vanniktechPublish = "0.36.0"
 
-# --- demo app only (Pokédex sample); the :barz library depends on none of these ---
+# --- demo app only (Pokédex sample); the :navbarz library depends on none of these ---
 ktor = "3.5.0"
 kotlinxSerialization = "1.11.0"
 kotlinxDatetime = "0.7.1"
 coil = "3.5.0-beta01"
 koin = "4.2.1"
 kermit = "2.1.0"
-# Blur for the glass chrome. Demo-only — :barz does not depend on a blur library and should not;
+# Blur for the glass chrome. Demo-only — :navbarz does not depend on a blur library and should not;
 # the sample frosts its own screens with HazeInput.Content.
 haze = "2.0.0"
 navigation3 = "1.1.2"
@@ -35,14 +30,16 @@ navigation3Browser = "1.0.0"
 navigationeventCompose = "1.1.0"
 # The adaptive-navigation3 graph still pulls Kotlin-2.2-era AOSP klibs that reference
 # `externrefToBoolean`, a Wasm internal newer Kotlin no longer exports — the page dies at
-# instantiation. These force every offending artifact up to an abi-compatible release.
+# instantiation. Declaring each offender directly raises it by conflict resolution; nothing
+# here *forces* a version, so a future transitive bump past these wins on its own. The symptom
+# is a runtime Wasm failure, so no build task catches a regression: load the page.
+# `-beta02` sits above the stable 2.10.x sibling because the fix is not in a stable release yet.
 androidxLifecycleAosp = "2.11.0-beta02"
 androidxSavedstateAosp = "1.5.0"
 androidxNavigationeventAosp = "1.1.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinxCoroutines" }
 
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
@@ -51,10 +48,8 @@ compose-material3 = { module = "org.jetbrains.compose.material3:material3", vers
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
-compose-material3-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "composeMultiplatformAdaptive" }
 compose-material3-adaptive-navigation-suite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version.ref = "composeMultiplatformMaterial3" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
-compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 
 # --- demo app only ---
@@ -100,3 +95,4 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechPublish" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }

@@ -14,10 +14,10 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "dev.parez.barz.sample.MainKt"
+        mainClass = "dev.parez.navbarz.sample.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "dev.parez.barz.sample"
+            packageName = "dev.parez.navbarz.sample"
             packageVersion = "1.0.0"
         }
     }

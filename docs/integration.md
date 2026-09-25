@@ -7,12 +7,14 @@
 One dependency, on every platform. It goes in your **shared** KMP module, not in the per-platform
 shells — the iOS chrome rides along inside the Kotlin framework.
 
+It is on Maven Central, so `mavenCentral()` is the only repository you need.
+
 ```kotlin
 // shared/build.gradle.kts
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("dev.parez.barz:barz:0.1.0-SNAPSHOT")
+            implementation("dev.parez.navbarz:navbarz:0.1.0")
         }
     }
 }
@@ -23,19 +25,19 @@ With a version catalog:
 ```toml
 # gradle/libs.versions.toml
 [versions]
-barz = "0.1.0-SNAPSHOT"
+navbarz = "0.1.0"
 
 [libraries]
-barz = { module = "dev.parez.barz:barz", version.ref = "barz" }
+navbarz = { module = "dev.parez.navbarz:navbarz", version.ref = "navbarz" }
 ```
 
 There is no Swift package and no SPM step. See the [iOS guide](ios.md) for why.
 
 ### From the Kotlin Toolchain (ex-Amper)
 
-Barz's Gradle publication carries Gradle Module Metadata, so the Kotlin Toolchain resolves the root
-coordinate into the right per-platform variant exactly as Gradle does. Verified against CLI 0.12.2
-on jvm, android, iosArm64, iosSimulatorArm64, js and wasmJs:
+NavBarz's Gradle publication carries Gradle Module Metadata, so the Kotlin Toolchain resolves the
+root coordinate into the right per-platform variant exactly as Gradle does. Verified against CLI
+0.12.2 on jvm, android, iosArm64, iosSimulatorArm64, js and wasmJs:
 
 ```yaml
 # module.yaml
@@ -44,7 +46,7 @@ product:
   platforms: [jvm, android, iosArm64, iosSimulatorArm64, js, wasmJs]
 
 dependencies:
-  - dev.parez.barz:barz:0.1.0-SNAPSHOT
+  - dev.parez.navbarz:navbarz:0.1.0
 
 settings:
   compose: enabled
@@ -52,14 +54,14 @@ settings:
 
 ## Which entry point
 
-Barz has four, in decreasing order of how much it does for you.
+NavBarz has four, in decreasing order of how much it does for you.
 
 | Use | When |
 |---|---|
 | [`AdaptiveNavigationScaffold`](#adaptivenavigationscaffold) | You want chrome that changes shape with the window. This is the one. |
 | [`AdaptiveNavigationBar`](#adaptivenavigationbar) | You want a bottom bar and nothing else, inside your own `Scaffold`. |
 | [`rememberNavigationMode`](#remembernavigationmode) | You want the decision but not the container. |
-| [`barzTabBarController`](ios.md) | iOS, and you want the system to own the bar. |
+| [`navBarzTabBarController`](ios.md) | iOS, and you want the system to own the bar. |
 
 ### AdaptiveNavigationScaffold
 
@@ -117,8 +119,9 @@ when (rememberNavigationMode()) {
 }
 ```
 
-State-backed, so desktop window drags and browser resizes recompose live. Despite the `remember`
-prefix it caches nothing — it is a pure computation per recomposition.
+State-backed, so desktop window drags and browser resizes recompose live — but only at the two
+thresholds. The window size behind it changes every frame of a drag; the mode is wrapped in
+`derivedStateOf` so your content is not invalidated sixty times a second on the way past 600dp.
 
 ## Icons
 
@@ -156,7 +159,7 @@ AdaptiveNavigationConfig(
         drawerFromWidthDp = 1200,
         minHeightDp = 480,
     ),
-    ios = IosOptions(),
+    ios = IosBarOptions(),
 )
 ```
 
@@ -199,17 +202,14 @@ Only the override matching the running platform is consulted, so this is safe to
 and drawer**; a bottom bar has nowhere to put it, so it is ignored there.
 
 Supplying one also gives the rail its top spacing — Material reserves only 4dp above the first item
-and expects a header to do the rest, so Barz stands in with 8dp when there is none.
+and expects a header to do the rest, so NavBarz stands in with 8dp when there is none.
 
-Barz has no FAB slot, deliberately. A primary action is the app's business, and the idiom differs
+NavBarz has no FAB slot, deliberately. A primary action is the app's business, and the idiom differs
 too much per platform to wrap honestly: use `Scaffold`'s `floatingActionButton` on Android, Desktop
 and Web, and on iOS either an extra tab item you intercept in the delegate or
 `UITabBarController.bottomAccessory`.
 
 ## Platform notes
-
-Foldable posture (`isTabletop`) is reported on Android only; every other target returns a default
-`Posture()`. Window *size* is live everywhere.
 
 `currentPlatform` is a plain `val`, not a `CompositionLocal` — it cannot be faked in tests, which
 matters if you try to unit-test the iOS-gated paths.

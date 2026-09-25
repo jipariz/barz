@@ -1,11 +1,11 @@
-# Barz
+# NavBarz
 
 Adaptive navigation chrome for Compose Multiplatform. One list of destinations; a bottom bar, a
 navigation rail or a permanent drawer depending on the window — and a real `UITabBarController` on
 iOS rather than an imitation of one.
 
 ```kotlin
-implementation("dev.parez.barz:barz:0.1.0-SNAPSHOT")
+implementation("dev.parez.navbarz:navbarz:0.1.0")
 ```
 
 | Target | Chrome |
@@ -29,9 +29,9 @@ on the same code path — only the window changed.
 
 ### Foldables
 
-Barz holds the drawer back until **1200dp**, not Material's 840dp "expanded". An unfolded Pixel 10
-Pro Fold is 852dp wide — under Material's default that earns a permanent drawer eating ~40% of the
-screen; under Barz it gets a rail, and the content keeps its two panes.
+NavBarz holds the drawer back until **1200dp**, not Material's 840dp "expanded". An unfolded Pixel
+10 Pro Fold is 852dp wide — under Material's default that earns a permanent drawer eating ~40% of
+the screen; under NavBarz it gets a rail, and the content keeps its two panes.
 
 | Folded — 443dp, bottom bar | Unfolded — 852dp, rail |
 |---|---|
@@ -39,9 +39,9 @@ screen; under Barz it gets a rail, and the content keeps its two panes.
 
 ### iOS, natively
 
-`barzTabBarController` builds a real `UITabBarController`, so the system — not Barz — decides where
-the bar goes. On iPhone it is a Liquid Glass tab bar; on iPad it adapts to a sidebar; on iPhone Duo
-it relocates to the side strip by itself, in both postures.
+`navBarzTabBarController` builds a real `UITabBarController`, so the system — not NavBarz — decides
+where the bar goes. On iPhone it is a Liquid Glass tab bar; on iPad it adapts to a sidebar; on
+iPhone Duo it relocates to the side strip by itself, in both postures.
 
 | iPhone | iPad — sidebar | iPhone Duo, folded | iPhone Duo, open |
 |---|---|---|---|
@@ -66,8 +66,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import dev.parez.barz.AdaptiveNavigationScaffold
-import dev.parez.barz.NavigationItem
+import dev.parez.navbarz.AdaptiveNavigationScaffold
+import dev.parez.navbarz.NavigationItem
 
 private val items = listOf(
     NavigationItem(title = "Home", systemIcon = "house"),
@@ -104,7 +104,7 @@ Note it is a **required** parameter that sits after two defaulted ones, so name 
 ## The sample
 
 `sample/` is a Pokédex on [PokéAPI](https://pokeapi.co) with three tabs — Pokemon, Team, Settings —
-running on all five targets from one `commonMain`. It exercises both adaptive axes at once: Barz
+running on all five targets from one `commonMain`. It exercises both adaptive axes at once: NavBarz
 picks the chrome from the window, and *inside* the Pokemon tab a `ListDetailPaneScaffold`
 independently splits into two panes.
 
@@ -118,9 +118,11 @@ open sample/iosApp/iosApp.xcodeproj
 ## Building this repo
 
 ```sh
-./gradlew :barz:allTests              # jvm, android host, iOS simulator
-./gradlew :barz:checkKotlinAbi        # fails if the public API changed
-./gradlew :barz:publishToMavenLocal
+./gradlew build                       # compiles every target, runs the tests and the ABI check
+./gradlew :navbarz:allTests              # jvm, android host, iOS simulator
+./gradlew :navbarz:checkKotlinAbi        # fails if the public API changed
+./gradlew :navbarz:publishToMavenLocal
+./gradlew ktfmtFormat                 # ktfmt, kotlinlang style; `ktfmtCheck` in CI
 ```
 
 Web targets are compile-verified rather than tested: Karma needs a local Chrome, and Node cannot
