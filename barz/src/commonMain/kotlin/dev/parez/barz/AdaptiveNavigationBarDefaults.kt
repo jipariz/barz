@@ -30,23 +30,23 @@ object AdaptiveNavigationBarDefaults {
         unselectedTextColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
         badgeContainerColor: Color = MaterialTheme.colorScheme.error,
         badgeContentColor: Color = MaterialTheme.colorScheme.onError,
-    ): AdaptiveNavigationBarColors = AdaptiveNavigationBarColors(
-        containerColor = containerColor,
-        indicatorColor = indicatorColor,
-        selectedIconColor = selectedIconColor,
-        selectedTextColor = selectedTextColor,
-        unselectedIconColor = unselectedIconColor,
-        unselectedTextColor = unselectedTextColor,
-        badgeContainerColor = badgeContainerColor,
-        badgeContentColor = badgeContentColor,
-    )
+    ): AdaptiveNavigationBarColors =
+        AdaptiveNavigationBarColors(
+            containerColor = containerColor,
+            indicatorColor = indicatorColor,
+            selectedIconColor = selectedIconColor,
+            selectedTextColor = selectedTextColor,
+            unselectedIconColor = unselectedIconColor,
+            unselectedTextColor = unselectedTextColor,
+            badgeContainerColor = badgeContainerColor,
+            badgeContentColor = badgeContentColor,
+        )
 
     /**
      * Builds a config, optionally overriding it per platform.
      *
-     * This is how you say "desktop should always use a drawer, phones should never leave the
-     * bottom bar" from shared code:
-     *
+     * This is how you say "desktop should always use a drawer, phones should never leave the bottom
+     * bar" from shared code:
      * ```
      * val config = AdaptiveNavigationBarDefaults.config(
      *     android = AdaptiveNavigationConfig(allowedModes = setOf(NavigationMode.BottomBar)),
@@ -63,10 +63,11 @@ object AdaptiveNavigationBarDefaults {
         desktop: AdaptiveNavigationConfig? = null,
         web: AdaptiveNavigationConfig? = null,
         ios: AdaptiveNavigationConfig? = null,
-    ): AdaptiveNavigationConfig = when (currentPlatform) {
-        BarzPlatform.Android -> android
-        BarzPlatform.Desktop -> desktop
-        BarzPlatform.Web -> web
-        BarzPlatform.Ios -> ios
-    } ?: default
+    ): AdaptiveNavigationConfig =
+        when (currentPlatform) {
+            BarzPlatform.Android -> android
+            BarzPlatform.Desktop -> desktop
+            BarzPlatform.Web -> web
+            BarzPlatform.Ios -> ios
+        } ?: default
 }

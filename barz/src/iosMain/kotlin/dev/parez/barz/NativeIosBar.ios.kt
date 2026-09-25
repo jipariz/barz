@@ -54,19 +54,21 @@ internal actual fun NativeIosBar(
     // selection tap included — and rebuilding these there re-resolved every SF Symbol and called
     // setItems, which tears down and recreates the bar's subviews and kills the selection
     // animation the native bar exists to provide.
-    val barItems = remember(items) {
-        items.mapIndexed { index, item ->
-            UITabBarItem(
-                title = item.title.takeIf { item.showLabel },
-                image = item.systemIcon.asUIImage(),
-                tag = index.toLong(),
-            ).apply {
-                item.selectedSystemIcon?.let { selectedImage = it.asUIImage() }
-                badgeValue = item.badge ?: if (item.showBadgeDot) "" else null
-                enabled = item.enabled
+    val barItems =
+        remember(items) {
+            items.mapIndexed { index, item ->
+                UITabBarItem(
+                        title = item.title.takeIf { item.showLabel },
+                        image = item.systemIcon.asUIImage(),
+                        tag = index.toLong(),
+                    )
+                    .apply {
+                        item.selectedSystemIcon?.let { selectedImage = it.asUIImage() }
+                        badgeValue = item.badge ?: if (item.showBadgeDot) "" else null
+                        enabled = item.enabled
+                    }
             }
         }
-    }
 
     UIKitView(
         factory = {
@@ -100,13 +102,21 @@ private class NativeBarDelegate : NSObject(), UITabBarDelegateProtocol {
     }
 }
 
-private fun Color.toUIColor(): UIColor? = takeIf { it != Color.Unspecified }?.let {
-    UIColor.colorWithRed(it.red.toDouble(), it.green.toDouble(), it.blue.toDouble(), it.alpha.toDouble())
+private fun Color.toUIColor(): UIColor? = takeIf {
+    it != Color.Unspecified
 }
+    ?.let {
+        UIColor.colorWithRed(
+            it.red.toDouble(),
+            it.green.toDouble(),
+            it.blue.toDouble(),
+            it.alpha.toDouble(),
+        )
+    }
 
 /**
- * SF Symbol first, asset catalog second — consumers often ship their own glyphs rather than
- * SF Symbols. Shared with [barzTabBarController], which used to omit the fallback.
+ * SF Symbol first, asset catalog second — consumers often ship their own glyphs rather than SF
+ * Symbols. Shared with [barzTabBarController], which used to omit the fallback.
  */
 internal fun String.asUIImage(): UIImage? =
     UIImage.systemImageNamed(this) ?: UIImage.imageNamed(this)

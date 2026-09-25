@@ -20,8 +20,8 @@ data class TeamMember(
 /**
  * The team roster: an ordered list of at most [TEAM_CAPACITY] members.
  *
- * [add] returns `false` when the team is full rather than throwing or silently dropping — the caller
- * turns that into the design's "Team is full!" dialog.
+ * [add] returns `false` when the team is full rather than throwing or silently dropping — the
+ * caller turns that into the design's "Team is full!" dialog.
  */
 class TeamState {
     private val _members = MutableStateFlow<List<TeamMember>>(emptyList())

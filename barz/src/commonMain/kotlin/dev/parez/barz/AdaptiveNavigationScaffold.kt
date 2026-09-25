@@ -1,15 +1,12 @@
 package dev.parez.barz
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
@@ -23,7 +20,6 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -44,9 +40,9 @@ import androidx.compose.ui.unit.dp
  * Use [AdaptiveNavigationBar] instead if you want a plain bottom bar in a `Scaffold`, and
  * [rememberNavigationMode] if you want the decision without the container.
  *
- * On iOS this renders the Compose container, not a `UITabBarController` — the rail and drawer
- * have no UIKit equivalent, so there is nothing native to defer to above bottom-bar widths. If you
- * want the system to own the bar (and reposition it on a foldable), root the app in
+ * On iOS this renders the Compose container, not a `UITabBarController` — the rail and drawer have
+ * no UIKit equivalent, so there is nothing native to defer to above bottom-bar widths. If you want
+ * the system to own the bar (and reposition it on a foldable), root the app in
  * [barzTabBarController] instead of using this scaffold.
  *
  * @param header optional content above the items in the rail and the drawer — a logo, a menu
@@ -121,9 +117,7 @@ fun AdaptiveNavigationScaffold(
                                 // Same gutter the items below get. PermanentDrawerSheet lays its
                                 // content out edge to edge, and unlike the rail it does not centre
                                 // it, so an unpadded header is clipped by the sheet's edge.
-                                Column(
-                                    Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                                ) {
+                                Column(Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)) {
                                     header?.invoke(this)
                                 }
                                 Spacer(Modifier.height(TopContentSpacing))
@@ -137,12 +131,13 @@ fun AdaptiveNavigationScaffold(
                                         selected = selected,
                                         // NavigationDrawerItem has no `enabled`; approximate it so
                                         // a disabled item is at least inert and announced as such.
-                                        onClick = {
-                                            if (navItem.enabled) onItemSelected(index)
-                                        },
+                                        onClick = { if (navItem.enabled) onItemSelected(index) },
                                         icon = {
                                             NavigationItemIcon(
-                                                navItem, index, selected, icon,
+                                                navItem,
+                                                index,
+                                                selected,
+                                                icon,
                                                 showBadge = false,
                                             )
                                         },
@@ -166,23 +161,25 @@ private val TopContentSpacing = 8.dp
 
 /**
  * @Composable so the returned lambda is compiler-memoized. As a plain function it allocated a fresh
- * lambda per call, changing the `label` parameter's identity every recomposition and stopping the
- * Material item from ever skipping.
+ *   lambda per call, changing the `label` parameter's identity every recomposition and stopping the
+ *   Material item from ever skipping.
  */
 @Composable
 private fun NavigationItem.labelOrNull(): (@Composable () -> Unit)? =
     if (showLabel) ({ Text(title) }) else null
 
-private fun NavigationMode.toSuiteType(): NavigationSuiteType = when (this) {
-    NavigationMode.BottomBar -> NavigationSuiteType.NavigationBar
-    NavigationMode.Rail -> NavigationSuiteType.NavigationRail
-    NavigationMode.Drawer -> NavigationSuiteType.NavigationDrawer
-}
+private fun NavigationMode.toSuiteType(): NavigationSuiteType =
+    when (this) {
+        NavigationMode.BottomBar -> NavigationSuiteType.NavigationBar
+        NavigationMode.Rail -> NavigationSuiteType.NavigationRail
+        NavigationMode.Drawer -> NavigationSuiteType.NavigationDrawer
+    }
 
 /** The drawer renders badges in its own end slot rather than over the icon. */
 @Composable
-private fun NavigationItem.badgeLabel(): (@Composable () -> Unit)? = when {
-    badge != null -> ({ Text(badge) })
-    showBadgeDot -> ({ Text("") })
-    else -> null
-}
+private fun NavigationItem.badgeLabel(): (@Composable () -> Unit)? =
+    when {
+        badge != null -> ({ Text(badge) })
+        showBadgeDot -> ({ Text("") })
+        else -> null
+    }

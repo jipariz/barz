@@ -124,5 +124,4 @@ val MonoTagStyle =
  * Read off the background rather than threaded down from [DemoApp]: the type-tag shades and the
  * settings controls are the only things that need it, and both are deep in the tree.
  */
-@Composable
-fun isDarkScheme(): Boolean = MaterialTheme.colorScheme.background.luminance() < 0.5f
+@Composable fun isDarkScheme(): Boolean = MaterialTheme.colorScheme.background.luminance() < 0.5f

@@ -32,8 +32,9 @@ class PokemonRepository(private val api: PokemonApi) {
     private val entries = MutableStateFlow<Map<Int, PokemonListEntry>>(emptyMap())
     private val details = MutableStateFlow<Map<Int, PokemonDetail>>(emptyMap())
 
-    fun observePokemonList(): Flow<List<PokemonListEntry>> =
-        entries.map { it.values.sortedBy { entry -> entry.id } }
+    fun observePokemonList(): Flow<List<PokemonListEntry>> = entries.map {
+        it.values.sortedBy { entry -> entry.id }
+    }
 
     fun observeDetail(id: Int): Flow<PokemonDetail?> = details.map { it[id] }
 
@@ -46,7 +47,9 @@ class PokemonRepository(private val api: PokemonApi) {
             // Before the entries, so subscribers never see the final page alongside hasMore = true.
             _hasMore.value = response.next != null
             entries.value = entries.value + response.results.associateBy { it.id }
-            Logger.i(tag = "Repository") { "fetchNextPage: cached ${response.results.size} entries" }
+            Logger.i(tag = "Repository") {
+                "fetchNextPage: cached ${response.results.size} entries"
+            }
         }
     }
 

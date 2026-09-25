@@ -5,8 +5,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 /**
- * Renders a team member's added-at stamp the way the design does — "Dec 5, 11:30 AM", or
- * "Dec 5, 11:30" when the 24-hour setting is on.
+ * Renders a team member's added-at stamp the way the design does — "Dec 5, 11:30 AM", or "Dec 5,
+ * 11:30" when the 24-hour setting is on.
  *
  * Hand-rolled rather than delegating to a platform formatter: `kotlinx-datetime` has no common
  * formatter for localised month names, and an `expect`/`actual` per target for one short string

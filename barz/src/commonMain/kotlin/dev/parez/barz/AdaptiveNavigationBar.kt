@@ -1,34 +1,27 @@
 package dev.parez.barz
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.painterResource
 
 /**
  * A navigation bar that renders in the platform's idiom.
  *
  * Drop-in replacement for a Material 3 `NavigationBar`:
- *
  * ```
  * Scaffold(
  *     bottomBar = {
@@ -86,13 +79,25 @@ fun AdaptiveNavigationBar(
             // The pill already sits inside the caller's insets; letting the inner NavigationBar
             // apply the system bottom inset again inflates it by the gesture-bar height.
             BarContent(
-                items, selectedIndex, onItemSelected, icon, colors, Color.Transparent,
+                items,
+                selectedIndex,
+                onItemSelected,
+                icon,
+                colors,
+                Color.Transparent,
                 windowInsets = WindowInsets(0),
             )
         }
     } else {
-        BarContent(items, selectedIndex, onItemSelected, icon, colors, colors.containerColor,
-            modifier)
+        BarContent(
+            items,
+            selectedIndex,
+            onItemSelected,
+            icon,
+            colors,
+            colors.containerColor,
+            modifier,
+        )
     }
 }
 
@@ -100,9 +105,9 @@ fun AdaptiveNavigationBar(
  * Overload for apps whose icons are [ImageVector]s (`Icons.Default.*`) rather than Compose
  * resources. [NavigationItem.icon] is ignored in favour of [icon].
  *
- * Delegates rather than duplicating: as its own implementation it bypassed the native-bar and
- * glass branches entirely, so an iOS app that happened to use ImageVector icons silently got a
- * plain Compose bar with no way to tell.
+ * Delegates rather than duplicating: as its own implementation it bypassed the native-bar and glass
+ * branches entirely, so an iOS app that happened to use ImageVector icons silently got a plain
+ * Compose bar with no way to tell.
  */
 @Composable
 fun AdaptiveNavigationBar(
@@ -161,7 +166,10 @@ private fun BarContent(
                 enabled = item.enabled,
                 icon = {
                     NavigationItemIcon(
-                        item, index, selected, icon,
+                        item,
+                        index,
+                        selected,
+                        icon,
                         badgeContainerColor = colors.badgeContainerColor,
                         badgeContentColor = colors.badgeContentColor,
                     )
@@ -177,10 +185,11 @@ internal fun NavigationItem.iconFor(selected: Boolean) =
     if (selected) selectedIcon ?: icon else icon
 
 @Composable
-private fun AdaptiveNavigationBarColors.itemColors() = NavigationBarItemDefaults.colors(
-    selectedIconColor = selectedIconColor,
-    selectedTextColor = selectedTextColor,
-    unselectedIconColor = unselectedIconColor,
-    unselectedTextColor = unselectedTextColor,
-    indicatorColor = indicatorColor,
-)
+private fun AdaptiveNavigationBarColors.itemColors() =
+    NavigationBarItemDefaults.colors(
+        selectedIconColor = selectedIconColor,
+        selectedTextColor = selectedTextColor,
+        unselectedIconColor = unselectedIconColor,
+        unselectedTextColor = unselectedTextColor,
+        indicatorColor = indicatorColor,
+    )

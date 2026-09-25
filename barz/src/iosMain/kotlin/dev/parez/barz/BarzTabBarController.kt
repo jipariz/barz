@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.ComposeUIViewController
 import platform.Foundation.NSBundle
 import platform.Foundation.NSSelectorFromString
-import platform.UIKit.UIImage
 import platform.UIKit.UITabBarAppearance
 import platform.UIKit.UITabBarController
 import platform.UIKit.UITabBarControllerDelegateProtocol
@@ -52,31 +51,34 @@ private class BarzTabBarController(
 
     // UIKit holds `delegate` weakly, so the object has to be owned by something that outlives the
     // call. Keeping it as a field of the controller is the simplest thing that does that.
-    private val tabDelegate = object : NSObject(), UITabBarControllerDelegateProtocol {
-        override fun tabBarController(
-            tabBarController: UITabBarController,
-            didSelectViewController: UIViewController,
-        ) {
-            onSelect(tabBarController.selectedIndex.toInt())
+    private val tabDelegate =
+        object : NSObject(), UITabBarControllerDelegateProtocol {
+            override fun tabBarController(
+                tabBarController: UITabBarController,
+                didSelectViewController: UIViewController,
+            ) {
+                onSelect(tabBarController.selectedIndex.toInt())
+            }
         }
-    }
 
     init {
         setViewControllers(
             items.mapIndexed { index, item ->
-                ComposeUIViewController { content(index) }.also { vc ->
-                    vc.setTabBarItem(
-                        UITabBarItem(
-                            title = item.title.takeIf { item.showLabel },
-                            image = item.systemIcon.asUIImage(),
-                            selectedImage = item.selectedSystemIcon?.asUIImage(),
-                        ).apply {
-                            badgeValue = item.badge ?: if (item.showBadgeDot) "" else null
-                            enabled = item.enabled
-                        },
-                    )
-                }
-            },
+                ComposeUIViewController { content(index) }
+                    .also { vc ->
+                        vc.setTabBarItem(
+                            UITabBarItem(
+                                    title = item.title.takeIf { item.showLabel },
+                                    image = item.systemIcon.asUIImage(),
+                                    selectedImage = item.selectedSystemIcon?.asUIImage(),
+                                )
+                                .apply {
+                                    badgeValue = item.badge ?: if (item.showBadgeDot) "" else null
+                                    enabled = item.enabled
+                                }
+                        )
+                    }
+            }
         )
         delegate = tabDelegate
 

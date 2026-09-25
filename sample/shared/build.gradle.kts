@@ -40,8 +40,7 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    applyDefaultHierarchyTemplate()
+    @OptIn(ExperimentalKotlinGradlePluginApi::class) applyDefaultHierarchyTemplate()
 
     sourceSets {
         // `BrowserHistoryEffect` has a real implementation on web and a no-op everywhere else.

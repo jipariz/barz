@@ -7,8 +7,8 @@ import org.jetbrains.compose.resources.DrawableResource
  * One navigation destination.
  *
  * A single item carries both platforms' iconography because the same list drives a Compose
- * container on Android/Desktop/Web and a native `UITabBarController` on iOS — the two need different
- * icon types and there is no sensible common denominator.
+ * container on Android/Desktop/Web and a native `UITabBarController` on iOS — the two need
+ * different icon types and there is no sensible common denominator.
  *
  * @param title label shown next to or under the icon.
  * @param icon drawable used by the Compose containers. Optional: pass an `icon` slot to

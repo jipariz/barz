@@ -38,13 +38,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.rememberNavBackStack
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.platformLogWriter
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.blur.HazeBlurStyle
+import dev.chrisbanes.haze.blur.hazeBlur
 import dev.parez.barz.AdaptiveNavigationScaffold
 import dev.parez.barz.NavigationItem
 import dev.parez.barz.NavigationMode
 import dev.parez.barz.rememberNavigationMode
-import dev.chrisbanes.haze.HazeInput
-import dev.chrisbanes.haze.blur.HazeBlurStyle
-import dev.chrisbanes.haze.blur.hazeBlur
 import dev.parez.barz.sample.di.LibraryKoinContext
 import dev.parez.barz.sample.navigation.BrowserHistoryEffect
 import dev.parez.barz.sample.navigation.DemoSavedStateConfiguration
@@ -101,8 +101,8 @@ val DemoNavItems: List<NavigationItem> =
  * The whole demo, navigation chrome included — Barz's Compose container picks a bottom bar, a rail
  * or a drawer from the window size.
  *
- * iOS roots itself in `barzTabBarController` and calls [DemoTab] per tab instead, so the system owns
- * the bar there. See `MainViewController.kt`.
+ * iOS roots itself in `barzTabBarController` and calls [DemoTab] per tab instead, so the system
+ * owns the bar there. See `MainViewController.kt`.
  */
 @Composable
 fun DemoApp() {
@@ -180,43 +180,48 @@ private fun TabContent(tab: Tab) {
 
     Column(Modifier.fillMaxSize().hazeBlur(input = HazeInput.Content, style = ContentBlur)) {
         tabState.SaveableStateProvider(tab) {
-        when (tab) {
-            Tab.POKEMON -> {
-                // Only this tab drills down, so it is the only one with a nav3 stack. On web
-                // `BrowserHistoryEffect` binds it to the History API so the URL and browser
-                // back/forward stay in sync.
-                val backStack = rememberNavBackStack(DemoSavedStateConfiguration, PokemonListKey)
-                BrowserHistoryEffect(backStack)
-                PokemonCatalog(
-                    backStack = backStack,
-                    team = team,
-                    unit = unit,
-                    onTeamFull = { teamFull = true },
-                    contentPadding = insets,
-                )
+            when (tab) {
+                Tab.POKEMON -> {
+                    // Only this tab drills down, so it is the only one with a nav3 stack. On web
+                    // `BrowserHistoryEffect` binds it to the History API so the URL and browser
+                    // back/forward stay in sync.
+                    val backStack =
+                        rememberNavBackStack(DemoSavedStateConfiguration, PokemonListKey)
+                    BrowserHistoryEffect(backStack)
+                    PokemonCatalog(
+                        backStack = backStack,
+                        team = team,
+                        unit = unit,
+                        onTeamFull = { teamFull = true },
+                        contentPadding = insets,
+                    )
+                }
+                Tab.TEAM -> {
+                    ScreenHeader(
+                        "Team",
+                        trailing = "${members.size}/$TEAM_CAPACITY",
+                        insets = insets,
+                    )
+                    TeamScreen(
+                        members = members,
+                        twentyFourHourTime = twentyFourHourTime,
+                        onRemove = team::remove,
+                        contentPadding = insets.withoutTop(),
+                    )
+                }
+                Tab.SETTINGS -> {
+                    ScreenHeader("Settings", insets = insets)
+                    SettingsScreen(
+                        unit = unit,
+                        onUnitChange = settings::setUnit,
+                        twentyFourHourTime = twentyFourHourTime,
+                        onTwentyFourHourTimeChange = settings::setTwentyFourHourTime,
+                        mode = mode,
+                        onModeChange = settings::setMode,
+                        contentPadding = insets.withoutTop(),
+                    )
+                }
             }
-            Tab.TEAM -> {
-                ScreenHeader("Team", trailing = "${members.size}/$TEAM_CAPACITY", insets = insets)
-                TeamScreen(
-                    members = members,
-                    twentyFourHourTime = twentyFourHourTime,
-                    onRemove = team::remove,
-                    contentPadding = insets.withoutTop(),
-                )
-            }
-            Tab.SETTINGS -> {
-                ScreenHeader("Settings", insets = insets)
-                SettingsScreen(
-                    unit = unit,
-                    onUnitChange = settings::setUnit,
-                    twentyFourHourTime = twentyFourHourTime,
-                    onTwentyFourHourTimeChange = settings::setTwentyFourHourTime,
-                    mode = mode,
-                    onModeChange = settings::setMode,
-                    contentPadding = insets.withoutTop(),
-                )
-            }
-        }
         }
     }
 

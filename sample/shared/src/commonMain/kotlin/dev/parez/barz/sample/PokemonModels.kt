@@ -17,14 +17,15 @@ data class PokemonListEntry(val name: String, val url: String) {
     /**
      * Extracted from the URL: "https://pokeapi.co/api/v2/pokemon/1/" → 1.
      *
-     * Computed once, not per access. As a getter this ran three allocations every time it was
-     * read — including from `key = { it.id }`, which a lazy grid calls for every visible item on
-     * every measure pass — and `toInt()` would have thrown from inside that key lambda, during
+     * Computed once, not per access. As a getter this ran three allocations every time it was read
+     * — including from `key = { it.id }`, which a lazy grid calls for every visible item on every
+     * measure pass — and `toInt()` would have thrown from inside that key lambda, during
      * measurement, where it cannot be caught.
      */
-    val id: Int by lazy(LazyThreadSafetyMode.NONE) {
-        url.trimEnd('/').substringAfterLast('/').toIntOrNull() ?: 0
-    }
+    val id: Int by
+        lazy(LazyThreadSafetyMode.NONE) {
+            url.trimEnd('/').substringAfterLast('/').toIntOrNull() ?: 0
+        }
 }
 
 // ── Detail endpoint ───────────────────────────────────────────────────────────
@@ -62,4 +63,3 @@ fun artworkUrlFor(id: Int): String = "$SPRITES/pokemon/other/official-artwork/$i
 
 fun String.toDisplayName(): String =
     replace('-', ' ').split(' ').joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
-

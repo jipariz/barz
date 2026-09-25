@@ -35,18 +35,20 @@ class NavigationModeResolverTest {
 
     @Test
     fun `breakpoints are configurable`() {
-        val eager = AdaptiveNavigationConfig(
-            breakpoints = NavigationBreakpoints(railFromWidthDp = 400, drawerFromWidthDp = 700),
-        )
+        val eager =
+            AdaptiveNavigationConfig(
+                breakpoints = NavigationBreakpoints(railFromWidthDp = 400, drawerFromWidthDp = 700)
+            )
         assertEquals(NavigationMode.Rail, mode(411f, 891f, eager))
         assertEquals(NavigationMode.Drawer, mode(851f, 883f, eager))
     }
 
     @Test
     fun `allowedModes caps the mode instead of failing`() {
-        val noDrawer = AdaptiveNavigationConfig(
-            allowedModes = setOf(NavigationMode.BottomBar, NavigationMode.Rail),
-        )
+        val noDrawer =
+            AdaptiveNavigationConfig(
+                allowedModes = setOf(NavigationMode.BottomBar, NavigationMode.Rail)
+            )
         assertEquals(NavigationMode.Rail, mode(1600f, 1200f, noDrawer))
 
         val barOnly = AdaptiveNavigationConfig(allowedModes = setOf(NavigationMode.BottomBar))
@@ -95,9 +97,10 @@ class NavigationModeResolverTest {
 
     @Test
     fun `rail clamps down to bottom bar when rail is disallowed`() {
-        val noRail = AdaptiveNavigationConfig(
-            allowedModes = setOf(NavigationMode.BottomBar, NavigationMode.Drawer),
-        )
+        val noRail =
+            AdaptiveNavigationConfig(
+                allowedModes = setOf(NavigationMode.BottomBar, NavigationMode.Drawer)
+            )
         assertEquals(NavigationMode.BottomBar, mode(800f, 900f, noRail))
     }
 

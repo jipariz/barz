@@ -11,8 +11,8 @@ import androidx.compose.ui.unit.dp
  * Adds two [PaddingValues] edge-wise.
  *
  * Scrolling screens need the window insets handed down by the navigation scaffold *plus* their own
- * gutter, and both have to reach `contentPadding` — `Modifier.padding` on a lazy container clips the
- * scroll instead of insetting its content, so the bar would slice through the list as it moves.
+ * gutter, and both have to reach `contentPadding` — `Modifier.padding` on a lazy container clips
+ * the scroll instead of insetting its content, so the bar would slice through the list as it moves.
  */
 @Composable
 internal operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
@@ -21,8 +21,7 @@ internal operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
     // width and the iPhone Duo's side strip, which is the whole reason this helper exists.
     val direction = LocalLayoutDirection.current
     return PaddingValues(
-        start =
-            calculateStartPadding(direction) + other.calculateStartPadding(direction),
+        start = calculateStartPadding(direction) + other.calculateStartPadding(direction),
         top = calculateTopPadding() + other.calculateTopPadding(),
         end = calculateEndPadding(direction) + other.calculateEndPadding(direction),
         bottom = calculateBottomPadding() + other.calculateBottomPadding(),

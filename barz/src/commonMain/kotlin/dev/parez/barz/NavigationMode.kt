@@ -47,11 +47,11 @@ data class NavigationBreakpoints(
  *
  * There are three levels of "native" available, and only two of them are choices here:
  *
- * | | Liquid Glass | repositioned on a foldable |
- * |---|---|---|
- * | [ComposeGlass] | imitated | no |
- * | [NativeTabBar] | **real** | no |
- * | [barzTabBarController] | **real** | **yes** |
+ * |                        | Liquid Glass | repositioned on a foldable |
+ * |------------------------|--------------|----------------------------|
+ * | [ComposeGlass]         | imitated     | no                         |
+ * | [NativeTabBar]         | **real**     | no                         |
+ * | [barzTabBarController] | **real**     | **yes**                    |
  *
  * The third is not a value in this enum because it is not a rendering choice — it replaces your
  * root view controller. Liquid Glass is a property of the *view*, so an embedded `UITabBar` gets
@@ -59,14 +59,14 @@ data class NavigationBreakpoints(
  */
 enum class IosChrome {
     /**
-     * A real `UITabBar` embedded through `UIKitView`. Genuine system material, laid out by
-     * Compose. The default: it looks native and costs nothing structurally.
+     * A real `UITabBar` embedded through `UIKitView`. Genuine system material, laid out by Compose.
+     * The default: it looks native and costs nothing structurally.
      */
     NativeTabBar,
 
     /**
-     * A bar drawn in Compose. Use it when you want full control of the rendering, or on a
-     * platform mix where a uniform look matters more than a native one.
+     * A bar drawn in Compose. Use it when you want full control of the rendering, or on a platform
+     * mix where a uniform look matters more than a native one.
      */
     ComposeGlass,
 }
@@ -80,8 +80,8 @@ enum class IosChrome {
  *   between the system material and an explicitly opaque bar background.
  * @param sidebarAdaptable promote tabs to a sidebar on iPad. Only meaningful for
  *   [barzTabBarController] — an embedded bar has no sidebar mode.
- * @param nativeBarHeight height reserved for the embedded `UITabBar` ([IosChrome.NativeTabBar]).
- *   A UIKit view cannot report its size back through Compose interop, so the host has to reserve
+ * @param nativeBarHeight height reserved for the embedded `UITabBar` ([IosChrome.NativeTabBar]). A
+ *   UIKit view cannot report its size back through Compose interop, so the host has to reserve
  *   space for it. Raise this if your layout adds an offset and the bar ends up clipped.
  */
 @Immutable
@@ -108,6 +108,8 @@ data class AdaptiveNavigationConfig(
     val ios: IosOptions = IosOptions(),
 ) {
     init {
-        require(allowedModes.isNotEmpty()) { "allowedModes must contain at least one NavigationMode" }
+        require(allowedModes.isNotEmpty()) {
+            "allowedModes must contain at least one NavigationMode"
+        }
     }
 }
