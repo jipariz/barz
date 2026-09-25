@@ -17,6 +17,13 @@ kotlin {
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
+        // Looks like an empty block; is not. In AGP's com.android.kotlin.multiplatform.library
+        // DSL this call is what *creates* the Android host-test compilation — without it there is
+        // no androidHostTest task and `allTests` quietly drops to jvm + iosSimulatorArm64. I
+        // deleted it once as dead code and lost a platform's test run without a single failure to
+        // show for it. Leave it.
+        withHostTestBuilder {}.configure {}
+
         compilations.configureEach {
             compileTaskProvider.configure { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
         }
