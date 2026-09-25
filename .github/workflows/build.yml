@@ -26,8 +26,25 @@ jobs:
       # `build` already runs allTests and — because KGP wires check -> checkKotlinAbi — the ABI
       # check too, so neither needs its own step. The committed gradle.properties caps workers at
       # 2 to stay friendly on a laptop; override on the command line so local builds keep theirs.
+      #
+      # The sample's iOS *framework* links are excluded, and nothing is lost by it. `:navbarz` is
+      # the published artifact and is built and tested in full; `:sample:shared` still compiles for
+      # both iOS targets, which is the check that the SDK is usable from iOS code. Linking the
+      # sample's frameworks on top of that verifies nothing further — and the one framework that
+      # does matter, Debug for the simulator, is linked by the xcodebuild step below via the
+      # project's own "Compile Kotlin Framework" phase.
+      #
+      # They are also what has been breaking this job: four concurrent Kotlin/Native links share
+      # the Gradle daemon's heap, and Haze + Ktor + Koin + nav3 in one statically linked binary
+      # does not fit four times over. Not building them is the fix; raising the heap was treating
+      # the symptom.
       - name: Build, test and check the public ABI
-        run: ./gradlew build ktfmtCheck --stacktrace --max-workers=4
+        run: |
+          ./gradlew build ktfmtCheck --stacktrace --max-workers=4 \
+            -x :sample:shared:linkReleaseFrameworkIosArm64 \
+            -x :sample:shared:linkReleaseFrameworkIosSimulatorArm64 \
+            -x :sample:shared:linkDebugFrameworkIosArm64 \
+            -x :sample:shared:linkDebugFrameworkIosSimulatorArm64
 
       - name: Verify the library publishes
         run: ./gradlew :navbarz:publishToMavenLocal
