@@ -29,5 +29,10 @@ dependencyResolutionManagement {
 }
 
 include(":barz")
+
+// Demo app, ported from the sidekick Pokédex: one shared KMP library plus a thin shell per
+// platform. iosApp is a sibling Xcode project, not a Gradle module.
 include(":sample:shared")
 include(":sample:androidApp")
+include(":sample:desktopApp")
+include(":sample:webApp")

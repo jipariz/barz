@@ -1,6 +1,8 @@
 package dev.parez.barz
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 /** The shapes the navigation chrome can take. */
 enum class NavigationMode {
@@ -31,18 +33,31 @@ data class NavigationBreakpoints(
     val minHeightDp: Int = 480,
 )
 
-/** Which implementation supplies the iOS navigation chrome. */
+/**
+ * Which bar [AdaptiveNavigationBar] renders on iOS.
+ *
+ * There are three levels of "native" available, and only two of them are choices here:
+ *
+ * | | Liquid Glass | repositioned on a foldable |
+ * |---|---|---|
+ * | [ComposeGlass] | imitated | no |
+ * | [NativeTabBar] | **real** | no |
+ * | [barzTabBarController] | **real** | **yes** |
+ *
+ * The third is not a value in this enum because it is not a rendering choice — it replaces your
+ * root view controller. Liquid Glass is a property of the *view*, so an embedded `UITabBar` gets
+ * it; foldable placement is a property of the *container*, so only a `UITabBarController` does.
+ */
 enum class IosChrome {
     /**
-     * Real SwiftUI `TabView` from the companion Swift package. Liquid Glass, `sidebarAdaptable`
-     * and future iPhone Duo placement are genuine system behaviour, because they come from a real
-     * system container. Costs an SPM dependency alongside the Gradle one.
+     * A real `UITabBar` embedded through `UIKitView`. Genuine system material, laid out by
+     * Compose. The default: it looks native and costs nothing structurally.
      */
-    NativeTabView,
+    NativeTabBar,
 
     /**
-     * Bar drawn in Compose. One Gradle dependency and no Swift, at the cost of only *imitating*
-     * the system material — an app using this does not get Duo placement or sidebar promotion.
+     * A bar drawn in Compose. Use it when you want full control of the rendering, or on a
+     * platform mix where a uniform look matters more than a native one.
      */
     ComposeGlass,
 }
@@ -50,20 +65,22 @@ enum class IosChrome {
 /**
  * iOS-only knobs. Ignored on every other platform.
  *
- * @param chrome see [IosChrome].
+ * @param chrome which bar [AdaptiveNavigationBar] renders; see [IosChrome].
  * @param liquidGlass **not a true system opt-out.** The only real switch is the app-level
  *   `UIDesignRequiresCompatibility` Info.plist key, which a library cannot set. This flag chooses
  *   between the system material and an explicitly opaque bar background.
- * @param sidebarAdaptable promote tabs to a sidebar on iPad (`.tabViewStyle(.sidebarAdaptable)`).
- *   [IosChrome.NativeTabView] only.
- * @param tabBarMinimizeBehavior let the tab bar shrink on scroll. iOS 26+, ignored below.
+ * @param sidebarAdaptable promote tabs to a sidebar on iPad. Only meaningful for
+ *   [barzTabBarController] — an embedded bar has no sidebar mode.
+ * @param nativeBarHeight height reserved for the embedded `UITabBar` ([IosChrome.NativeTabBar]).
+ *   A UIKit view cannot report its size back through Compose interop, so the host has to reserve
+ *   space for it. Raise this if your layout adds an offset and the bar ends up clipped.
  */
 @Immutable
 data class IosOptions(
-    val chrome: IosChrome = IosChrome.NativeTabView,
+    val chrome: IosChrome = IosChrome.NativeTabBar,
     val liquidGlass: Boolean = true,
     val sidebarAdaptable: Boolean = true,
-    val tabBarMinimizeBehavior: Boolean = true,
+    val nativeBarHeight: Dp = 56.dp,
 )
 
 /**

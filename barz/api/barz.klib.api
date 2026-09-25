@@ -22,7 +22,7 @@ final enum class dev.parez.barz/BarzPlatform : kotlin/Enum<dev.parez.barz/BarzPl
 
 final enum class dev.parez.barz/IosChrome : kotlin/Enum<dev.parez.barz/IosChrome> { // dev.parez.barz/IosChrome|null[0]
     enum entry ComposeGlass // dev.parez.barz/IosChrome.ComposeGlass|null[0]
-    enum entry NativeTabView // dev.parez.barz/IosChrome.NativeTabView|null[0]
+    enum entry NativeTabBar // dev.parez.barz/IosChrome.NativeTabBar|null[0]
 
     final val entries // dev.parez.barz/IosChrome.entries|#static{}entries[0]
         final fun <get-entries>(): kotlin.enums/EnumEntries<dev.parez.barz/IosChrome> // dev.parez.barz/IosChrome.entries.<get-entries>|<get-entries>#static(){}[0]
@@ -97,22 +97,22 @@ final class dev.parez.barz/AdaptiveNavigationConfig { // dev.parez.barz/Adaptive
 }
 
 final class dev.parez.barz/IosOptions { // dev.parez.barz/IosOptions|null[0]
-    constructor <init>(dev.parez.barz/IosChrome = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // dev.parez.barz/IosOptions.<init>|<init>(dev.parez.barz.IosChrome;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+    constructor <init>(dev.parez.barz/IosChrome = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., androidx.compose.ui.unit/Dp = ...) // dev.parez.barz/IosOptions.<init>|<init>(dev.parez.barz.IosChrome;kotlin.Boolean;kotlin.Boolean;androidx.compose.ui.unit.Dp){}[0]
 
     final val chrome // dev.parez.barz/IosOptions.chrome|{}chrome[0]
         final fun <get-chrome>(): dev.parez.barz/IosChrome // dev.parez.barz/IosOptions.chrome.<get-chrome>|<get-chrome>(){}[0]
     final val liquidGlass // dev.parez.barz/IosOptions.liquidGlass|{}liquidGlass[0]
         final fun <get-liquidGlass>(): kotlin/Boolean // dev.parez.barz/IosOptions.liquidGlass.<get-liquidGlass>|<get-liquidGlass>(){}[0]
+    final val nativeBarHeight // dev.parez.barz/IosOptions.nativeBarHeight|{}nativeBarHeight[0]
+        final fun <get-nativeBarHeight>(): androidx.compose.ui.unit/Dp // dev.parez.barz/IosOptions.nativeBarHeight.<get-nativeBarHeight>|<get-nativeBarHeight>(){}[0]
     final val sidebarAdaptable // dev.parez.barz/IosOptions.sidebarAdaptable|{}sidebarAdaptable[0]
         final fun <get-sidebarAdaptable>(): kotlin/Boolean // dev.parez.barz/IosOptions.sidebarAdaptable.<get-sidebarAdaptable>|<get-sidebarAdaptable>(){}[0]
-    final val tabBarMinimizeBehavior // dev.parez.barz/IosOptions.tabBarMinimizeBehavior|{}tabBarMinimizeBehavior[0]
-        final fun <get-tabBarMinimizeBehavior>(): kotlin/Boolean // dev.parez.barz/IosOptions.tabBarMinimizeBehavior.<get-tabBarMinimizeBehavior>|<get-tabBarMinimizeBehavior>(){}[0]
 
     final fun component1(): dev.parez.barz/IosChrome // dev.parez.barz/IosOptions.component1|component1(){}[0]
     final fun component2(): kotlin/Boolean // dev.parez.barz/IosOptions.component2|component2(){}[0]
     final fun component3(): kotlin/Boolean // dev.parez.barz/IosOptions.component3|component3(){}[0]
-    final fun component4(): kotlin/Boolean // dev.parez.barz/IosOptions.component4|component4(){}[0]
-    final fun copy(dev.parez.barz/IosChrome = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): dev.parez.barz/IosOptions // dev.parez.barz/IosOptions.copy|copy(dev.parez.barz.IosChrome;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.parez.barz/IosOptions.component4|component4(){}[0]
+    final fun copy(dev.parez.barz/IosChrome = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., androidx.compose.ui.unit/Dp = ...): dev.parez.barz/IosOptions // dev.parez.barz/IosOptions.copy|copy(dev.parez.barz.IosChrome;kotlin.Boolean;kotlin.Boolean;androidx.compose.ui.unit.Dp){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // dev.parez.barz/IosOptions.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // dev.parez.barz/IosOptions.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // dev.parez.barz/IosOptions.toString|toString(){}[0]
@@ -203,7 +203,7 @@ final fun barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Re
 final fun barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Res_string$stableprop_getter(): kotlin/Int // barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Res_string$stableprop_getter|barz_sdk_barz_generated_resources_Res_string$stableprop_getter(){}[0]
 final fun dev.parez.barz/AdaptiveNavigationBar(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, dev.parez.barz/AdaptiveNavigationBarColors?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationBar|AdaptiveNavigationBar(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;dev.parez.barz.AdaptiveNavigationBarColors?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.parez.barz/AdaptiveNavigationBar(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, kotlin/Function2<kotlin/Int, kotlin/Boolean, androidx.compose.ui.graphics.vector/ImageVector>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationBarColors?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationBar|AdaptiveNavigationBar(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;kotlin.Function2<kotlin.Int,kotlin.Boolean,androidx.compose.ui.graphics.vector.ImageVector>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationBarColors?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
-final fun dev.parez.barz/AdaptiveNavigationScaffold(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationScaffold|AdaptiveNavigationScaffold(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.parez.barz/AdaptiveNavigationScaffold(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationScaffold|AdaptiveNavigationScaffold(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarColors$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarColors$stableprop_getter|dev_parez_barz_AdaptiveNavigationBarColors$stableprop_getter(){}[0]
 final fun dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop_getter|dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop_getter(){}[0]
 final fun dev.parez.barz/dev_parez_barz_AdaptiveNavigationConfig$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_AdaptiveNavigationConfig$stableprop_getter|dev_parez_barz_AdaptiveNavigationConfig$stableprop_getter(){}[0]
