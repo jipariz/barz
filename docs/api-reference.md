@@ -27,8 +27,12 @@ Chrome that changes shape with the window: bottom bar → rail → permanent dra
   here** — this is the Compose container on every platform, iOS included.
 - There is **no `colors` parameter**; `AdaptiveNavigationBarColors` applies to
   `AdaptiveNavigationBar` only. Restyle via `MaterialTheme`.
-- In **drawer** mode Material's `NavigationDrawerItem` shape means `showLabel` and `enabled` are
-  not applied; labels always show and items are always enabled. Both are honoured in bar and rail.
+- The rail and the drawer scroll vertically, so more destinations than fit the window stay
+  reachable. A bottom bar does not — Material caps it at five.
+- `NavigationDrawerItem` has no `enabled` parameter, so in **drawer** mode `enabled = false` is
+  approximated: the item is inert but not visually dimmed. Bar and rail honour it properly.
+  `showLabel` and badges are honoured in all three, but the drawer puts the badge in the row's own
+  end slot rather than over the icon.
 
 ### `AdaptiveNavigationBar`
 
@@ -80,6 +84,9 @@ fun rememberNavigationMode(config: AdaptiveNavigationConfig = AdaptiveNavigation
 Reads `LocalWindowInfo.containerSize` directly rather than `currentWindowAdaptiveInfo()`, because
 the window size class quantises to fixed buckets that would defeat custom breakpoints.
 
+`containerSize` changes every frame of a window drag; the result is wrapped in `derivedStateOf`, so
+callers recompose only at the two thresholds where the mode actually changes.
+
 ### `barzTabBarController` — iOS only, not a composable
 
 ```kotlin
@@ -114,7 +121,11 @@ data class NavigationItem(
 ```
 
 Exactly one of `icon` or the container's `icon` slot must be supplied — supplying neither throws a
-named error rather than rendering an invisible tap target. A text `badge` wins over `showBadgeDot`. `contentDescription` falls back to `title`.
+named error rather than rendering an invisible tap target. A text `badge` wins over `showBadgeDot`.
+
+`contentDescription` is only applied when `showLabel = false`. The Material item composables merge
+descendant semantics and already announce the title, so describing the icon as well makes a screen
+reader read every destination twice.
 
 ### `AdaptiveNavigationConfig`
 
@@ -139,6 +150,9 @@ data class NavigationBreakpoints(
     val minHeightDp: Int = 480,
 )
 ```
+
+`railFromWidthDp > drawerFromWidthDp` throws at construction: the resolver tests the drawer first,
+so a swapped pair would make `Rail` unreachable rather than fail.
 
 ### `IosOptions`
 

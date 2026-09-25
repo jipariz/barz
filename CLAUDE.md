@@ -33,6 +33,15 @@ module with the same name collide in type-safe project accessors.
 
 Single test: `./gradlew :barz:jvmTest --tests "*NavigationModeResolverTest.landscape*"`
 
+`./gradlew build` covers all of the above except formatting — KGP wires `check` to
+`checkKotlinAbi`, so CI needs only `build ktfmtCheck`.
+
+The ABI dump does **not** cover the Android target: KGP collects Android dumps from a
+`KotlinAndroidTarget`, and AGP's `com.android.kotlin.multiplatform.library` gives a
+`KotlinMultiplatformAndroidLibraryTarget`, which it skips. Hence `barz/api/jvm/` and no
+`barz/api/android/`. There is no androidMain-only public API today; if you add some, it ships
+unguarded.
+
 iOS: `open sample/iosApp/iosApp.xcodeproj` — the "Compile Kotlin Framework" phase runs
 `:sample:shared:embedAndSignAppleFrameworkForXcode`, so no manual Gradle step.
 

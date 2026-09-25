@@ -121,9 +121,11 @@ open sample/iosApp/iosApp.xcodeproj
 ## Building this repo
 
 ```sh
+./gradlew build                       # compiles every target, runs the tests and the ABI check
 ./gradlew :barz:allTests              # jvm, android host, iOS simulator
 ./gradlew :barz:checkKotlinAbi        # fails if the public API changed
 ./gradlew :barz:publishToMavenLocal
+./gradlew ktfmtFormat                 # ktfmt, kotlinlang style; `ktfmtCheck` in CI
 ```
 
 Web targets are compile-verified rather than tested: Karma needs a local Chrome, and Node cannot

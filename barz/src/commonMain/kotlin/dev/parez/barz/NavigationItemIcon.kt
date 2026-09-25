@@ -39,11 +39,9 @@ internal fun NavigationItemIcon(
             item.icon != null ->
                 Icon(
                     painter = painterResource(item.iconFor(selected)!!),
-                    // Null when the item shows a label: NavigationBarItem/RailItem/DrawerItem all
-                    // merge
-                    // descendant semantics and already announce the title, so describing the icon
-                    // too
-                    // makes every screen reader say "Home, Home".
+                    // Null when the item shows a label: NavigationBarItem, RailItem and
+                    // DrawerItem all merge descendant semantics and already announce the
+                    // title, so describing the icon too makes a screen reader say "Home, Home".
                     contentDescription =
                         if (item.showLabel) null else item.contentDescription ?: item.title,
                 )

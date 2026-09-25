@@ -133,8 +133,9 @@ when (rememberNavigationMode()) {
 }
 ```
 
-State-backed, so desktop window drags and browser resizes recompose live. Despite the `remember`
-prefix it caches nothing — it is a pure computation per recomposition.
+State-backed, so desktop window drags and browser resizes recompose live — but only at the two
+thresholds. The window size behind it changes every frame of a drag; the mode is wrapped in
+`derivedStateOf` so your content is not invalidated sixty times a second on the way past 600dp.
 
 ## Icons
 
