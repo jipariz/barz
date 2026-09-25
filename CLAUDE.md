@@ -61,17 +61,10 @@ things Material's own components offer: `NavigationRail`'s `header` slot is hard
 drawer items never receive `NavigationDrawerItemDefaults.ItemPadding`, so they sit flush against the
 sheet. Both were visible defects. If you go back to the wrapper, both regress.
 
-**There are two unrelated FAB concepts.** `AdaptiveNavigationScaffold`'s `fab` slot is the adaptive
-one: `NavigationSuiteScaffoldLayout` places it over the bottom-end corner above a bar, but only in
-its bottom-bar branch — the vertical branch measures `primaryActionContent` and never places it, so
-Barz composes the FAB into the rail's and drawer's header itself. `IosFabItem` on
-`AdaptiveNavigationBar` is the other one: a button drawn *inside* the bar, iOS-only, because that is
-the platform idiom there. Don't merge them.
-
-`FabPlacement` defaults to `Top` because that is Material's convention — `NavigationRail`'s `header`
-slot exists for the FAB, and Google's own apps put it there. `Bottom` exists because going bar →
-rail, a top FAB jumps from bottom-right to top-left while a bottom one keeps its height. The sample
-uses `Bottom`; the SDK default stays `Top` so Barz does not quietly contradict the spec.
+**Barz has no FAB, deliberately.** A floating action button is an Android idiom and the iOS
+equivalents (an extra `UITabBarItem` intercepted in `shouldSelectViewController:`, or
+`UITabBarController.bottomAccessory`) belong to the app, not to a navigation library. The slot and
+`IosFabItem` existed briefly and were removed in `391b232`.
 
 **Icons have two paths.** `NavigationItem.icon` (a `DrawableResource`) or an `icon` composable slot
 on the container. Exactly one must be supplied; `NavigationItemIcon` throws a named error otherwise,
@@ -144,9 +137,8 @@ the Android emulator window renders the *inner* display even when folded, so the
 is `adb shell screencap` composited into the folded bezel.
 
 **The demo frosts its own screens.** `DemoApp` wraps `TabContent` in
-`Modifier.hazeBlur(input = HazeInput.Content, …)`, which blurs that subtree only — the chrome and
-the FAB are drawn by the scaffold *outside* `content`, so they stay sharp and become the only thing
-in focus. Haze (`dev.chrisbanes.haze`) is a **sample** dependency; `:barz` does not depend on it and
+`Modifier.hazeBlur(input = HazeInput.Content, …)`, which blurs that subtree only — the chrome is
+drawn by the scaffold *outside* `content`, so it stays sharp and becomes the only thing in focus. Haze (`dev.chrisbanes.haze`) is a **sample** dependency; `:barz` does not depend on it and
 should not. Note this makes the demo deliberately unreadable: drop the `hazeBlur` line to undo it.
 
 **The demo's screens inset themselves.** Both hosts draw edge to edge, so each screen takes

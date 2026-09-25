@@ -7,7 +7,7 @@ import org.jetbrains.compose.resources.DrawableResource
  * One navigation destination.
  *
  * A single item carries both platforms' iconography because the same list drives a Compose
- * container on Android/Desktop/Web and a native SwiftUI `TabView` on iOS — the two need different
+ * container on Android/Desktop/Web and a native `UITabBarController` on iOS — the two need different
  * icon types and there is no sensible common denominator.
  *
  * @param title label shown next to or under the icon.
@@ -16,7 +16,7 @@ import org.jetbrains.compose.resources.DrawableResource
  *   `ImageVector`s, or if your resources live somewhere this item cannot reference. Exactly one of
  *   the two must be supplied.
  * @param selectedIcon optional filled variant; [icon] is reused when null.
- * @param systemIcon SF Symbol name, used by the iOS Swift layer. Ignored on other platforms.
+ * @param systemIcon SF Symbol name, used by the native iOS chrome. Ignored on other platforms.
  * @param selectedSystemIcon optional filled SF Symbol; [systemIcon] is reused when null.
  * @param showLabel whether the label is drawn. Icon-only items still need [contentDescription].
  * @param badge text badge, e.g. an unread count. Null for none.

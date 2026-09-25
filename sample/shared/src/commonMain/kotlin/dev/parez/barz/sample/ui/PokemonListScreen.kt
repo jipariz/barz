@@ -57,7 +57,7 @@ fun PokemonListScreen(
         is ListUiState.Error ->
             TeamRocketError(
                 message = state.message,
-                onRetry = viewModel::onRetry,
+                onRetry = viewModel::loadNextPage,
                 modifier = Modifier.padding(contentPadding),
             )
         is ListUiState.Content ->
@@ -67,7 +67,7 @@ fun PokemonListScreen(
                 isOnTeam = isOnTeam,
                 onToggleTeam = onToggleTeam,
                 onLoadMore = viewModel::loadNextPage,
-                onRetry = viewModel::onRetry,
+                onRetry = viewModel::loadNextPage,
                 contentPadding = contentPadding,
             )
     }
@@ -90,7 +90,7 @@ private fun PokemonGrid(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(state.filteredItems, key = { it.id }, contentType = { "pokemon" }) { entry ->
+        items(state.items, key = { it.id }, contentType = { "pokemon" }) { entry ->
             PokemonCard(
                 entry = entry,
                 onTeam = isOnTeam(entry.id),

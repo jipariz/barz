@@ -1,6 +1,5 @@
 package dev.parez.barz
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgeDefaults
 import androidx.compose.material3.BadgedBox
@@ -59,7 +58,7 @@ internal fun NavigationItemIcon(
         else -> null
     }
 
-    if (badge == null) Box { icon() } else BadgedBox(badge = { badge() }) { icon() }
+    if (badge == null) icon() else BadgedBox(badge = { badge() }) { icon() }
 }
 
 @Composable

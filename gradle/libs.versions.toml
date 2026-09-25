@@ -1,13 +1,7 @@
 [versions]
 agp = "9.4.1"
 kotlin = "2.4.0"
-# :barz used to build against 36 while the sample used 37, to keep the AAR consumable by apps on
-# AGP 8.x — an AAR records its compileSdk as a *minimum* for consumers. That no longer buys
-# anything: every Compose 1.12 AndroidX artifact the library depends on (foundation, ui, material3,
-# the navigation suite) already demands 37, and consumers get them transitively. Holding the
-# library at 36 only broke `publishToMavenLocal` on checkAarMetadata.
 android-compileSdk = "37"
-android-library-compileSdk = "37"
 android-minSdk = "24"
 android-targetSdk = "37"
 composeMultiplatform = "1.12.0"
@@ -42,7 +36,6 @@ androidxNavigationeventAosp = "1.1.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinxCoroutines" }
 
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
@@ -51,10 +44,8 @@ compose-material3 = { module = "org.jetbrains.compose.material3:material3", vers
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
-compose-material3-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "composeMultiplatformAdaptive" }
 compose-material3-adaptive-navigation-suite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version.ref = "composeMultiplatformMaterial3" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
-compose-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 
 # --- demo app only ---

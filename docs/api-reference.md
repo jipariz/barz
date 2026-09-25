@@ -113,8 +113,8 @@ data class NavigationItem(
 )
 ```
 
-Exactly one of `icon` or the container's `icon` slot must be supplied; neither throws a named
-error. A text `badge` wins over `showBadgeDot`. `contentDescription` falls back to `title`.
+Exactly one of `icon` or the container's `icon` slot must be supplied — supplying neither throws a
+named error rather than rendering an invisible tap target. A text `badge` wins over `showBadgeDot`. `contentDescription` falls back to `title`.
 
 ### `AdaptiveNavigationConfig`
 

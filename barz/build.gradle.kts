@@ -14,10 +14,8 @@ plugins {
 kotlin {
     android {
         namespace = "dev.parez.barz"
-        compileSdk = libs.versions.android.library.compileSdk.get().toInt()
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
-
-        withHostTestBuilder {}.configure {}
 
         compilations.configureEach {
             compileTaskProvider.configure {
@@ -27,6 +25,12 @@ kotlin {
     }
 
     jvm()
+
+    // Calling this is what enables ABI validation as of Kotlin 2.4 — the `enabled` property it
+    // used to take was removed. The dump under barz/api/ is committed so a change to the public
+    // API shows up as a diff in review.
+    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+    abiValidation {}
 
     // Tests are off on the web targets, deliberately. Karma needs a local Chrome install, and
     // Node cannot host them either because Compose's web runtime loads Skiko's .wasm over XHR.
@@ -43,10 +47,20 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // Required now that nonIosMain declares manual dependsOn edges: those switch off the
+    // automatic application of the default hierarchy, and without it iosMain is never wired.
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyDefaultHierarchyTemplate()
 
     sourceSets {
+        // One no-op actual instead of four byte-identical copies. Only iOS has a native bar; every
+        // other target's NativeIosBar is unreachable behind `supportsNativeBar`.
+        val nonIosMain by creating { dependsOn(commonMain.get()) }
+        androidMain.get().dependsOn(nonIosMain)
+        jvmMain.get().dependsOn(nonIosMain)
+        jsMain.get().dependsOn(nonIosMain)
+        wasmJsMain.get().dependsOn(nonIosMain)
+
         commonMain.dependencies {
             // `api`, not `implementation`: these types appear in this library's public signatures
             // (@Composable, Modifier, Color, DrawableResource), so consumers must see them.
@@ -93,10 +107,3 @@ mavenPublishing {
     }
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
-kotlin {
-    // Calling this is what enables ABI validation as of Kotlin 2.4 — the `enabled` property it
-    // used to take was removed. The dump under barz/api/ is committed so a change to the public
-    // API shows up as a diff in review.
-    abiValidation {}
-}

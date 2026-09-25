@@ -208,8 +208,5 @@ and Web, and on iOS either an extra tab item you intercept in the delegate or
 
 ## Platform notes
 
-Foldable posture (`isTabletop`) is reported on Android only; every other target returns a default
-`Posture()`. Window *size* is live everywhere.
-
 `currentPlatform` is a plain `val`, not a `CompositionLocal` — it cannot be faked in tests, which
 matters if you try to unit-test the iOS-gated paths.
