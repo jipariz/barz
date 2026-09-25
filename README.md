@@ -96,7 +96,7 @@ Note it is a **required** parameter that sits after two defaulted ones, so name 
 ## Documentation
 
 - **[Integration guide](docs/integration.md)** — install, the four entry points, icons,
-  breakpoints, per-platform configuration, the `header` and `fab` slots.
+  breakpoints, per-platform configuration, the `header` slot.
 - **[iOS guide](docs/ios.md)** — native chrome, what Liquid Glass actually is and is not, iPad
   sidebar, iPhone Duo, wiring into an Xcode project.
 - **[API reference](docs/api-reference.md)** — every public declaration, with the limitations.

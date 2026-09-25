@@ -50,9 +50,6 @@ fun AdaptiveNavigationBar(
     modifier: Modifier = Modifier,
     config: AdaptiveNavigationConfig = AdaptiveNavigationConfig(),
     icon: (@Composable (index: Int, selected: Boolean) -> Unit)? = null,
-    iosFab: IosFabItem? = null,
-    onIosFabClick: () -> Unit = {},
-    fabIcon: (@Composable () -> Unit)? = null,
     colors: AdaptiveNavigationBarColors = AdaptiveNavigationBarDefaults.colors(),
 ) {
     // Prefer the platform's own bar view: a real UITabBar renders with the genuine system
@@ -79,12 +76,11 @@ fun AdaptiveNavigationBar(
             color = colors.containerColor.copy(alpha = 0.72f),
             tonalElevation = 3.dp,
         ) {
-            BarWithFab(items, selectedIndex, onItemSelected, icon, colors, Color.Transparent,
-                iosFab, onIosFabClick, fabIcon)
+            BarContent(items, selectedIndex, onItemSelected, icon, colors, Color.Transparent)
         }
     } else {
-        BarWithFab(items, selectedIndex, onItemSelected, icon, colors, colors.containerColor,
-            iosFab, onIosFabClick, fabIcon, modifier)
+        BarContent(items, selectedIndex, onItemSelected, icon, colors, colors.containerColor,
+            modifier)
     }
 }
 
@@ -124,51 +120,6 @@ fun AdaptiveNavigationBar(
                 label = if (item.showLabel) ({ Text(item.title) }) else null,
                 colors = colors.itemColors(),
             )
-        }
-    }
-}
-
-/**
- * Places the bar and, on iOS only, the prominent action beside it.
- *
- * The platform check is here rather than at the call site so shared code can pass an [IosFabItem]
- * unconditionally and get the right behaviour everywhere.
- */
-@Composable
-private fun BarWithFab(
-    items: List<NavigationItem>,
-    selectedIndex: Int,
-    onItemSelected: (Int) -> Unit,
-    icon: (@Composable (index: Int, selected: Boolean) -> Unit)?,
-    colors: AdaptiveNavigationBarColors,
-    containerColor: Color,
-    iosFab: IosFabItem?,
-    onIosFabClick: () -> Unit,
-    fabIcon: (@Composable () -> Unit)?,
-    modifier: Modifier = Modifier,
-) {
-    if (iosFab == null || currentPlatform != BarzPlatform.Ios) {
-        BarContent(items, selectedIndex, onItemSelected, icon, colors, containerColor, modifier)
-        return
-    }
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        BarContent(
-            items, selectedIndex, onItemSelected, icon, colors, containerColor,
-            Modifier.weight(1f),
-        )
-        FloatingActionButton(
-            onClick = onIosFabClick,
-            modifier = Modifier.padding(horizontal = 8.dp),
-            containerColor = iosFab.containerColor.takeOrElse { colors.containerColor },
-            contentColor = iosFab.contentColor.takeOrElse { colors.selectedIconColor },
-        ) {
-            when {
-                fabIcon != null -> fabIcon()
-                iosFab.icon != null -> Icon(
-                    painter = painterResource(iosFab.icon),
-                    contentDescription = iosFab.contentDescription ?: iosFab.title,
-                )
-            }
         }
     }
 }

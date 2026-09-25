@@ -16,8 +16,6 @@ fun AdaptiveNavigationScaffold(
     config: AdaptiveNavigationConfig = AdaptiveNavigationConfig(),
     icon: (@Composable (index: Int, selected: Boolean) -> Unit)? = null,
     header: (@Composable ColumnScope.() -> Unit)? = null,
-    fab: (@Composable () -> Unit)? = null,
-    fabPlacement: FabPlacement = FabPlacement.Top,
     content: @Composable () -> Unit,
 )
 ```
@@ -25,7 +23,6 @@ fun AdaptiveNavigationScaffold(
 Chrome that changes shape with the window: bottom bar → rail → permanent drawer.
 
 - `header` is ignored in bottom-bar mode.
-- `fabPlacement` is ignored in bottom-bar mode; the FAB always floats bottom-end there.
 - Only `config.breakpoints` and `config.allowedModes` are consulted. **`config.ios` has no effect
   here** — this is the Compose container on every platform, iOS included.
 - There is **no `colors` parameter**; `AdaptiveNavigationBarColors` applies to
@@ -44,9 +41,6 @@ fun AdaptiveNavigationBar(
     modifier: Modifier = Modifier,
     config: AdaptiveNavigationConfig = AdaptiveNavigationConfig(),
     icon: (@Composable (index: Int, selected: Boolean) -> Unit)? = null,
-    iosFab: IosFabItem? = null,
-    onIosFabClick: () -> Unit = {},
-    fabIcon: (@Composable () -> Unit)? = null,
     colors: AdaptiveNavigationBarColors = AdaptiveNavigationBarDefaults.colors(),
 )
 ```
@@ -54,9 +48,9 @@ fun AdaptiveNavigationBar(
 Always a bottom bar. Three mutually exclusive render paths, chosen in order:
 
 1. **native `UITabBar`** — iOS with `config.ios.chrome == NativeTabBar` (the default). Returns
-   early, so `iosFab`, `fabIcon` and `icon` are all unused on this path.
+   early, so the `icon` slot is unused on this path.
 2. **Compose glass** — iOS with `ComposeGlass` and `liquidGlass = true`. Rounded translucent
-   surface at 72% alpha. The only path that renders `iosFab`.
+   surface at 72% alpha.
 3. **plain `NavigationBar`** — everything else, including every non-iOS platform.
 
 ### `AdaptiveNavigationBar` (ImageVector overload)
@@ -161,24 +155,6 @@ data class IosOptions(
 `sidebarAdaptable` only affects `barzTabBarController`. `nativeBarHeight` exists because a UIKit
 view cannot report its size back through Compose interop.
 
-### `IosFabItem`
-
-```kotlin
-@Immutable
-data class IosFabItem(
-    val systemIcon: String,
-    val icon: DrawableResource? = null,
-    val containerColor: Color = Color.Unspecified,
-    val contentColor: Color = Color.Unspecified,
-    val title: String = "",
-    val showLabel: Boolean = false,
-    val contentDescription: String? = null,
-)
-```
-
-Renders only with `IosChrome.ComposeGlass` on iOS. `systemIcon`, `title` and `showLabel` are
-currently unread on that path.
-
 ### `AdaptiveNavigationBarColors` / `AdaptiveNavigationBarDefaults`
 
 ```kotlin
@@ -207,7 +183,6 @@ object AdaptiveNavigationBarDefaults {
 | Type | Values |
 |---|---|
 | `NavigationMode` | `BottomBar`, `Rail`, `Drawer` |
-| `FabPlacement` | `Top` (Material's convention, default), `Bottom` |
 | `IosChrome` | `NativeTabBar` (default), `ComposeGlass` |
 | `BarzPlatform` | `Android`, `Desktop`, `Web`, `Ios` |
 

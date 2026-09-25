@@ -113,10 +113,10 @@ and point it at your shared module.
 
 ## Known limitations
 
-- `IosFabItem` renders **only** with `IosChrome.ComposeGlass`. The `NativeTabBar` path returns
-  before the FAB is composed, and every non-iOS platform ignores it by design — use `Scaffold`'s
-  `floatingActionButton` there.
-- Within `IosFabItem`, only `icon`, `containerColor`, `contentColor` and `contentDescription` are
-  read. `systemIcon`, `title` and `showLabel` are currently ignored.
+- **Barz has no FAB.** A floating action button is an Android idiom, and iOS has better native
+  answers that belong to your app rather than to a navigation library: add an extra `UITabBarItem`
+  and intercept it in `tabBarController:shouldSelectViewController:` to run an action instead of
+  switching tabs, or use `UITabBarController.bottomAccessory` (iOS 26) for a Now-Playing-style
+  strip above the bar. Both are reachable from Kotlin/Native.
 - `iosX64` is not published. Intel simulators are end-of-life and several Compose Multiplatform
   artifacts no longer ship a `uikitX64` variant.

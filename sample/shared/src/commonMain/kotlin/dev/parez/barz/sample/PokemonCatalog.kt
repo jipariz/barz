@@ -29,7 +29,6 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.PaddingValues
@@ -40,7 +39,6 @@ import dev.parez.barz.sample.navigation.PokemonListKey
 import dev.parez.barz.sample.ui.PokemonDetailScreen
 import dev.parez.barz.sample.ui.PokemonListScreen
 import dev.parez.barz.sample.ui.withoutTop
-import kotlin.random.Random
 
 /**
  * Adaptive list-detail catalog driven by AndroidX Navigation 3.
@@ -65,27 +63,11 @@ internal fun PokemonCatalog(
     team: TeamState,
     unit: UnitSystem,
     onTeamFull: () -> Unit,
-    shuffle: Int,
     contentPadding: PaddingValues,
 ) {
     val members by team.members.collectAsState()
     val onTeamIds = remember(members) { members.mapTo(mutableSetOf()) { it.id } }
 
-    // Every bump of `shuffle` opens a random Pokémon from the first generation. Keyed on the
-    // counter rather than on a click callback so it works the same whichever mode the chrome is
-    // in — the FAB just increments, the navigation happens here.
-    LaunchedEffect(shuffle) {
-        if (shuffle == 0) return@LaunchedEffect
-        val id = Random.nextInt(1, 152)
-        // Empty name on purpose: the real one arrives with the detail fetch, and the placeholder
-        // the loading state would otherwise show is a slug, not a name.
-        val key = PokemonDetailKey(id, name = "")
-        if (backStack.lastOrNull() is PokemonDetailKey) {
-            backStack[backStack.lastIndex] = key
-        } else {
-            backStack.add(key)
-        }
-    }
     // Drop the default horizontal gutter between the two panes — same tweak as
     // the official Material recipe (b/418201867).
     val windowAdaptiveInfo = currentWindowAdaptiveInfoV2()

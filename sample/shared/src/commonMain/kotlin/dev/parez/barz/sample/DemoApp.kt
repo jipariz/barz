@@ -14,13 +14,11 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CatchingPokemon
-import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.outlined.CatchingPokemon
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Shield
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -40,7 +38,6 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.platformLogWriter
 import dev.parez.barz.AdaptiveNavigationScaffold
-import dev.parez.barz.FabPlacement
 import dev.parez.barz.NavigationItem
 import dev.parez.barz.NavigationMode
 import dev.parez.barz.rememberNavigationMode
@@ -110,9 +107,6 @@ val DemoNavItems: List<NavigationItem> =
 fun DemoApp() {
     DemoRoot {
         var selectedTab by rememberSaveable { mutableIntStateOf(0) }
-        // Bumping this re-runs the Pokemon tab's "random" pick. Kept out here rather than in
-        // TabContent because the FAB that drives it lives in the chrome, not in the screen.
-        var shuffle by remember { mutableIntStateOf(0) }
 
         AdaptiveNavigationScaffold(
             items = DemoNavItems,
@@ -124,21 +118,8 @@ fun DemoApp() {
             header = { RailHeader() },
             // Honoured in all three modes: over the bottom-end corner above a bar, in the header
             // of a rail or drawer.
-            fabPlacement = FabPlacement.Bottom,
-            fab = {
-                FloatingActionButton(
-                    onClick = {
-                        selectedTab = Tab.POKEMON.ordinal
-                        shuffle++
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                ) {
-                    Icon(Icons.Filled.Casino, contentDescription = "Show a random Pokémon")
-                }
-            },
         ) {
-            TabContent(Tab.entries[selectedTab], shuffle)
+            TabContent(Tab.entries[selectedTab])
         }
     }
 }
@@ -174,7 +155,7 @@ private fun DemoRoot(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun TabContent(tab: Tab, shuffle: Int = 0) {
+private fun TabContent(tab: Tab) {
     val settings: SettingsState = koinInject()
     val team: TeamState = koinInject()
 
@@ -191,7 +172,7 @@ private fun TabContent(tab: Tab, shuffle: Int = 0) {
 
     // Frosts the screens and nothing else. `HazeInput.Content` blurs this modifier's own subtree;
     // both hosts draw their chrome outside it — the Compose scaffold in [DemoApp], the native
-    // UITabBarController on iOS — so the bar and the FAB stay sharp either way.
+    // UITabBarController on iOS — so the chrome stays sharp either way.
     Column(Modifier.fillMaxSize().hazeBlur(input = HazeInput.Content, style = ContentBlur)) {
         when (tab) {
             Tab.POKEMON -> {
@@ -205,7 +186,6 @@ private fun TabContent(tab: Tab, shuffle: Int = 0) {
                     team = team,
                     unit = unit,
                     onTeamFull = { teamFull = true },
-                    shuffle = shuffle,
                     contentPadding = insets,
                 )
             }

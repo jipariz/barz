@@ -72,8 +72,6 @@ AdaptiveNavigationScaffold(
     config = AdaptiveNavigationConfig(),
     icon = { index, isSelected -> Icon(iconFor(index, isSelected), null) },
     header = { Text("My app") },                  // rail + drawer only
-    fab = { FloatingActionButton(onClick = ::compose) { Icon(Icons.Filled.Add, null) } },
-    fabPlacement = FabPlacement.Top,
 ) {
     CurrentScreen(selected)
 }
@@ -195,22 +193,18 @@ val config = AdaptiveNavigationBarDefaults.config(
 Only the override matching the running platform is consulted, so this is safe to call from
 `commonMain` with no `expect`/`actual` of your own. It is not a composable.
 
-## Header and FAB
+## Header
 
-Both are slots on `AdaptiveNavigationScaffold`.
+`header` is a slot on `AdaptiveNavigationScaffold`. It renders above the destinations in the **rail
+and drawer**; a bottom bar has nowhere to put it, so it is ignored there.
 
-`header` renders above the destinations in the **rail and drawer**. A bottom bar has nowhere to put
-it, so it is ignored there. Supplying one also gives the rail its top spacing — Material reserves
-only 4dp above the first item and expects a header to do the rest; Barz stands in with 8dp when
-there is none.
+Supplying one also gives the rail its top spacing — Material reserves only 4dp above the first item
+and expects a header to do the rest, so Barz stands in with 8dp when there is none.
 
-`fab` is honoured in all three modes. Over a bottom bar it floats at the bottom-end corner, 16dp
-from the edge. In a rail or drawer, `fabPlacement` decides:
-
-| | |
-|---|---|
-| `FabPlacement.Top` | In the component's header. Material's convention, and the default. |
-| `FabPlacement.Bottom` | At the foot, 16dp from the window edge — the same distance the FAB keeps over a bottom bar, so it does not leap across the screen when the chrome changes shape. Material has no spec for this position. |
+Barz has no FAB slot, deliberately. A primary action is the app's business, and the idiom differs
+too much per platform to wrap honestly: use `Scaffold`'s `floatingActionButton` on Android, Desktop
+and Web, and on iOS either an extra tab item you intercept in the delegate or
+`UITabBarController.bottomAccessory`.
 
 ## Platform notes
 

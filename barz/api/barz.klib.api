@@ -20,17 +20,6 @@ final enum class dev.parez.barz/BarzPlatform : kotlin/Enum<dev.parez.barz/BarzPl
     final fun values(): kotlin/Array<dev.parez.barz/BarzPlatform> // dev.parez.barz/BarzPlatform.values|values#static(){}[0]
 }
 
-final enum class dev.parez.barz/FabPlacement : kotlin/Enum<dev.parez.barz/FabPlacement> { // dev.parez.barz/FabPlacement|null[0]
-    enum entry Bottom // dev.parez.barz/FabPlacement.Bottom|null[0]
-    enum entry Top // dev.parez.barz/FabPlacement.Top|null[0]
-
-    final val entries // dev.parez.barz/FabPlacement.entries|#static{}entries[0]
-        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.parez.barz/FabPlacement> // dev.parez.barz/FabPlacement.entries.<get-entries>|<get-entries>#static(){}[0]
-
-    final fun valueOf(kotlin/String): dev.parez.barz/FabPlacement // dev.parez.barz/FabPlacement.valueOf|valueOf#static(kotlin.String){}[0]
-    final fun values(): kotlin/Array<dev.parez.barz/FabPlacement> // dev.parez.barz/FabPlacement.values|values#static(){}[0]
-}
-
 final enum class dev.parez.barz/IosChrome : kotlin/Enum<dev.parez.barz/IosChrome> { // dev.parez.barz/IosChrome|null[0]
     enum entry ComposeGlass // dev.parez.barz/IosChrome.ComposeGlass|null[0]
     enum entry NativeTabBar // dev.parez.barz/IosChrome.NativeTabBar|null[0]
@@ -105,37 +94,6 @@ final class dev.parez.barz/AdaptiveNavigationConfig { // dev.parez.barz/Adaptive
     final fun equals(kotlin/Any?): kotlin/Boolean // dev.parez.barz/AdaptiveNavigationConfig.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // dev.parez.barz/AdaptiveNavigationConfig.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // dev.parez.barz/AdaptiveNavigationConfig.toString|toString(){}[0]
-}
-
-final class dev.parez.barz/IosFabItem { // dev.parez.barz/IosFabItem|null[0]
-    constructor <init>(kotlin/String, org.jetbrains.compose.resources/DrawableResource? = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., kotlin/String = ..., kotlin/Boolean = ..., kotlin/String? = ...) // dev.parez.barz/IosFabItem.<init>|<init>(kotlin.String;org.jetbrains.compose.resources.DrawableResource?;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;kotlin.String;kotlin.Boolean;kotlin.String?){}[0]
-
-    final val containerColor // dev.parez.barz/IosFabItem.containerColor|{}containerColor[0]
-        final fun <get-containerColor>(): androidx.compose.ui.graphics/Color // dev.parez.barz/IosFabItem.containerColor.<get-containerColor>|<get-containerColor>(){}[0]
-    final val contentColor // dev.parez.barz/IosFabItem.contentColor|{}contentColor[0]
-        final fun <get-contentColor>(): androidx.compose.ui.graphics/Color // dev.parez.barz/IosFabItem.contentColor.<get-contentColor>|<get-contentColor>(){}[0]
-    final val contentDescription // dev.parez.barz/IosFabItem.contentDescription|{}contentDescription[0]
-        final fun <get-contentDescription>(): kotlin/String? // dev.parez.barz/IosFabItem.contentDescription.<get-contentDescription>|<get-contentDescription>(){}[0]
-    final val icon // dev.parez.barz/IosFabItem.icon|{}icon[0]
-        final fun <get-icon>(): org.jetbrains.compose.resources/DrawableResource? // dev.parez.barz/IosFabItem.icon.<get-icon>|<get-icon>(){}[0]
-    final val showLabel // dev.parez.barz/IosFabItem.showLabel|{}showLabel[0]
-        final fun <get-showLabel>(): kotlin/Boolean // dev.parez.barz/IosFabItem.showLabel.<get-showLabel>|<get-showLabel>(){}[0]
-    final val systemIcon // dev.parez.barz/IosFabItem.systemIcon|{}systemIcon[0]
-        final fun <get-systemIcon>(): kotlin/String // dev.parez.barz/IosFabItem.systemIcon.<get-systemIcon>|<get-systemIcon>(){}[0]
-    final val title // dev.parez.barz/IosFabItem.title|{}title[0]
-        final fun <get-title>(): kotlin/String // dev.parez.barz/IosFabItem.title.<get-title>|<get-title>(){}[0]
-
-    final fun component1(): kotlin/String // dev.parez.barz/IosFabItem.component1|component1(){}[0]
-    final fun component2(): org.jetbrains.compose.resources/DrawableResource? // dev.parez.barz/IosFabItem.component2|component2(){}[0]
-    final fun component3(): androidx.compose.ui.graphics/Color // dev.parez.barz/IosFabItem.component3|component3(){}[0]
-    final fun component4(): androidx.compose.ui.graphics/Color // dev.parez.barz/IosFabItem.component4|component4(){}[0]
-    final fun component5(): kotlin/String // dev.parez.barz/IosFabItem.component5|component5(){}[0]
-    final fun component6(): kotlin/Boolean // dev.parez.barz/IosFabItem.component6|component6(){}[0]
-    final fun component7(): kotlin/String? // dev.parez.barz/IosFabItem.component7|component7(){}[0]
-    final fun copy(kotlin/String = ..., org.jetbrains.compose.resources/DrawableResource? = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., kotlin/String = ..., kotlin/Boolean = ..., kotlin/String? = ...): dev.parez.barz/IosFabItem // dev.parez.barz/IosFabItem.copy|copy(kotlin.String;org.jetbrains.compose.resources.DrawableResource?;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;kotlin.String;kotlin.Boolean;kotlin.String?){}[0]
-    final fun equals(kotlin/Any?): kotlin/Boolean // dev.parez.barz/IosFabItem.equals|equals(kotlin.Any?){}[0]
-    final fun hashCode(): kotlin/Int // dev.parez.barz/IosFabItem.hashCode|hashCode(){}[0]
-    final fun toString(): kotlin/String // dev.parez.barz/IosFabItem.toString|toString(){}[0]
 }
 
 final class dev.parez.barz/IosOptions { // dev.parez.barz/IosOptions|null[0]
@@ -234,7 +192,6 @@ final val dev.parez.barz/currentPlatform // dev.parez.barz/currentPlatform|{}cur
 final val dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarColors$stableprop // dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarColors$stableprop|#static{}dev_parez_barz_AdaptiveNavigationBarColors$stableprop[0]
 final val dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop // dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop|#static{}dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop[0]
 final val dev.parez.barz/dev_parez_barz_AdaptiveNavigationConfig$stableprop // dev.parez.barz/dev_parez_barz_AdaptiveNavigationConfig$stableprop|#static{}dev_parez_barz_AdaptiveNavigationConfig$stableprop[0]
-final val dev.parez.barz/dev_parez_barz_IosFabItem$stableprop // dev.parez.barz/dev_parez_barz_IosFabItem$stableprop|#static{}dev_parez_barz_IosFabItem$stableprop[0]
 final val dev.parez.barz/dev_parez_barz_IosOptions$stableprop // dev.parez.barz/dev_parez_barz_IosOptions$stableprop|#static{}dev_parez_barz_IosOptions$stableprop[0]
 final val dev.parez.barz/dev_parez_barz_NavigationBreakpoints$stableprop // dev.parez.barz/dev_parez_barz_NavigationBreakpoints$stableprop|#static{}dev_parez_barz_NavigationBreakpoints$stableprop[0]
 final val dev.parez.barz/dev_parez_barz_NavigationItem$stableprop // dev.parez.barz/dev_parez_barz_NavigationItem$stableprop|#static{}dev_parez_barz_NavigationItem$stableprop[0]
@@ -244,13 +201,12 @@ final fun barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Re
 final fun barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Res_font$stableprop_getter(): kotlin/Int // barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Res_font$stableprop_getter|barz_sdk_barz_generated_resources_Res_font$stableprop_getter(){}[0]
 final fun barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Res_plurals$stableprop_getter(): kotlin/Int // barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Res_plurals$stableprop_getter|barz_sdk_barz_generated_resources_Res_plurals$stableprop_getter(){}[0]
 final fun barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Res_string$stableprop_getter(): kotlin/Int // barz_sdk.barz.generated.resources/barz_sdk_barz_generated_resources_Res_string$stableprop_getter|barz_sdk_barz_generated_resources_Res_string$stableprop_getter(){}[0]
-final fun dev.parez.barz/AdaptiveNavigationBar(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, dev.parez.barz/IosFabItem?, kotlin/Function0<kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, dev.parez.barz/AdaptiveNavigationBarColors?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationBar|AdaptiveNavigationBar(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;dev.parez.barz.IosFabItem?;kotlin.Function0<kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;dev.parez.barz.AdaptiveNavigationBarColors?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.parez.barz/AdaptiveNavigationBar(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, dev.parez.barz/AdaptiveNavigationBarColors?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationBar|AdaptiveNavigationBar(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;dev.parez.barz.AdaptiveNavigationBarColors?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.parez.barz/AdaptiveNavigationBar(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, kotlin/Function2<kotlin/Int, kotlin/Boolean, androidx.compose.ui.graphics.vector/ImageVector>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationBarColors?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationBar|AdaptiveNavigationBar(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;kotlin.Function2<kotlin.Int,kotlin.Boolean,androidx.compose.ui.graphics.vector.ImageVector>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationBarColors?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
-final fun dev.parez.barz/AdaptiveNavigationScaffold(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, dev.parez.barz/FabPlacement?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationScaffold|AdaptiveNavigationScaffold(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;dev.parez.barz.FabPlacement?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.parez.barz/AdaptiveNavigationScaffold(kotlin.collections/List<dev.parez.barz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.barz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.barz/AdaptiveNavigationScaffold|AdaptiveNavigationScaffold(kotlin.collections.List<dev.parez.barz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.barz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarColors$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarColors$stableprop_getter|dev_parez_barz_AdaptiveNavigationBarColors$stableprop_getter(){}[0]
 final fun dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop_getter|dev_parez_barz_AdaptiveNavigationBarDefaults$stableprop_getter(){}[0]
 final fun dev.parez.barz/dev_parez_barz_AdaptiveNavigationConfig$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_AdaptiveNavigationConfig$stableprop_getter|dev_parez_barz_AdaptiveNavigationConfig$stableprop_getter(){}[0]
-final fun dev.parez.barz/dev_parez_barz_IosFabItem$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_IosFabItem$stableprop_getter|dev_parez_barz_IosFabItem$stableprop_getter(){}[0]
 final fun dev.parez.barz/dev_parez_barz_IosOptions$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_IosOptions$stableprop_getter|dev_parez_barz_IosOptions$stableprop_getter(){}[0]
 final fun dev.parez.barz/dev_parez_barz_NavigationBreakpoints$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_NavigationBreakpoints$stableprop_getter|dev_parez_barz_NavigationBreakpoints$stableprop_getter(){}[0]
 final fun dev.parez.barz/dev_parez_barz_NavigationItem$stableprop_getter(): kotlin/Int // dev.parez.barz/dev_parez_barz_NavigationItem$stableprop_getter|dev_parez_barz_NavigationItem$stableprop_getter(){}[0]
