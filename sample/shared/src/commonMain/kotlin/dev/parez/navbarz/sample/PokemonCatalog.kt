@@ -35,6 +35,8 @@ import dev.parez.navbarz.sample.navigation.PokemonDetailKey
 import dev.parez.navbarz.sample.navigation.PokemonListKey
 import dev.parez.navbarz.sample.ui.PokemonDetailScreen
 import dev.parez.navbarz.sample.ui.PokemonListScreen
+import dev.parez.navbarz.sample.ui.withoutEnd
+import dev.parez.navbarz.sample.ui.withoutStart
 import dev.parez.navbarz.sample.ui.withoutTop
 
 /**
@@ -88,6 +90,13 @@ internal fun PokemonCatalog(
                 ),
             initialAnchoredIndex = 1,
         )
+    // In two-pane mode each pane touches only one outer window edge; the other side is the
+    // divider. Handing both panes the whole window's insets puts the iPhone Duo's 84dp side-strip
+    // inset on the *list*, which does not touch that edge, leaving a dead gap at the divider.
+    val twoPane = directive.maxHorizontalPartitions > 1
+    val listInsets = if (twoPane) contentPadding.withoutEnd() else contentPadding
+    val detailInsets = if (twoPane) contentPadding.withoutStart() else contentPadding
+
     val sceneStrategy =
         rememberListDetailSceneStrategy<NavKey>(
             // Keep the adaptive scaffold in charge of every window size so the
@@ -125,9 +134,9 @@ internal fun PokemonCatalog(
                         )
                 ) {
                     Column(Modifier.fillMaxSize()) {
-                        ScreenHeader("Pokemon", insets = contentPadding)
+                        ScreenHeader("Pokemon", insets = listInsets)
                         PokemonListScreen(
-                            contentPadding = contentPadding.withoutTop(),
+                            contentPadding = listInsets.withoutTop(),
                             isOnTeam = { id -> members.value.any { it.id == id } },
                             onToggleTeam = { entry ->
                                 // The list only knows a name and an id — types arrive with the
@@ -162,7 +171,7 @@ internal fun PokemonCatalog(
                             if (!team.toggle(detail.id, detail.name, types)) onTeamFull()
                         },
                         unit = unit,
-                        contentPadding = contentPadding,
+                        contentPadding = detailInsets,
                     )
                 }
             },

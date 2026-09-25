@@ -43,3 +43,35 @@ internal fun PaddingValues.withoutTop(): PaddingValues {
         bottom = calculateBottomPadding(),
     )
 }
+
+/**
+ * The same insets with the start (or end) edge zeroed, for a pane that does not touch that window
+ * edge.
+ *
+ * `ListDetailPaneScaffold` hands both panes the window's insets, but in two-pane mode only the
+ * outer edges are real: the list's end and the detail's start abut each other, not the window. On
+ * an opened iPhone Duo the native tab bar contributes an 84dp *end* inset, so an unfiltered list
+ * pane leaves 84dp of dead space against the divider.
+ */
+@Composable
+internal fun PaddingValues.withoutStart(): PaddingValues {
+    val direction = LocalLayoutDirection.current
+    return PaddingValues(
+        start = 0.dp,
+        top = calculateTopPadding(),
+        end = calculateEndPadding(direction),
+        bottom = calculateBottomPadding(),
+    )
+}
+
+/** @see withoutStart */
+@Composable
+internal fun PaddingValues.withoutEnd(): PaddingValues {
+    val direction = LocalLayoutDirection.current
+    return PaddingValues(
+        start = calculateStartPadding(direction),
+        top = calculateTopPadding(),
+        end = 0.dp,
+        bottom = calculateBottomPadding(),
+    )
+}
