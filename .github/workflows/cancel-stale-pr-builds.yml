@@ -1,0 +1,40 @@
+name: Cancel stale PR builds
+
+# `concurrency` cannot do this. Build's group is keyed on `github.ref`, which for a pull request is
+# `refs/pull/N/merge`; closing or merging a PR pushes nothing to that ref, so the in-flight run has
+# nothing to supersede it and carries on building a branch nobody is waiting for. Meanwhile the
+# merge commit has already started its own run on main, verifying the same content.
+#
+# The Build job runs on macOS, which bills at 10x on private repos and occupies a scarce runner on
+# public ones, so leaving two of these behind after every merge is worth one cheap ubuntu job.
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  actions: write
+
+jobs:
+  cancel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel any run still going for this PR's branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          # `--event pull_request` matters: without it this would also cancel the push-triggered
+          # run on main that we actually want, whenever a branch and main share a head SHA.
+          ids=$(gh run list --repo "$GITHUB_REPOSITORY" --branch "$HEAD_BRANCH" \
+                  --event pull_request --limit 20 \
+                  --json databaseId,status \
+                  --jq '.[] | select(.status == "in_progress" or .status == "queued") | .databaseId')
+          if [ -z "$ids" ]; then
+            echo "Nothing in flight for $HEAD_BRANCH."
+            exit 0
+          fi
+          for id in $ids; do
+            echo "Cancelling $id"
+            gh run cancel "$id" --repo "$GITHUB_REPOSITORY" || true
+          done
