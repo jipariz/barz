@@ -3,7 +3,8 @@ package dev.parez.barz.sample.ui
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 
 /**
@@ -13,27 +14,33 @@ import androidx.compose.ui.unit.dp
  * gutter, and both have to reach `contentPadding` — `Modifier.padding` on a lazy container clips the
  * scroll instead of insetting its content, so the bar would slice through the list as it moves.
  */
-internal operator fun PaddingValues.plus(other: PaddingValues): PaddingValues =
-    PaddingValues(
+@Composable
+internal operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
+    // calculateStartPadding(Ltr) returns the *left* edge. Feeding that back in as `start` sends it
+    // to the right in an RTL layout — and the values being folded here are the navigation rail's
+    // width and the iPhone Duo's side strip, which is the whole reason this helper exists.
+    val direction = LocalLayoutDirection.current
+    return PaddingValues(
         start =
-            calculateStartPadding(LayoutDirection.Ltr) +
-                other.calculateStartPadding(LayoutDirection.Ltr),
+            calculateStartPadding(direction) + other.calculateStartPadding(direction),
         top = calculateTopPadding() + other.calculateTopPadding(),
-        end =
-            calculateEndPadding(LayoutDirection.Ltr) +
-                other.calculateEndPadding(LayoutDirection.Ltr),
+        end = calculateEndPadding(direction) + other.calculateEndPadding(direction),
         bottom = calculateBottomPadding() + other.calculateBottomPadding(),
     )
+}
 
 /**
  * The same insets with the top edge zeroed. Screens that sit under a page header have already
  * consumed the top inset there; passing it on again would leave a second status-bar-sized gap. The
  * horizontal edges are kept — those carry the navigation rail's width on wide windows.
  */
-internal fun PaddingValues.withoutTop(): PaddingValues =
-    PaddingValues(
-        start = calculateStartPadding(LayoutDirection.Ltr),
+@Composable
+internal fun PaddingValues.withoutTop(): PaddingValues {
+    val direction = LocalLayoutDirection.current
+    return PaddingValues(
+        start = calculateStartPadding(direction),
         top = 0.dp,
-        end = calculateEndPadding(LayoutDirection.Ltr),
+        end = calculateEndPadding(direction),
         bottom = calculateBottomPadding(),
     )
+}

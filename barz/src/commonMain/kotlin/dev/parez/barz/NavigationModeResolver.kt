@@ -1,6 +1,8 @@
 package dev.parez.barz
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 
@@ -19,11 +21,24 @@ import androidx.compose.ui.platform.LocalWindowInfo
 fun rememberNavigationMode(
     config: AdaptiveNavigationConfig = AdaptiveNavigationConfig(),
 ): NavigationMode {
-    val size = LocalWindowInfo.current.containerSize
+    val windowInfo = LocalWindowInfo.current
     val density = LocalDensity.current
-    val widthDp = with(density) { size.width.toDp().value }
-    val heightDp = with(density) { size.height.toDp().value }
-    return resolveNavigationMode(widthDp, heightDp, config)
+    // `containerSize` changes on every frame of a window drag or a browser resize, but this
+    // function's output is a three-valued enum that changes at exactly two thresholds. Reading it
+    // directly would invalidate every caller — and AdaptiveNavigationScaffold passes the consuming
+    // app through as `content` — once per frame for the whole gesture. derivedStateOf collapses
+    // that to the two frames where the answer actually changes.
+    val mode = remember(windowInfo, density, config) {
+        derivedStateOf {
+            val size = windowInfo.containerSize
+            resolveNavigationMode(
+                widthDp = with(density) { size.width.toDp().value },
+                heightDp = with(density) { size.height.toDp().value },
+                config = config,
+            )
+        }
+    }
+    return mode.value
 }
 
 /**
@@ -52,10 +67,8 @@ internal fun resolveNavigationMode(
  * narrowest permitted mode. Never throws — an app that allows only [NavigationMode.Drawer] still
  * gets a drawer on a phone rather than a crash.
  */
-private fun NavigationMode.clampTo(allowed: Set<NavigationMode>): NavigationMode {
-    if (this in allowed) return this
-    val order = listOf(NavigationMode.BottomBar, NavigationMode.Rail, NavigationMode.Drawer)
-    val index = order.indexOf(this)
-    return order.take(index).lastOrNull { it in allowed }
-        ?: order.first { it in allowed }
-}
+private fun NavigationMode.clampTo(allowed: Set<NavigationMode>): NavigationMode =
+    // `entries` is already ordered narrowest-to-widest, so `ordinal` is the width rank. Taking
+    // ordinal + 1 subsumes the "already allowed" case.
+    NavigationMode.entries.take(ordinal + 1).lastOrNull { it in allowed }
+        ?: NavigationMode.entries.first { it in allowed }

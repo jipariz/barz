@@ -1,6 +1,7 @@
 package dev.parez.barz
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,8 +42,13 @@ internal actual fun NativeIosBar(
     // UITabBar holds its delegate weakly, so it has to be remembered here rather than created
     // inline in the factory — otherwise selection stops firing as soon as it is collected.
     val delegate = remember { NativeBarDelegate() }
-    delegate.onItemSelected = onItemSelected
-    delegate.items = items
+    // SideEffect, not a bare write: composition can be cancelled or re-run speculatively, and these
+    // are plain vars on a long-lived object — updating them mid-composition applies changes that
+    // the frame may never commit.
+    SideEffect {
+        delegate.onItemSelected = onItemSelected
+        delegate.items = items
+    }
 
     UIKitView(
         factory = {

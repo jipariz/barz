@@ -1,8 +1,11 @@
+@file:OptIn(kotlinx.cinterop.BetaInteropApi::class, kotlinx.cinterop.ExperimentalForeignApi::class)
+
 package dev.parez.barz
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.ComposeUIViewController
 import platform.Foundation.NSBundle
+import platform.Foundation.NSSelectorFromString
 import platform.UIKit.UIImage
 import platform.UIKit.UITabBarAppearance
 import platform.UIKit.UITabBarController
@@ -64,9 +67,9 @@ private class BarzTabBarController(
                 ComposeUIViewController { content(index) }.also { vc ->
                     vc.setTabBarItem(
                         UITabBarItem(
-                        title = item.title.takeIf { item.showLabel },
-                        image = UIImage.systemImageNamed(item.systemIcon),
-                        selectedImage = item.selectedSystemIcon?.let(UIImage::systemImageNamed),
+                            title = item.title.takeIf { item.showLabel },
+                            image = item.systemIcon.asUIImage(),
+                            selectedImage = item.selectedSystemIcon?.asUIImage(),
                         ).apply {
                             badgeValue = item.badge ?: if (item.showBadgeDot) "" else null
                             enabled = item.enabled
@@ -77,7 +80,11 @@ private class BarzTabBarController(
         )
         delegate = tabDelegate
 
-        if (options.sidebarAdaptable) {
+        // `UITabBarController.mode` is iOS 18+. Kotlin/Native emits a plain objc_msgSend with no
+        // availability check, so on iOS 17 and below this is an unrecognised selector — a crash on
+        // the default path, since `sidebarAdaptable` defaults to true. The library declares no
+        // deployment target, so consumers can and will run below 18.
+        if (options.sidebarAdaptable && respondsToSelector(NSSelectorFromString("setMode:"))) {
             mode = UITabBarControllerModeTabSidebar
         }
         if (!options.liquidGlass) {
@@ -89,9 +96,13 @@ private class BarzTabBarController(
             tabBar.scrollEdgeAppearance = opaque
         }
     }
-
-    /** Selects a tab programmatically, e.g. to restore state. */
-    fun select(index: Int) {
-        selectedIndex = index.toULong()
-    }
 }
+
+/**
+ * SF Symbol first, asset catalog second.
+ *
+ * Both iOS paths resolve icons this way now; the embedded [NativeIosBar] always did, and this one
+ * did not, so the same [NavigationItem] list rendered with icons in one and blanks in the other.
+ */
+private fun String.asUIImage(): UIImage? =
+    UIImage.systemImageNamed(this) ?: UIImage.imageNamed(this)

@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -116,8 +117,6 @@ fun DemoApp() {
             // Rail and drawer only — the bottom bar ignores it. Doubles as the top spacing the
             // rail would otherwise lack.
             header = { RailHeader() },
-            // Honoured in all three modes: over the bottom-end corner above a bar, in the header
-            // of a rail or drawer.
         ) {
             TabContent(Tab.entries[selectedTab])
         }
@@ -173,7 +172,14 @@ private fun TabContent(tab: Tab) {
     // Frosts the screens and nothing else. `HazeInput.Content` blurs this modifier's own subtree;
     // both hosts draw their chrome outside it — the Compose scaffold in [DemoApp], the native
     // UITabBarController on iOS — so the chrome stays sharp either way.
+    // Without a SaveableStateHolder each tab's subtree is disposed on the way out and rebuilt from
+    // scratch on the way back: the Pokemon tab loses its open detail pane, its grid scroll position
+    // and its pane-expansion anchor on every round trip. iOS never hit this because
+    // barzTabBarController gives each tab its own ComposeUIViewController.
+    val tabState = rememberSaveableStateHolder()
+
     Column(Modifier.fillMaxSize().hazeBlur(input = HazeInput.Content, style = ContentBlur)) {
+        tabState.SaveableStateProvider(tab) {
         when (tab) {
             Tab.POKEMON -> {
                 // Only this tab drills down, so it is the only one with a nav3 stack. On web
@@ -210,6 +216,7 @@ private fun TabContent(tab: Tab) {
                     contentPadding = insets.withoutTop(),
                 )
             }
+        }
         }
     }
 

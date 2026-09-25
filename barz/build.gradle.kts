@@ -55,8 +55,11 @@ kotlin {
             api(libs.compose.material3)
             api(libs.compose.components.resources)
 
-            // Internal only — Barz wraps NavigationSuiteScaffold behind its own API surface.
-            implementation(libs.compose.foundation)
+            // api, not implementation: ColumnScope is androidx.compose.foundation.layout and it
+            // appears in AdaptiveNavigationScaffold's public `header` signature. It only resolves
+            // for consumers today because material3 happens to api foundation transitively.
+            api(libs.compose.foundation)
+            // Internal only — Barz wraps NavigationSuiteScaffoldLayout behind its own API surface.
             implementation(libs.compose.material3.adaptive.navigation.suite)
         }
         commonTest.dependencies {

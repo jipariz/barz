@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -107,7 +108,8 @@ private fun TeamCard(member: TeamMember, twentyFourHourTime: Boolean, onRemove: 
                         containerColor = MaterialTheme.colorScheme.onSurface,
                         contentColor = MaterialTheme.colorScheme.surface,
                     ),
-                modifier = Modifier.size(28.dp),
+                // 28dp visual, 48dp target — this is a destructive control.
+                modifier = Modifier.minimumInteractiveComponentSize().size(28.dp),
             ) {
                 Icon(
                     Icons.Filled.Close,

@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -74,9 +76,19 @@ fun AdaptiveNavigationBar(
             modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
             shape = MaterialTheme.shapes.extraLarge,
             color = colors.containerColor.copy(alpha = 0.72f),
+            // Explicit, because `copy(alpha = …)` produces a colour that matches no colorScheme
+            // entry, so Surface's own contentColorFor lookup returns Unspecified — and an Icon with
+            // an Unspecified tint applies no ColorFilter at all, drawing caller icons in their
+            // source colours instead of the theme's.
+            contentColor = colors.unselectedIconColor,
             tonalElevation = 3.dp,
         ) {
-            BarContent(items, selectedIndex, onItemSelected, icon, colors, Color.Transparent)
+            // The pill already sits inside the caller's insets; letting the inner NavigationBar
+            // apply the system bottom inset again inflates it by the gesture-bar height.
+            BarContent(
+                items, selectedIndex, onItemSelected, icon, colors, Color.Transparent,
+                windowInsets = WindowInsets(0),
+            )
         }
     } else {
         BarContent(items, selectedIndex, onItemSelected, icon, colors, colors.containerColor,
@@ -133,8 +145,15 @@ private fun BarContent(
     colors: AdaptiveNavigationBarColors,
     containerColor: Color,
     modifier: Modifier = Modifier,
+    windowInsets: WindowInsets = NavigationBarDefaults.windowInsets,
 ) {
-    NavigationBar(modifier = modifier, containerColor = containerColor) {
+    NavigationBar(
+        modifier = modifier,
+        containerColor = containerColor,
+        windowInsets = windowInsets,
+    ) {
+        // Hoisted: this was being rebuilt once per item, per recomposition.
+        val itemColors = colors.itemColors()
         items.forEachIndexed { index, item ->
             val selected = index == selectedIndex
             NavigationBarItem(

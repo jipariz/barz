@@ -3,6 +3,8 @@ package dev.parez.barz.sample
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -16,8 +18,14 @@ import kotlinx.coroutines.sync.withLock
 class PokemonRepository(private val api: PokemonApi) {
     private val fetchMutex = Mutex()
     private var nextOffset = 0
-    var hasMore = true
-        private set
+    private val _hasMore = MutableStateFlow(true)
+
+    /**
+     * Whether another page exists. A [StateFlow] rather than a plain `var` because the list screen
+     * folds it into a `combine`: as a bare field it was invisible to that pipeline and only stayed
+     * correct because the loading flag happened to change immediately afterwards.
+     */
+    val hasMore: StateFlow<Boolean> = _hasMore.asStateFlow()
 
     // Sorted on read rather than on write: entries arrive page-ordered anyway, and a single sort
     // per emission is cheaper than keeping an ordered structure in sync.
@@ -31,13 +39,14 @@ class PokemonRepository(private val api: PokemonApi) {
 
     suspend fun fetchNextPage(limit: Int = 20) {
         fetchMutex.withLock {
-            if (!hasMore) return
+            if (!_hasMore.value) return
             Logger.d(tag = "Repository") { "fetchNextPage: offset=$nextOffset, limit=$limit" }
             val response = api.fetchList(nextOffset, limit)
+            nextOffset += limit
+            // Before the entries, so subscribers never see the final page alongside hasMore = true.
+            _hasMore.value = response.next != null
             entries.value = entries.value + response.results.associateBy { it.id }
             Logger.i(tag = "Repository") { "fetchNextPage: cached ${response.results.size} entries" }
-            nextOffset += limit
-            hasMore = response.next != null
         }
     }
 

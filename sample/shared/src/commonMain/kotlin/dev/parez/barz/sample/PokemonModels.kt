@@ -14,12 +14,17 @@ data class PokemonListResponse(
 
 @Serializable
 data class PokemonListEntry(val name: String, val url: String) {
-    /** Extracted from the URL: "https://pokeapi.co/api/v2/pokemon/1/" → 1 */
-    val id: Int
-        get() = url.trimEnd('/').substringAfterLast('/').toInt()
-
-    val spriteUrl: String
-        get() = spriteUrlFor(id)
+    /**
+     * Extracted from the URL: "https://pokeapi.co/api/v2/pokemon/1/" → 1.
+     *
+     * Computed once, not per access. As a getter this ran three allocations every time it was
+     * read — including from `key = { it.id }`, which a lazy grid calls for every visible item on
+     * every measure pass — and `toInt()` would have thrown from inside that key lambda, during
+     * measurement, where it cannot be caught.
+     */
+    val id: Int by lazy(LazyThreadSafetyMode.NONE) {
+        url.trimEnd('/').substringAfterLast('/').toIntOrNull() ?: 0
+    }
 }
 
 // ── Detail endpoint ───────────────────────────────────────────────────────────
@@ -47,28 +52,14 @@ data class AbilitySlot(val ability: NamedResource, @SerialName("is_hidden") val 
 
 // ── URL helpers ───────────────────────────────────────────────────────────────
 
-fun spriteUrlFor(id: Int, shiny: Boolean = false): String {
-    val path = if (shiny) "pokemon/shiny/$id.png" else "pokemon/$id.png"
-    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/$path"
-}
+private const val SPRITES = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
 
-fun artworkUrlFor(id: Int, shiny: Boolean = false): String {
-    val path = if (shiny) "official-artwork/shiny/$id.png" else "official-artwork/$id.png"
-    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/$path"
-}
+fun spriteUrlFor(id: Int): String = "$SPRITES/pokemon/$id.png"
+
+fun artworkUrlFor(id: Int): String = "$SPRITES/pokemon/other/official-artwork/$id.png"
 
 // ── Display helpers ───────────────────────────────────────────────────────────
 
 fun String.toDisplayName(): String =
     replace('-', ' ').split(' ').joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
 
-fun statDisplayName(apiName: String): String =
-    when (apiName) {
-        "hp" -> "HP"
-        "attack" -> "Attack"
-        "defense" -> "Defense"
-        "special-attack" -> "Sp.Atk"
-        "special-defense" -> "Sp.Def"
-        "speed" -> "Speed"
-        else -> apiName.toDisplayName()
-    }

@@ -31,24 +31,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import dev.parez.barz.sample.PokemonDetail
 import dev.parez.barz.sample.UnitSystem
 import dev.parez.barz.sample.artworkUrlFor
-import dev.parez.barz.sample.statDisplayName
 import dev.parez.barz.sample.theme.MonoTagStyle
 import dev.parez.barz.sample.theme.isDarkScheme
 import dev.parez.barz.sample.toDisplayName
@@ -101,7 +102,10 @@ fun PokemonDetailScreen(
                     contentColor = Color.White,
                 ),
             modifier =
-                Modifier.padding(contentPadding).padding(start = 16.dp, top = 8.dp).size(40.dp),
+                Modifier.padding(contentPadding)
+                    .padding(start = 16.dp, top = 8.dp)
+                    .minimumInteractiveComponentSize()
+                    .size(40.dp),
         ) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
         }
@@ -125,7 +129,8 @@ private fun DetailContent(
     unit: UnitSystem,
     contentPadding: PaddingValues,
 ) {
-    val types = detail.types.sortedBy { it.slot }.map { it.type.name }
+    val layoutDirection = LocalLayoutDirection.current
+    val types = remember(detail) { detail.types.sortedBy { it.slot }.map { it.type.name } }
     val accent = typeColor(types.firstOrNull().orEmpty())
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
@@ -148,8 +153,8 @@ private fun DetailContent(
                 .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                 .background(MaterialTheme.colorScheme.background)
                 .padding(
-                    start = contentPadding.calculateStartPadding(LayoutDirection.Ltr),
-                    end = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
+                    start = contentPadding.calculateStartPadding(layoutDirection),
+                    end = contentPadding.calculateEndPadding(layoutDirection),
                     bottom = contentPadding.calculateBottomPadding(),
                 )
                 .padding(horizontal = 16.dp)
@@ -181,6 +186,7 @@ private fun DetailContent(
                     onClick = onToggleTeam,
                     shape = CircleShape,
                     color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier.minimumInteractiveComponentSize(),
                 ) {
                     PokeballGlyph(
                         color =
@@ -355,5 +361,5 @@ private fun statAbbreviation(apiName: String): String =
         "special-attack" -> "SATK"
         "special-defense" -> "SDEF"
         "speed" -> "SPD"
-        else -> statDisplayName(apiName)
+        else -> apiName.toDisplayName()
     }

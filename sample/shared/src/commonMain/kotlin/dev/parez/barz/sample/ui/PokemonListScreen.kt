@@ -1,7 +1,7 @@
 package dev.parez.barz.sample.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,8 +31,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -162,12 +163,19 @@ private fun PokemonCard(
                         if (onTeam) MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.onSurfaceVariant,
                     background = MaterialTheme.colorScheme.surfaceContainer,
-                    // Inset from the tile's corner rather than pinned to it — the design floats
-                    // the toggle inside the sprite well. Padding outside the clip so the whole
-                    // 40dp square is the hit target, not just the 24dp glyph.
+                    // Inset from the tile's corner rather than pinned to it — the design floats the
+                    // toggle inside the sprite well. minimumInteractiveComponentSize lifts the hit
+                    // area to the 48dp floor without moving a pixel, and the label/role make it an
+                    // addressable control: the parent card merges its descendants, so without them
+                    // the primary affordance on this screen is an anonymous custom action.
                     modifier =
-                        Modifier.clip(RoundedCornerShape(20.dp))
-                            .clickable(onClick = onToggleTeam)
+                        Modifier.minimumInteractiveComponentSize()
+                            .clip(RoundedCornerShape(20.dp))
+                            .toggleable(
+                                value = onTeam,
+                                role = Role.Checkbox,
+                                onValueChange = { onToggleTeam() },
+                            )
                             .padding(8.dp)
                             .size(24.dp),
                 )

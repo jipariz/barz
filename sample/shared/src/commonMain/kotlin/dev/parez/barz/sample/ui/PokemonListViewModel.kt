@@ -36,11 +36,13 @@ class PokemonListViewModel(private val repository: PokemonRepository) : ViewMode
     private val error = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<ListUiState> =
-        combine(repository.observePokemonList(), query, isLoadingMore, error) {
-                items,
+        combine(
+                repository.observePokemonList(),
                 query,
-                loading,
-                err ->
+                isLoadingMore,
+                error,
+                repository.hasMore,
+            ) { items, query, loading, err, hasMore ->
                 Logger.d(tag = "ListVM") {
                     "combine: items=${items.size}, query=$query, loading=$loading, err=$err"
                 }
@@ -57,7 +59,7 @@ class PokemonListViewModel(private val repository: PokemonRepository) : ViewMode
                         filteredItems = filtered,
                         query = query,
                         isLoadingMore = loading,
-                        hasMore = repository.hasMore,
+                        hasMore = hasMore,
                         error = err,
                     )
                 }

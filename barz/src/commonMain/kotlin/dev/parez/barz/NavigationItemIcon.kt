@@ -37,7 +37,11 @@ internal fun NavigationItemIcon(
             slot != null -> slot(index, selected)
             item.icon != null -> Icon(
                 painter = painterResource(item.iconFor(selected)!!),
-                contentDescription = item.contentDescription ?: item.title,
+                // Null when the item shows a label: NavigationBarItem/RailItem/DrawerItem all merge
+                // descendant semantics and already announce the title, so describing the icon too
+                // makes every screen reader say "Home, Home".
+                contentDescription =
+                    if (item.showLabel) null else item.contentDescription ?: item.title,
             )
             else -> error(
                 "NavigationItem \"${item.title}\" has no icon. Set NavigationItem.icon to a " +
