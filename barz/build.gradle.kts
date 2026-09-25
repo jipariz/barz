@@ -18,19 +18,26 @@ kotlin {
         minSdk = libs.versions.android.minSdk.get().toInt()
 
         compilations.configureEach {
-            compileTaskProvider.configure {
-                compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
-            }
+            compileTaskProvider.configure { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
         }
     }
 
-    jvm()
+    // Pinned, not inherited. Without this the published barz-jvm's bytecode level is whatever
+    // JDK the publisher happened to run — 21 on CI, something else on a contributor's machine.
+    // A toolchain would fix it too, but needs a JDK 11 present; setting the target does not.
+    jvm { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
 
     // Calling this is what enables ABI validation as of Kotlin 2.4 — the `enabled` property it
     // used to take was removed. The dump under barz/api/ is committed so a change to the public
     // API shows up as a diff in review.
-    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
-    abiValidation {}
+    //
+    // Two dumps are produced, not three: `jvm/` and the klib one, covering jvm + js + wasmJs +
+    // both iOS targets. KGP collects Android dumps only from a `KotlinAndroidTarget`, and AGP's
+    // com.android.kotlin.multiplatform.library gives a KotlinMultiplatformAndroidLibraryTarget
+    // instead, which it skips. Android-only public API would therefore change unguarded — there
+    // is none today (androidMain holds one `actual val` whose expect the klib dump covers), so
+    // the guard is complete in practice. Adding androidMain API means checking it by hand.
+    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class) abiValidation {}
 
     // Tests are off on the web targets, deliberately. Karma needs a local Chrome install, and
     // Node cannot host them either because Compose's web runtime loads Skiko's .wasm over XHR.
@@ -49,8 +56,7 @@ kotlin {
 
     // Required now that nonIosMain declares manual dependsOn edges: those switch off the
     // automatic application of the default hierarchy, and without it iosMain is never wired.
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    applyDefaultHierarchyTemplate()
+    @OptIn(ExperimentalKotlinGradlePluginApi::class) applyDefaultHierarchyTemplate()
 
     sourceSets {
         // One no-op actual instead of four byte-identical copies. Only iOS has a native bar; every
@@ -76,9 +82,7 @@ kotlin {
             // Internal only — Barz wraps NavigationSuiteScaffoldLayout behind its own API surface.
             implementation(libs.compose.material3.adaptive.navigation.suite)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
+        commonTest.dependencies { implementation(libs.kotlin.test) }
     }
 }
 
@@ -86,9 +90,9 @@ kotlin {
 // webpack bundle to load Skiko from. Barz's web test tasks are disabled (see the note on the js
 // target above), so there is nothing for it to guard — and satisfying it would mean declaring an
 // executable binary on a library.
-tasks.matching { it.name.startsWith("checkComposeUiTestConfigurationFor") }.configureEach {
-    enabled = false
-}
+tasks
+    .matching { it.name.startsWith("checkComposeUiTestConfigurationFor") }
+    .configureEach { enabled = false }
 
 mavenPublishing {
     // Coordinates, POM and version come from gradle.properties (GROUP / VERSION_NAME / POM_*).
@@ -96,8 +100,8 @@ mavenPublishing {
         KotlinMultiplatform(
             // Central requires a javadoc jar; an empty one satisfies it. Dokka would pull
             // rendering artifacts that are not in the local cache, so it stays opt-in.
-            javadocJar = JavadocJar.Empty(),
-        ),
+            javadocJar = JavadocJar.Empty()
+        )
     )
     publishToMavenCentral()
     // In-memory signing only. The signing plugin's useGpgCmd() is not configuration-cache
@@ -106,4 +110,3 @@ mavenPublishing {
         signAllPublications()
     }
 }
-

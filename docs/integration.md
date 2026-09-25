@@ -7,6 +7,19 @@
 One dependency, on every platform. It goes in your **shared** KMP module, not in the per-platform
 shells — the iOS chrome rides along inside the Kotlin framework.
 
+Barz has not had a stable release yet, so the current build is a snapshot and `mavenCentral()`
+alone will not find it. Add the snapshots repository:
+
+```kotlin
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+}
+```
+
 ```kotlin
 // shared/build.gradle.kts
 kotlin {
@@ -45,6 +58,9 @@ product:
 
 dependencies:
   - dev.parez.barz:barz:0.1.0-SNAPSHOT
+
+repositories:
+  - https://central.sonatype.com/repository/maven-snapshots/
 
 settings:
   compose: enabled

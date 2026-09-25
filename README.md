@@ -8,6 +8,9 @@ iOS rather than an imitation of one.
 implementation("dev.parez.barz:barz:0.1.0-SNAPSHOT")
 ```
 
+Pre-release, so it lives in the snapshots repository — see the
+[integration guide](docs/integration.md#install) for the `repositories` line that copy-paste needs.
+
 | Target | Chrome |
 |---|---|
 | Android | Material 3 bar / rail / drawer |
