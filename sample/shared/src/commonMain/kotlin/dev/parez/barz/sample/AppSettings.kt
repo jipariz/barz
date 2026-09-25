@@ -16,7 +16,7 @@ enum class ThemeMode {
 }
 
 /**
- * The three knobs on the Settings screen. In-memory only — the demo has no persistence layer, and a
+ * The knobs on the Settings screen. In-memory only — the demo has no persistence layer, and a
  * per-platform one would be more setup than a navigation sample needs.
  */
 class SettingsState {
@@ -29,6 +29,12 @@ class SettingsState {
     private val _mode = MutableStateFlow(ThemeMode.SYSTEM)
     val mode: StateFlow<ThemeMode> = _mode.asStateFlow()
 
+    // On by default: frosting the screens is the demo's whole way of pointing at the chrome. The
+    // switch exists because that also makes the content deliberately unreadable, and anyone who
+    // came to read a Pokédex rather than look at a navigation bar wants it off.
+    private val _blurContent = MutableStateFlow(true)
+    val blurContent: StateFlow<Boolean> = _blurContent.asStateFlow()
+
     fun setUnit(value: UnitSystem) {
         _unit.value = value
     }
@@ -39,5 +45,9 @@ class SettingsState {
 
     fun setMode(value: ThemeMode) {
         _mode.value = value
+    }
+
+    fun setBlurContent(value: Boolean) {
+        _blurContent.value = value
     }
 }

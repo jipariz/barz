@@ -162,6 +162,7 @@ private fun TabContent(tab: Tab) {
     val unit by settings.unit.collectAsState()
     val twentyFourHourTime by settings.twentyFourHourTime.collectAsState()
     val mode by settings.mode.collectAsState()
+    val blurContent by settings.blurContent.collectAsState()
 
     var teamFull by remember { mutableStateOf(false) }
 
@@ -169,16 +170,21 @@ private fun TabContent(tab: Tab) {
     // container clipping it — that way sprites scroll under the bar rather than stopping at it.
     val insets = WindowInsets.safeDrawing.asPaddingValues()
 
-    // Frosts the screens and nothing else. `HazeInput.Content` blurs this modifier's own subtree;
-    // both hosts draw their chrome outside it — the Compose scaffold in [DemoApp], the native
-    // UITabBarController on iOS — so the chrome stays sharp either way.
     // Without a SaveableStateHolder each tab's subtree is disposed on the way out and rebuilt from
     // scratch on the way back: the Pokemon tab loses its open detail pane, its grid scroll position
     // and its pane-expansion anchor on every round trip. iOS never hit this because
     // barzTabBarController gives each tab its own ComposeUIViewController.
     val tabState = rememberSaveableStateHolder()
 
-    Column(Modifier.fillMaxSize().hazeBlur(input = HazeInput.Content, style = ContentBlur)) {
+    // Frosts the screens and nothing else. `HazeInput.Content` blurs this modifier's own subtree;
+    // both hosts draw their chrome outside it — the Compose scaffold in [DemoApp], the native
+    // UITabBarController on iOS — so the chrome stays sharp either way. Settings turns it off,
+    // because "the content is unreadable" is the point and also a nuisance.
+    val blur =
+        if (blurContent) Modifier.hazeBlur(input = HazeInput.Content, style = ContentBlur)
+        else Modifier
+
+    Column(Modifier.fillMaxSize().then(blur)) {
         tabState.SaveableStateProvider(tab) {
             when (tab) {
                 Tab.POKEMON -> {
@@ -218,6 +224,8 @@ private fun TabContent(tab: Tab) {
                         onTwentyFourHourTimeChange = settings::setTwentyFourHourTime,
                         mode = mode,
                         onModeChange = settings::setMode,
+                        blurContent = blurContent,
+                        onBlurContentChange = settings::setBlurContent,
                         contentPadding = insets.withoutTop(),
                     )
                 }

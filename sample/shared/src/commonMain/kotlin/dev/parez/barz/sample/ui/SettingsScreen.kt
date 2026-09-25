@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.BlurOn
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Info
@@ -34,6 +35,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -61,6 +63,8 @@ fun SettingsScreen(
     onTwentyFourHourTimeChange: (Boolean) -> Unit,
     mode: ThemeMode,
     onModeChange: (ThemeMode) -> Unit,
+    blurContent: Boolean,
+    onBlurContentChange: (Boolean) -> Unit,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     var showAbout by remember { mutableStateOf(false) }
@@ -88,23 +92,20 @@ fun SettingsScreen(
                     Switch(
                         checked = twentyFourHourTime,
                         onCheckedChange = onTwentyFourHourTimeChange,
-                        // Spelled out in full. The M3 defaults draw the thumb and border in
-                        // `outline` over a `surfaceContainerHighest` track, which on this greyscale
-                        // palette is close enough to invisible.
-                        colors =
-                            SwitchDefaults.colors(
-                                checkedTrackColor = MaterialTheme.colorScheme.onSurface,
-                                checkedThumbColor = MaterialTheme.colorScheme.surface,
-                                checkedBorderColor = Color.Transparent,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainer,
-                                uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                uncheckedBorderColor = Color.Transparent,
-                            ),
+                        colors = demoSwitchColors(),
                     )
                 }
                 RowDivider()
                 SettingsRow(icon = Icons.Filled.Tonality, label = "Mode") {
                     ModePicker(mode = mode, onChange = onModeChange)
+                }
+                RowDivider()
+                SettingsRow(icon = Icons.Filled.BlurOn, label = "Blur Content") {
+                    Switch(
+                        checked = blurContent,
+                        onCheckedChange = onBlurContentChange,
+                        colors = demoSwitchColors(),
+                    )
                 }
                 RowDivider()
                 SettingsRow(
@@ -126,6 +127,21 @@ fun SettingsScreen(
         AboutDialog(onDismiss = { showAbout = false })
     }
 }
+
+/**
+ * Spelled out in full. The M3 defaults draw the thumb and border in `outline` over a
+ * `surfaceContainerHighest` track, which on this greyscale palette is close enough to invisible.
+ */
+@Composable
+private fun demoSwitchColors(): SwitchColors =
+    SwitchDefaults.colors(
+        checkedTrackColor = MaterialTheme.colorScheme.onSurface,
+        checkedThumbColor = MaterialTheme.colorScheme.surface,
+        checkedBorderColor = Color.Transparent,
+        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainer,
+        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        uncheckedBorderColor = Color.Transparent,
+    )
 
 @Composable
 private fun SettingsRow(

@@ -148,7 +148,8 @@ is `adb shell screencap` composited into the folded bezel.
 **The demo frosts its own screens.** `DemoApp` wraps `TabContent` in
 `Modifier.hazeBlur(input = HazeInput.Content, …)`, which blurs that subtree only — the chrome is
 drawn by the scaffold *outside* `content`, so it stays sharp and becomes the only thing in focus. Haze (`dev.chrisbanes.haze`) is a **sample** dependency; `:barz` does not depend on it and
-should not. Note this makes the demo deliberately unreadable: drop the `hazeBlur` line to undo it.
+should not. It makes the demo deliberately unreadable, so Settings has a **Blur Content** switch
+that turns it off — reach for that rather than editing the modifier.
 
 **The demo's screens inset themselves.** Both hosts draw edge to edge, so each screen takes
 `WindowInsets.safeDrawing` as `contentPadding` rather than having the container clip it. This is not
