@@ -23,35 +23,20 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      # `build` already runs allTests and — because KGP wires check -> checkKotlinAbi — the ABI
-      # check too, so neither needs its own step. The committed gradle.properties caps workers at
-      # 2 to stay friendly on a laptop; override on the command line so local builds keep theirs.
+      # `ciVerify` is defined in the root build.gradle.kts, which explains what it covers and why
+      # it is not plain `build`. Short version: it is `:navbarz` only — the published artifact —
+      # because a root `build` also produces the sample's distributable artifacts, which nothing
+      # here consumes and which exhausted this runner's heap twice.
       #
-      # The sample's iOS *framework* links are excluded, and nothing is lost by it. `:navbarz` is
-      # the published artifact and is built and tested in full; `:sample:shared` still compiles for
-      # both iOS targets, which is the check that the SDK is usable from iOS code. Linking the
-      # sample's frameworks on top of that verifies nothing further — and the one framework that
-      # does matter, Debug for the simulator, is linked by the xcodebuild step below via the
-      # project's own "Compile Kotlin Framework" phase.
-      #
-      # They are also what has been breaking this job: four concurrent Kotlin/Native links share
-      # the Gradle daemon's heap, and Haze + Ktor + Koin + nav3 in one statically linked binary
-      # does not fit four times over. Not building them is the fix; raising the heap was treating
-      # the symptom.
+      # The committed gradle.properties caps workers at 2 to stay friendly on a laptop; override on
+      # the command line so local builds keep their setting.
       - name: Build, test and check the public ABI
-        run: |
-          ./gradlew build ktfmtCheck --stacktrace --max-workers=4 \
-            -x :sample:shared:linkReleaseFrameworkIosArm64 \
-            -x :sample:shared:linkReleaseFrameworkIosSimulatorArm64 \
-            -x :sample:shared:linkDebugFrameworkIosArm64 \
-            -x :sample:shared:linkDebugFrameworkIosSimulatorArm64
+        run: ./gradlew ciVerify ktfmtCheck --stacktrace --max-workers=4
 
-      - name: Verify the library publishes
-        run: ./gradlew :navbarz:publishToMavenLocal
-
-      # The Kotlin framework is already built above; what is not covered is the Xcode project
-      # around it — iOSApp.swift, ContentView.swift, and the "Compile Kotlin Framework" build
-      # phase that docs/ios.md tells readers to copy into their own app.
+      # This is the only step that links an iOS framework, and deliberately so: it links the one
+      # a consumer's own build would, through the project's "Compile Kotlin Framework" phase — the
+      # phase docs/ios.md tells readers to copy. It also covers iOSApp.swift and ContentView.swift,
+      # which no Gradle task touches.
       - name: Build the iOS sample app
         run: |
           xcodebuild -project sample/iosApp/iosApp.xcodeproj \

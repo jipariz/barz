@@ -21,3 +21,31 @@ allprojects {
     apply(plugin = rootProject.libs.plugins.ktfmt.get().pluginId)
     extensions.configure<com.ncorti.ktfmt.gradle.KtfmtExtension> { kotlinLangStyle() }
 }
+
+// What CI checks, named in one place.
+//
+// `:navbarz` only. It is the published artifact; the sample is a demo that ships to nobody, and
+// building it was costing more than it proved — `build` also produces the sample's *distributable*
+// artifacts (linked iOS frameworks, optimized web bundles), which exhausted the runner's heap
+// twice: first `linkReleaseFrameworkIosArm64`, then `compileProductionExecutableKotlinWasmJs`.
+//
+// Excluding those with `-x` was the first attempt and does not hold: `:sample:shared` and
+// `:sample:webApp` each have their own set, the exclusions do not cascade (`-x` on
+// `compileProductionExecutableKotlinWasmJs` leaves `...WasmJsOptimize` behind), and the names move
+// with the Kotlin version. Naming what must pass is stable; naming what must not run is
+// whack-a-mole.
+//
+// The sample is not entirely unbuilt on CI: the xcodebuild step compiles `:sample:shared` for iOS
+// through the Xcode project's "Compile Kotlin Framework" phase, which is the one path that also
+// proves a consumer's own wiring works. What is no longer covered is the Android, desktop and web
+// shells — a change that breaks those now surfaces locally rather than in CI.
+tasks.register("ciVerify") {
+    group = "verification"
+    description =
+        "Everything CI checks: the published library, built, tested, ABI-checked and published locally."
+
+    // `build` covers every target and the tests, and pulls in checkKotlinAbi because KGP wires
+    // `check` to it.
+    dependsOn(":navbarz:build")
+    dependsOn(":navbarz:publishToMavenLocal")
+}
