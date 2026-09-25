@@ -15,14 +15,14 @@ kotlinxCoroutines = "1.10.2"
 ktfmt = "0.27.0"
 vanniktechPublish = "0.36.0"
 
-# --- demo app only (Pokédex sample); the :barz library depends on none of these ---
+# --- demo app only (Pokédex sample); the :navbarz library depends on none of these ---
 ktor = "3.5.0"
 kotlinxSerialization = "1.11.0"
 kotlinxDatetime = "0.7.1"
 coil = "3.5.0-beta01"
 koin = "4.2.1"
 kermit = "2.1.0"
-# Blur for the glass chrome. Demo-only — :barz does not depend on a blur library and should not;
+# Blur for the glass chrome. Demo-only — :navbarz does not depend on a blur library and should not;
 # the sample frosts its own screens with HazeInput.Content.
 haze = "2.0.0"
 navigation3 = "1.1.2"

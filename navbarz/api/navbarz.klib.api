@@ -1,0 +1,216 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, js, wasmJs]
+// Alias: ios => [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <navbarz-sdk:navbarz>
+final enum class dev.parez.navbarz/IosChrome : kotlin/Enum<dev.parez.navbarz/IosChrome> { // dev.parez.navbarz/IosChrome|null[0]
+    enum entry ComposeGlass // dev.parez.navbarz/IosChrome.ComposeGlass|null[0]
+    enum entry NativeTabBar // dev.parez.navbarz/IosChrome.NativeTabBar|null[0]
+
+    final val entries // dev.parez.navbarz/IosChrome.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.parez.navbarz/IosChrome> // dev.parez.navbarz/IosChrome.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.parez.navbarz/IosChrome // dev.parez.navbarz/IosChrome.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.parez.navbarz/IosChrome> // dev.parez.navbarz/IosChrome.values|values#static(){}[0]
+}
+
+final enum class dev.parez.navbarz/NavBarzPlatform : kotlin/Enum<dev.parez.navbarz/NavBarzPlatform> { // dev.parez.navbarz/NavBarzPlatform|null[0]
+    enum entry Android // dev.parez.navbarz/NavBarzPlatform.Android|null[0]
+    enum entry Desktop // dev.parez.navbarz/NavBarzPlatform.Desktop|null[0]
+    enum entry Ios // dev.parez.navbarz/NavBarzPlatform.Ios|null[0]
+    enum entry Web // dev.parez.navbarz/NavBarzPlatform.Web|null[0]
+
+    final val entries // dev.parez.navbarz/NavBarzPlatform.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.parez.navbarz/NavBarzPlatform> // dev.parez.navbarz/NavBarzPlatform.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.parez.navbarz/NavBarzPlatform // dev.parez.navbarz/NavBarzPlatform.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.parez.navbarz/NavBarzPlatform> // dev.parez.navbarz/NavBarzPlatform.values|values#static(){}[0]
+}
+
+final enum class dev.parez.navbarz/NavigationMode : kotlin/Enum<dev.parez.navbarz/NavigationMode> { // dev.parez.navbarz/NavigationMode|null[0]
+    enum entry BottomBar // dev.parez.navbarz/NavigationMode.BottomBar|null[0]
+    enum entry Drawer // dev.parez.navbarz/NavigationMode.Drawer|null[0]
+    enum entry Rail // dev.parez.navbarz/NavigationMode.Rail|null[0]
+
+    final val entries // dev.parez.navbarz/NavigationMode.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.parez.navbarz/NavigationMode> // dev.parez.navbarz/NavigationMode.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.parez.navbarz/NavigationMode // dev.parez.navbarz/NavigationMode.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.parez.navbarz/NavigationMode> // dev.parez.navbarz/NavigationMode.values|values#static(){}[0]
+}
+
+final class dev.parez.navbarz/AdaptiveNavigationBarColors { // dev.parez.navbarz/AdaptiveNavigationBarColors|null[0]
+    constructor <init>(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color) // dev.parez.navbarz/AdaptiveNavigationBarColors.<init>|<init>(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+
+    final val badgeContainerColor // dev.parez.navbarz/AdaptiveNavigationBarColors.badgeContainerColor|{}badgeContainerColor[0]
+        final fun <get-badgeContainerColor>(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.badgeContainerColor.<get-badgeContainerColor>|<get-badgeContainerColor>(){}[0]
+    final val badgeContentColor // dev.parez.navbarz/AdaptiveNavigationBarColors.badgeContentColor|{}badgeContentColor[0]
+        final fun <get-badgeContentColor>(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.badgeContentColor.<get-badgeContentColor>|<get-badgeContentColor>(){}[0]
+    final val containerColor // dev.parez.navbarz/AdaptiveNavigationBarColors.containerColor|{}containerColor[0]
+        final fun <get-containerColor>(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.containerColor.<get-containerColor>|<get-containerColor>(){}[0]
+    final val indicatorColor // dev.parez.navbarz/AdaptiveNavigationBarColors.indicatorColor|{}indicatorColor[0]
+        final fun <get-indicatorColor>(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.indicatorColor.<get-indicatorColor>|<get-indicatorColor>(){}[0]
+    final val selectedIconColor // dev.parez.navbarz/AdaptiveNavigationBarColors.selectedIconColor|{}selectedIconColor[0]
+        final fun <get-selectedIconColor>(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.selectedIconColor.<get-selectedIconColor>|<get-selectedIconColor>(){}[0]
+    final val selectedTextColor // dev.parez.navbarz/AdaptiveNavigationBarColors.selectedTextColor|{}selectedTextColor[0]
+        final fun <get-selectedTextColor>(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.selectedTextColor.<get-selectedTextColor>|<get-selectedTextColor>(){}[0]
+    final val unselectedIconColor // dev.parez.navbarz/AdaptiveNavigationBarColors.unselectedIconColor|{}unselectedIconColor[0]
+        final fun <get-unselectedIconColor>(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.unselectedIconColor.<get-unselectedIconColor>|<get-unselectedIconColor>(){}[0]
+    final val unselectedTextColor // dev.parez.navbarz/AdaptiveNavigationBarColors.unselectedTextColor|{}unselectedTextColor[0]
+        final fun <get-unselectedTextColor>(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.unselectedTextColor.<get-unselectedTextColor>|<get-unselectedTextColor>(){}[0]
+
+    final fun component1(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.component1|component1(){}[0]
+    final fun component2(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.component2|component2(){}[0]
+    final fun component3(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.component4|component4(){}[0]
+    final fun component5(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.component5|component5(){}[0]
+    final fun component6(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.component6|component6(){}[0]
+    final fun component7(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.component7|component7(){}[0]
+    final fun component8(): androidx.compose.ui.graphics/Color // dev.parez.navbarz/AdaptiveNavigationBarColors.component8|component8(){}[0]
+    final fun copy(androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ..., androidx.compose.ui.graphics/Color = ...): dev.parez.navbarz/AdaptiveNavigationBarColors // dev.parez.navbarz/AdaptiveNavigationBarColors.copy|copy(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.parez.navbarz/AdaptiveNavigationBarColors.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.parez.navbarz/AdaptiveNavigationBarColors.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.parez.navbarz/AdaptiveNavigationBarColors.toString|toString(){}[0]
+}
+
+final class dev.parez.navbarz/AdaptiveNavigationConfig { // dev.parez.navbarz/AdaptiveNavigationConfig|null[0]
+    constructor <init>(kotlin.collections/Set<dev.parez.navbarz/NavigationMode> = ..., dev.parez.navbarz/NavigationBreakpoints = ..., dev.parez.navbarz/IosOptions = ...) // dev.parez.navbarz/AdaptiveNavigationConfig.<init>|<init>(kotlin.collections.Set<dev.parez.navbarz.NavigationMode>;dev.parez.navbarz.NavigationBreakpoints;dev.parez.navbarz.IosOptions){}[0]
+
+    final val allowedModes // dev.parez.navbarz/AdaptiveNavigationConfig.allowedModes|{}allowedModes[0]
+        final fun <get-allowedModes>(): kotlin.collections/Set<dev.parez.navbarz/NavigationMode> // dev.parez.navbarz/AdaptiveNavigationConfig.allowedModes.<get-allowedModes>|<get-allowedModes>(){}[0]
+    final val breakpoints // dev.parez.navbarz/AdaptiveNavigationConfig.breakpoints|{}breakpoints[0]
+        final fun <get-breakpoints>(): dev.parez.navbarz/NavigationBreakpoints // dev.parez.navbarz/AdaptiveNavigationConfig.breakpoints.<get-breakpoints>|<get-breakpoints>(){}[0]
+    final val ios // dev.parez.navbarz/AdaptiveNavigationConfig.ios|{}ios[0]
+        final fun <get-ios>(): dev.parez.navbarz/IosOptions // dev.parez.navbarz/AdaptiveNavigationConfig.ios.<get-ios>|<get-ios>(){}[0]
+
+    final fun component1(): kotlin.collections/Set<dev.parez.navbarz/NavigationMode> // dev.parez.navbarz/AdaptiveNavigationConfig.component1|component1(){}[0]
+    final fun component2(): dev.parez.navbarz/NavigationBreakpoints // dev.parez.navbarz/AdaptiveNavigationConfig.component2|component2(){}[0]
+    final fun component3(): dev.parez.navbarz/IosOptions // dev.parez.navbarz/AdaptiveNavigationConfig.component3|component3(){}[0]
+    final fun copy(kotlin.collections/Set<dev.parez.navbarz/NavigationMode> = ..., dev.parez.navbarz/NavigationBreakpoints = ..., dev.parez.navbarz/IosOptions = ...): dev.parez.navbarz/AdaptiveNavigationConfig // dev.parez.navbarz/AdaptiveNavigationConfig.copy|copy(kotlin.collections.Set<dev.parez.navbarz.NavigationMode>;dev.parez.navbarz.NavigationBreakpoints;dev.parez.navbarz.IosOptions){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.parez.navbarz/AdaptiveNavigationConfig.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.parez.navbarz/AdaptiveNavigationConfig.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.parez.navbarz/AdaptiveNavigationConfig.toString|toString(){}[0]
+}
+
+final class dev.parez.navbarz/IosOptions { // dev.parez.navbarz/IosOptions|null[0]
+    constructor <init>(dev.parez.navbarz/IosChrome = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., androidx.compose.ui.unit/Dp = ...) // dev.parez.navbarz/IosOptions.<init>|<init>(dev.parez.navbarz.IosChrome;kotlin.Boolean;kotlin.Boolean;androidx.compose.ui.unit.Dp){}[0]
+
+    final val chrome // dev.parez.navbarz/IosOptions.chrome|{}chrome[0]
+        final fun <get-chrome>(): dev.parez.navbarz/IosChrome // dev.parez.navbarz/IosOptions.chrome.<get-chrome>|<get-chrome>(){}[0]
+    final val liquidGlass // dev.parez.navbarz/IosOptions.liquidGlass|{}liquidGlass[0]
+        final fun <get-liquidGlass>(): kotlin/Boolean // dev.parez.navbarz/IosOptions.liquidGlass.<get-liquidGlass>|<get-liquidGlass>(){}[0]
+    final val nativeBarHeight // dev.parez.navbarz/IosOptions.nativeBarHeight|{}nativeBarHeight[0]
+        final fun <get-nativeBarHeight>(): androidx.compose.ui.unit/Dp // dev.parez.navbarz/IosOptions.nativeBarHeight.<get-nativeBarHeight>|<get-nativeBarHeight>(){}[0]
+    final val sidebarAdaptable // dev.parez.navbarz/IosOptions.sidebarAdaptable|{}sidebarAdaptable[0]
+        final fun <get-sidebarAdaptable>(): kotlin/Boolean // dev.parez.navbarz/IosOptions.sidebarAdaptable.<get-sidebarAdaptable>|<get-sidebarAdaptable>(){}[0]
+
+    final fun component1(): dev.parez.navbarz/IosChrome // dev.parez.navbarz/IosOptions.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // dev.parez.navbarz/IosOptions.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // dev.parez.navbarz/IosOptions.component3|component3(){}[0]
+    final fun component4(): androidx.compose.ui.unit/Dp // dev.parez.navbarz/IosOptions.component4|component4(){}[0]
+    final fun copy(dev.parez.navbarz/IosChrome = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., androidx.compose.ui.unit/Dp = ...): dev.parez.navbarz/IosOptions // dev.parez.navbarz/IosOptions.copy|copy(dev.parez.navbarz.IosChrome;kotlin.Boolean;kotlin.Boolean;androidx.compose.ui.unit.Dp){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.parez.navbarz/IosOptions.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.parez.navbarz/IosOptions.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.parez.navbarz/IosOptions.toString|toString(){}[0]
+}
+
+final class dev.parez.navbarz/NavigationBreakpoints { // dev.parez.navbarz/NavigationBreakpoints|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...) // dev.parez.navbarz/NavigationBreakpoints.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+    final val drawerFromWidthDp // dev.parez.navbarz/NavigationBreakpoints.drawerFromWidthDp|{}drawerFromWidthDp[0]
+        final fun <get-drawerFromWidthDp>(): kotlin/Int // dev.parez.navbarz/NavigationBreakpoints.drawerFromWidthDp.<get-drawerFromWidthDp>|<get-drawerFromWidthDp>(){}[0]
+    final val minHeightDp // dev.parez.navbarz/NavigationBreakpoints.minHeightDp|{}minHeightDp[0]
+        final fun <get-minHeightDp>(): kotlin/Int // dev.parez.navbarz/NavigationBreakpoints.minHeightDp.<get-minHeightDp>|<get-minHeightDp>(){}[0]
+    final val railFromWidthDp // dev.parez.navbarz/NavigationBreakpoints.railFromWidthDp|{}railFromWidthDp[0]
+        final fun <get-railFromWidthDp>(): kotlin/Int // dev.parez.navbarz/NavigationBreakpoints.railFromWidthDp.<get-railFromWidthDp>|<get-railFromWidthDp>(){}[0]
+
+    final fun component1(): kotlin/Int // dev.parez.navbarz/NavigationBreakpoints.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // dev.parez.navbarz/NavigationBreakpoints.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // dev.parez.navbarz/NavigationBreakpoints.component3|component3(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): dev.parez.navbarz/NavigationBreakpoints // dev.parez.navbarz/NavigationBreakpoints.copy|copy(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.parez.navbarz/NavigationBreakpoints.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.parez.navbarz/NavigationBreakpoints.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.parez.navbarz/NavigationBreakpoints.toString|toString(){}[0]
+}
+
+final class dev.parez.navbarz/NavigationItem { // dev.parez.navbarz/NavigationItem|null[0]
+    constructor <init>(kotlin/String, org.jetbrains.compose.resources/DrawableResource? = ..., org.jetbrains.compose.resources/DrawableResource? = ..., kotlin/String, kotlin/String? = ..., kotlin/Boolean = ..., kotlin/String? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/String? = ...) // dev.parez.navbarz/NavigationItem.<init>|<init>(kotlin.String;org.jetbrains.compose.resources.DrawableResource?;org.jetbrains.compose.resources.DrawableResource?;kotlin.String;kotlin.String?;kotlin.Boolean;kotlin.String?;kotlin.Boolean;kotlin.Boolean;kotlin.String?){}[0]
+
+    final val badge // dev.parez.navbarz/NavigationItem.badge|{}badge[0]
+        final fun <get-badge>(): kotlin/String? // dev.parez.navbarz/NavigationItem.badge.<get-badge>|<get-badge>(){}[0]
+    final val contentDescription // dev.parez.navbarz/NavigationItem.contentDescription|{}contentDescription[0]
+        final fun <get-contentDescription>(): kotlin/String? // dev.parez.navbarz/NavigationItem.contentDescription.<get-contentDescription>|<get-contentDescription>(){}[0]
+    final val enabled // dev.parez.navbarz/NavigationItem.enabled|{}enabled[0]
+        final fun <get-enabled>(): kotlin/Boolean // dev.parez.navbarz/NavigationItem.enabled.<get-enabled>|<get-enabled>(){}[0]
+    final val icon // dev.parez.navbarz/NavigationItem.icon|{}icon[0]
+        final fun <get-icon>(): org.jetbrains.compose.resources/DrawableResource? // dev.parez.navbarz/NavigationItem.icon.<get-icon>|<get-icon>(){}[0]
+    final val selectedIcon // dev.parez.navbarz/NavigationItem.selectedIcon|{}selectedIcon[0]
+        final fun <get-selectedIcon>(): org.jetbrains.compose.resources/DrawableResource? // dev.parez.navbarz/NavigationItem.selectedIcon.<get-selectedIcon>|<get-selectedIcon>(){}[0]
+    final val selectedSystemIcon // dev.parez.navbarz/NavigationItem.selectedSystemIcon|{}selectedSystemIcon[0]
+        final fun <get-selectedSystemIcon>(): kotlin/String? // dev.parez.navbarz/NavigationItem.selectedSystemIcon.<get-selectedSystemIcon>|<get-selectedSystemIcon>(){}[0]
+    final val showBadgeDot // dev.parez.navbarz/NavigationItem.showBadgeDot|{}showBadgeDot[0]
+        final fun <get-showBadgeDot>(): kotlin/Boolean // dev.parez.navbarz/NavigationItem.showBadgeDot.<get-showBadgeDot>|<get-showBadgeDot>(){}[0]
+    final val showLabel // dev.parez.navbarz/NavigationItem.showLabel|{}showLabel[0]
+        final fun <get-showLabel>(): kotlin/Boolean // dev.parez.navbarz/NavigationItem.showLabel.<get-showLabel>|<get-showLabel>(){}[0]
+    final val systemIcon // dev.parez.navbarz/NavigationItem.systemIcon|{}systemIcon[0]
+        final fun <get-systemIcon>(): kotlin/String // dev.parez.navbarz/NavigationItem.systemIcon.<get-systemIcon>|<get-systemIcon>(){}[0]
+    final val title // dev.parez.navbarz/NavigationItem.title|{}title[0]
+        final fun <get-title>(): kotlin/String // dev.parez.navbarz/NavigationItem.title.<get-title>|<get-title>(){}[0]
+
+    final fun component1(): kotlin/String // dev.parez.navbarz/NavigationItem.component1|component1(){}[0]
+    final fun component10(): kotlin/String? // dev.parez.navbarz/NavigationItem.component10|component10(){}[0]
+    final fun component2(): org.jetbrains.compose.resources/DrawableResource? // dev.parez.navbarz/NavigationItem.component2|component2(){}[0]
+    final fun component3(): org.jetbrains.compose.resources/DrawableResource? // dev.parez.navbarz/NavigationItem.component3|component3(){}[0]
+    final fun component4(): kotlin/String // dev.parez.navbarz/NavigationItem.component4|component4(){}[0]
+    final fun component5(): kotlin/String? // dev.parez.navbarz/NavigationItem.component5|component5(){}[0]
+    final fun component6(): kotlin/Boolean // dev.parez.navbarz/NavigationItem.component6|component6(){}[0]
+    final fun component7(): kotlin/String? // dev.parez.navbarz/NavigationItem.component7|component7(){}[0]
+    final fun component8(): kotlin/Boolean // dev.parez.navbarz/NavigationItem.component8|component8(){}[0]
+    final fun component9(): kotlin/Boolean // dev.parez.navbarz/NavigationItem.component9|component9(){}[0]
+    final fun copy(kotlin/String = ..., org.jetbrains.compose.resources/DrawableResource? = ..., org.jetbrains.compose.resources/DrawableResource? = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/Boolean = ..., kotlin/String? = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/String? = ...): dev.parez.navbarz/NavigationItem // dev.parez.navbarz/NavigationItem.copy|copy(kotlin.String;org.jetbrains.compose.resources.DrawableResource?;org.jetbrains.compose.resources.DrawableResource?;kotlin.String;kotlin.String?;kotlin.Boolean;kotlin.String?;kotlin.Boolean;kotlin.Boolean;kotlin.String?){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.parez.navbarz/NavigationItem.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.parez.navbarz/NavigationItem.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.parez.navbarz/NavigationItem.toString|toString(){}[0]
+}
+
+final object dev.parez.navbarz/AdaptiveNavigationBarDefaults { // dev.parez.navbarz/AdaptiveNavigationBarDefaults|null[0]
+    final fun colors(androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.ui.graphics/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.parez.navbarz/AdaptiveNavigationBarColors // dev.parez.navbarz/AdaptiveNavigationBarDefaults.colors|colors(androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.ui.graphics.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+    final fun config(dev.parez.navbarz/AdaptiveNavigationConfig = ..., dev.parez.navbarz/AdaptiveNavigationConfig? = ..., dev.parez.navbarz/AdaptiveNavigationConfig? = ..., dev.parez.navbarz/AdaptiveNavigationConfig? = ..., dev.parez.navbarz/AdaptiveNavigationConfig? = ...): dev.parez.navbarz/AdaptiveNavigationConfig // dev.parez.navbarz/AdaptiveNavigationBarDefaults.config|config(dev.parez.navbarz.AdaptiveNavigationConfig;dev.parez.navbarz.AdaptiveNavigationConfig?;dev.parez.navbarz.AdaptiveNavigationConfig?;dev.parez.navbarz.AdaptiveNavigationConfig?;dev.parez.navbarz.AdaptiveNavigationConfig?){}[0]
+}
+
+final val dev.parez.navbarz/currentPlatform // dev.parez.navbarz/currentPlatform|{}currentPlatform[0]
+    final fun <get-currentPlatform>(): dev.parez.navbarz/NavBarzPlatform // dev.parez.navbarz/currentPlatform.<get-currentPlatform>|<get-currentPlatform>(){}[0]
+final val dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationBarColors$stableprop // dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationBarColors$stableprop|#static{}dev_parez_navbarz_AdaptiveNavigationBarColors$stableprop[0]
+final val dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationBarDefaults$stableprop // dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationBarDefaults$stableprop|#static{}dev_parez_navbarz_AdaptiveNavigationBarDefaults$stableprop[0]
+final val dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationConfig$stableprop // dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationConfig$stableprop|#static{}dev_parez_navbarz_AdaptiveNavigationConfig$stableprop[0]
+final val dev.parez.navbarz/dev_parez_navbarz_IosOptions$stableprop // dev.parez.navbarz/dev_parez_navbarz_IosOptions$stableprop|#static{}dev_parez_navbarz_IosOptions$stableprop[0]
+final val dev.parez.navbarz/dev_parez_navbarz_NavigationBreakpoints$stableprop // dev.parez.navbarz/dev_parez_navbarz_NavigationBreakpoints$stableprop|#static{}dev_parez_navbarz_NavigationBreakpoints$stableprop[0]
+final val dev.parez.navbarz/dev_parez_navbarz_NavigationItem$stableprop // dev.parez.navbarz/dev_parez_navbarz_NavigationItem$stableprop|#static{}dev_parez_navbarz_NavigationItem$stableprop[0]
+final val navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_array$stableprop // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_array$stableprop|#static{}navbarz_sdk_navbarz_generated_resources_Res_array$stableprop[0]
+final val navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_drawable$stableprop // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_drawable$stableprop|#static{}navbarz_sdk_navbarz_generated_resources_Res_drawable$stableprop[0]
+final val navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_font$stableprop // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_font$stableprop|#static{}navbarz_sdk_navbarz_generated_resources_Res_font$stableprop[0]
+final val navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_plurals$stableprop // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_plurals$stableprop|#static{}navbarz_sdk_navbarz_generated_resources_Res_plurals$stableprop[0]
+final val navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_string$stableprop // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_string$stableprop|#static{}navbarz_sdk_navbarz_generated_resources_Res_string$stableprop[0]
+
+final fun dev.parez.navbarz/AdaptiveNavigationBar(kotlin.collections/List<dev.parez.navbarz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.navbarz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, dev.parez.navbarz/AdaptiveNavigationBarColors?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.navbarz/AdaptiveNavigationBar|AdaptiveNavigationBar(kotlin.collections.List<dev.parez.navbarz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.navbarz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;dev.parez.navbarz.AdaptiveNavigationBarColors?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.parez.navbarz/AdaptiveNavigationBar(kotlin.collections/List<dev.parez.navbarz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, kotlin/Function2<kotlin/Int, kotlin/Boolean, androidx.compose.ui.graphics.vector/ImageVector>, androidx.compose.ui/Modifier?, dev.parez.navbarz/AdaptiveNavigationConfig?, dev.parez.navbarz/AdaptiveNavigationBarColors?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.navbarz/AdaptiveNavigationBar|AdaptiveNavigationBar(kotlin.collections.List<dev.parez.navbarz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;kotlin.Function2<kotlin.Int,kotlin.Boolean,androidx.compose.ui.graphics.vector.ImageVector>;androidx.compose.ui.Modifier?;dev.parez.navbarz.AdaptiveNavigationConfig?;dev.parez.navbarz.AdaptiveNavigationBarColors?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.parez.navbarz/AdaptiveNavigationScaffold(kotlin.collections/List<dev.parez.navbarz/NavigationItem>, kotlin/Int, kotlin/Function1<kotlin/Int, kotlin/Unit>, androidx.compose.ui/Modifier?, dev.parez.navbarz/AdaptiveNavigationConfig?, kotlin/Function4<kotlin/Int, kotlin/Boolean, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function3<androidx.compose.foundation.layout/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.parez.navbarz/AdaptiveNavigationScaffold|AdaptiveNavigationScaffold(kotlin.collections.List<dev.parez.navbarz.NavigationItem>;kotlin.Int;kotlin.Function1<kotlin.Int,kotlin.Unit>;androidx.compose.ui.Modifier?;dev.parez.navbarz.AdaptiveNavigationConfig?;kotlin.Function4<kotlin.Int,kotlin.Boolean,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function3<androidx.compose.foundation.layout.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationBarColors$stableprop_getter(): kotlin/Int // dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationBarColors$stableprop_getter|dev_parez_navbarz_AdaptiveNavigationBarColors$stableprop_getter(){}[0]
+final fun dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationBarDefaults$stableprop_getter(): kotlin/Int // dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationBarDefaults$stableprop_getter|dev_parez_navbarz_AdaptiveNavigationBarDefaults$stableprop_getter(){}[0]
+final fun dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationConfig$stableprop_getter(): kotlin/Int // dev.parez.navbarz/dev_parez_navbarz_AdaptiveNavigationConfig$stableprop_getter|dev_parez_navbarz_AdaptiveNavigationConfig$stableprop_getter(){}[0]
+final fun dev.parez.navbarz/dev_parez_navbarz_IosOptions$stableprop_getter(): kotlin/Int // dev.parez.navbarz/dev_parez_navbarz_IosOptions$stableprop_getter|dev_parez_navbarz_IosOptions$stableprop_getter(){}[0]
+final fun dev.parez.navbarz/dev_parez_navbarz_NavigationBreakpoints$stableprop_getter(): kotlin/Int // dev.parez.navbarz/dev_parez_navbarz_NavigationBreakpoints$stableprop_getter|dev_parez_navbarz_NavigationBreakpoints$stableprop_getter(){}[0]
+final fun dev.parez.navbarz/dev_parez_navbarz_NavigationItem$stableprop_getter(): kotlin/Int // dev.parez.navbarz/dev_parez_navbarz_NavigationItem$stableprop_getter|dev_parez_navbarz_NavigationItem$stableprop_getter(){}[0]
+final fun dev.parez.navbarz/rememberNavigationMode(dev.parez.navbarz/AdaptiveNavigationConfig?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): dev.parez.navbarz/NavigationMode // dev.parez.navbarz/rememberNavigationMode|rememberNavigationMode(dev.parez.navbarz.AdaptiveNavigationConfig?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_array$stableprop_getter(): kotlin/Int // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_array$stableprop_getter|navbarz_sdk_navbarz_generated_resources_Res_array$stableprop_getter(){}[0]
+final fun navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_drawable$stableprop_getter(): kotlin/Int // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_drawable$stableprop_getter|navbarz_sdk_navbarz_generated_resources_Res_drawable$stableprop_getter(){}[0]
+final fun navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_font$stableprop_getter(): kotlin/Int // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_font$stableprop_getter|navbarz_sdk_navbarz_generated_resources_Res_font$stableprop_getter(){}[0]
+final fun navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_plurals$stableprop_getter(): kotlin/Int // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_plurals$stableprop_getter|navbarz_sdk_navbarz_generated_resources_Res_plurals$stableprop_getter(){}[0]
+final fun navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_string$stableprop_getter(): kotlin/Int // navbarz_sdk.navbarz.generated.resources/navbarz_sdk_navbarz_generated_resources_Res_string$stableprop_getter|navbarz_sdk_navbarz_generated_resources_Res_string$stableprop_getter(){}[0]
+
+// Targets: [ios]
+final fun dev.parez.navbarz/navBarzTabBarController(kotlin.collections/List<dev.parez.navbarz/NavigationItem>, dev.parez.navbarz/IosOptions = ..., kotlin/Function1<kotlin/Int, kotlin/Unit> = ..., kotlin/Function3<kotlin/Int, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>): platform.UIKit/UIViewController // dev.parez.navbarz/navBarzTabBarController|navBarzTabBarController(kotlin.collections.List<dev.parez.navbarz.NavigationItem>;dev.parez.navbarz.IosOptions;kotlin.Function1<kotlin.Int,kotlin.Unit>;kotlin.Function3<kotlin.Int,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]

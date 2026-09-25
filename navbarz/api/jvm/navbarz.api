@@ -1,0 +1,170 @@
+public final class dev/parez/navbarz/AdaptiveNavigationBarColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun copy-FD3wquc (JJJJJJJJ)Ldev/parez/navbarz/AdaptiveNavigationBarColors;
+	public static synthetic fun copy-FD3wquc$default (Ldev/parez/navbarz/AdaptiveNavigationBarColors;JJJJJJJJILjava/lang/Object;)Ldev/parez/navbarz/AdaptiveNavigationBarColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBadgeContainerColor-0d7_KjU ()J
+	public final fun getBadgeContentColor-0d7_KjU ()J
+	public final fun getContainerColor-0d7_KjU ()J
+	public final fun getIndicatorColor-0d7_KjU ()J
+	public final fun getSelectedIconColor-0d7_KjU ()J
+	public final fun getSelectedTextColor-0d7_KjU ()J
+	public final fun getUnselectedIconColor-0d7_KjU ()J
+	public final fun getUnselectedTextColor-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/parez/navbarz/AdaptiveNavigationBarDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/parez/navbarz/AdaptiveNavigationBarDefaults;
+	public final fun colors-oq7We08 (JJJJJJJJLandroidx/compose/runtime/Composer;II)Ldev/parez/navbarz/AdaptiveNavigationBarColors;
+	public final fun config (Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationConfig;)Ldev/parez/navbarz/AdaptiveNavigationConfig;
+	public static synthetic fun config$default (Ldev/parez/navbarz/AdaptiveNavigationBarDefaults;Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationConfig;ILjava/lang/Object;)Ldev/parez/navbarz/AdaptiveNavigationConfig;
+}
+
+public final class dev/parez/navbarz/AdaptiveNavigationBarKt {
+	public static final fun AdaptiveNavigationBar (Ljava/util/List;ILkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/parez/navbarz/AdaptiveNavigationConfig;Lkotlin/jvm/functions/Function4;Ldev/parez/navbarz/AdaptiveNavigationBarColors;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AdaptiveNavigationBar (Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Ldev/parez/navbarz/AdaptiveNavigationConfig;Ldev/parez/navbarz/AdaptiveNavigationBarColors;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/parez/navbarz/AdaptiveNavigationConfig {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosOptions;)V
+	public synthetic fun <init> (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosOptions;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Set;
+	public final fun component2 ()Ldev/parez/navbarz/NavigationBreakpoints;
+	public final fun component3 ()Ldev/parez/navbarz/IosOptions;
+	public final fun copy (Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosOptions;)Ldev/parez/navbarz/AdaptiveNavigationConfig;
+	public static synthetic fun copy$default (Ldev/parez/navbarz/AdaptiveNavigationConfig;Ljava/util/Set;Ldev/parez/navbarz/NavigationBreakpoints;Ldev/parez/navbarz/IosOptions;ILjava/lang/Object;)Ldev/parez/navbarz/AdaptiveNavigationConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAllowedModes ()Ljava/util/Set;
+	public final fun getBreakpoints ()Ldev/parez/navbarz/NavigationBreakpoints;
+	public final fun getIos ()Ldev/parez/navbarz/IosOptions;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/parez/navbarz/AdaptiveNavigationScaffoldKt {
+	public static final fun AdaptiveNavigationScaffold (Ljava/util/List;ILkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ldev/parez/navbarz/AdaptiveNavigationConfig;Lkotlin/jvm/functions/Function4;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class dev/parez/navbarz/ComposableSingletons$AdaptiveNavigationScaffoldKt {
+	public static final field INSTANCE Ldev/parez/navbarz/ComposableSingletons$AdaptiveNavigationScaffoldKt;
+	public fun <init> ()V
+	public final fun getLambda$-2112465584$navbarz_sdk_navbarz ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class dev/parez/navbarz/IosChrome : java/lang/Enum {
+	public static final field ComposeGlass Ldev/parez/navbarz/IosChrome;
+	public static final field NativeTabBar Ldev/parez/navbarz/IosChrome;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/parez/navbarz/IosChrome;
+	public static fun values ()[Ldev/parez/navbarz/IosChrome;
+}
+
+public final class dev/parez/navbarz/IosOptions {
+	public static final field $stable I
+	public synthetic fun <init> (Ldev/parez/navbarz/IosChrome;ZZFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ldev/parez/navbarz/IosChrome;ZZFLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ldev/parez/navbarz/IosChrome;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4-D9Ej5fM ()F
+	public final fun copy-eqLRuRQ (Ldev/parez/navbarz/IosChrome;ZZF)Ldev/parez/navbarz/IosOptions;
+	public static synthetic fun copy-eqLRuRQ$default (Ldev/parez/navbarz/IosOptions;Ldev/parez/navbarz/IosChrome;ZZFILjava/lang/Object;)Ldev/parez/navbarz/IosOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChrome ()Ldev/parez/navbarz/IosChrome;
+	public final fun getLiquidGlass ()Z
+	public final fun getNativeBarHeight-D9Ej5fM ()F
+	public final fun getSidebarAdaptable ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/parez/navbarz/NavBarzPlatform : java/lang/Enum {
+	public static final field Android Ldev/parez/navbarz/NavBarzPlatform;
+	public static final field Desktop Ldev/parez/navbarz/NavBarzPlatform;
+	public static final field Ios Ldev/parez/navbarz/NavBarzPlatform;
+	public static final field Web Ldev/parez/navbarz/NavBarzPlatform;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/parez/navbarz/NavBarzPlatform;
+	public static fun values ()[Ldev/parez/navbarz/NavBarzPlatform;
+}
+
+public final class dev/parez/navbarz/NavBarzPlatform_jvmKt {
+	public static final fun getCurrentPlatform ()Ldev/parez/navbarz/NavBarzPlatform;
+}
+
+public final class dev/parez/navbarz/NavigationBreakpoints {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (III)V
+	public synthetic fun <init> (IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun copy (III)Ldev/parez/navbarz/NavigationBreakpoints;
+	public static synthetic fun copy$default (Ldev/parez/navbarz/NavigationBreakpoints;IIIILjava/lang/Object;)Ldev/parez/navbarz/NavigationBreakpoints;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDrawerFromWidthDp ()I
+	public final fun getMinHeightDp ()I
+	public final fun getRailFromWidthDp ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/parez/navbarz/NavigationItem {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lorg/jetbrains/compose/resources/DrawableResource;Lorg/jetbrains/compose/resources/DrawableResource;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Lorg/jetbrains/compose/resources/DrawableResource;Lorg/jetbrains/compose/resources/DrawableResource;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component2 ()Lorg/jetbrains/compose/resources/DrawableResource;
+	public final fun component3 ()Lorg/jetbrains/compose/resources/DrawableResource;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Z
+	public final fun component9 ()Z
+	public final fun copy (Ljava/lang/String;Lorg/jetbrains/compose/resources/DrawableResource;Lorg/jetbrains/compose/resources/DrawableResource;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZZLjava/lang/String;)Ldev/parez/navbarz/NavigationItem;
+	public static synthetic fun copy$default (Ldev/parez/navbarz/NavigationItem;Ljava/lang/String;Lorg/jetbrains/compose/resources/DrawableResource;Lorg/jetbrains/compose/resources/DrawableResource;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZZLjava/lang/String;ILjava/lang/Object;)Ldev/parez/navbarz/NavigationItem;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBadge ()Ljava/lang/String;
+	public final fun getContentDescription ()Ljava/lang/String;
+	public final fun getEnabled ()Z
+	public final fun getIcon ()Lorg/jetbrains/compose/resources/DrawableResource;
+	public final fun getSelectedIcon ()Lorg/jetbrains/compose/resources/DrawableResource;
+	public final fun getSelectedSystemIcon ()Ljava/lang/String;
+	public final fun getShowBadgeDot ()Z
+	public final fun getShowLabel ()Z
+	public final fun getSystemIcon ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/parez/navbarz/NavigationMode : java/lang/Enum {
+	public static final field BottomBar Ldev/parez/navbarz/NavigationMode;
+	public static final field Drawer Ldev/parez/navbarz/NavigationMode;
+	public static final field Rail Ldev/parez/navbarz/NavigationMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/parez/navbarz/NavigationMode;
+	public static fun values ()[Ldev/parez/navbarz/NavigationMode;
+}
+
+public final class dev/parez/navbarz/NavigationModeResolverKt {
+	public static final fun rememberNavigationMode (Ldev/parez/navbarz/AdaptiveNavigationConfig;Landroidx/compose/runtime/Composer;II)Ldev/parez/navbarz/NavigationMode;
+}
+

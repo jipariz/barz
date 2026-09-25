@@ -1,4 +1,4 @@
-rootProject.name = "barz-sdk"
+rootProject.name = "navbarz-sdk"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -29,7 +29,7 @@ dependencyResolutionManagement {
     }
 }
 
-include(":barz")
+include(":navbarz")
 
 // Demo app, ported from the sidekick Pokédex: one shared KMP library plus a thin shell per
 // platform. iosApp is a sibling Xcode project, not a Gradle module.

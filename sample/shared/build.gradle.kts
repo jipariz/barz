@@ -3,7 +3,7 @@
 //
 // Ported from the sidekick repo's Pokédex demo. The debug-overlay SDK, its Gradle plugin, the
 // KSP-generated preferences store and the Room cache have all been stripped: this sample exists
-// to show off Barz's navigation, and none of that machinery served that.
+// to show off NavBarz's navigation, and none of that machinery served that.
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
@@ -17,7 +17,7 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "dev.parez.barz.sample"
+        namespace = "dev.parez.navbarz.sample"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
@@ -50,7 +50,7 @@ kotlin {
         iosMain.get().dependsOn(nonWebMain)
 
         commonMain.dependencies {
-            implementation(projects.barz)
+            implementation(projects.navbarz)
 
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)

@@ -1,6 +1,6 @@
 # API reference
 
-[← back to the README](../README.md) · everything in package `dev.parez.barz`
+[← back to the README](../README.md) · everything in package `dev.parez.navbarz`
 
 ## Composables
 
@@ -87,10 +87,10 @@ the window size class quantises to fixed buckets that would defeat custom breakp
 `containerSize` changes every frame of a window drag; the result is wrapped in `derivedStateOf`, so
 callers recompose only at the two thresholds where the mode actually changes.
 
-### `barzTabBarController` — iOS only, not a composable
+### `navBarzTabBarController` — iOS only, not a composable
 
 ```kotlin
-fun barzTabBarController(
+fun navBarzTabBarController(
     items: List<NavigationItem>,
     options: IosOptions = IosOptions(),
     onSelect: (Int) -> Unit = {},
@@ -166,7 +166,7 @@ data class IosOptions(
 )
 ```
 
-`sidebarAdaptable` only affects `barzTabBarController`. `nativeBarHeight` exists because a UIKit
+`sidebarAdaptable` only affects `navBarzTabBarController`. `nativeBarHeight` exists because a UIKit
 view cannot report its size back through Compose interop.
 
 ### `AdaptiveNavigationBarColors` / `AdaptiveNavigationBarDefaults`
@@ -198,12 +198,12 @@ object AdaptiveNavigationBarDefaults {
 |---|---|
 | `NavigationMode` | `BottomBar`, `Rail`, `Drawer` |
 | `IosChrome` | `NativeTabBar` (default), `ComposeGlass` |
-| `BarzPlatform` | `Android`, `Desktop`, `Web`, `Ios` |
+| `NavBarzPlatform` | `Android`, `Desktop`, `Web`, `Ios` |
 
 ### `currentPlatform`
 
 ```kotlin
-expect val currentPlatform: BarzPlatform
+expect val currentPlatform: NavBarzPlatform
 ```
 
 A plain top-level `val`, not a `CompositionLocal` — not overridable at runtime or in tests.
